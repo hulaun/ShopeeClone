@@ -1,4 +1,9 @@
+.container{
+  background: linear-gradient(0deg, var(--secondary-color), var(--primary-color));
+}
+
 .flex{
   display: flex;
-  flex: 1;
+  flex: 1fr;
+  justify-content: space-between;
 }
