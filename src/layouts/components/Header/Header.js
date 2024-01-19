@@ -10,13 +10,14 @@ import {
   BellIcon,
   HelpIcon,
   GlobeIcon,
+  DownIcon,
 } from "../../../components/Icons";
 
 const cx = classNames.bind(styles);
 
 function Header() {
   return (
-    <header className={cx("wrapper")}>
+    <header className={cx("wrapper", "text-white")}>
       <div className={cx("container")}>
         <div className={cx("settings", "flex")}>
           <div className={cx("connections", "flex")}>
@@ -40,9 +41,10 @@ function Header() {
             <div className={cx("flex")}>
               <GlobeIcon />
               <p>Language</p>
+              <DownIcon />
             </div>
             <div className={cx("flex")}>
-              <i></i>
+              <img src="https://picsum.photos/20/20"></img>
               <p>User</p>
             </div>
           </div>
@@ -52,7 +54,7 @@ function Header() {
             <img src={images.logo} alt="Shopee" />
           </div>
           <div className={cx("nav-wrapper")}>
-            <div className={cx("search-bar")}>
+            <div className={cx("search-bar", "bg-white", "flex")}>
               <input placeholder="Shoppe Thời Trang"></input>
               <button className={cx("search-button")}>
                 <SearchIcon />

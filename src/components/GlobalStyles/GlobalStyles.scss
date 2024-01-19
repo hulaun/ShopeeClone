@@ -1,10 +1,35 @@
-@import 'normalize.css';
+@import "normalize.css";
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,500;0,700;1,300;1,500;1,700;&display=swap");
 
+$primary: rgb(245, 62, 45);
+$secondary: rgb(254, 100, 50);
+//color palette
+$colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "white": white,
+  "black": black,
+);
+
+//setup
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 
-  --primary-color:rgb(245,62,45);
-  --secondary-color:rgb(254,100,50);
+  --primary: rgb(245, 62, 45);
+  --secondary: rgb(254, 100, 50);
+  font-family: "Roboto", sans-serif;
+  font-size: 0.9rem;
+}
+
+//utils
+
+@each $key, $val in $colors {
+  .text-#{$key} {
+    color: $val;
+  }
+  .bg-#{$key} {
+    background-color: $val;
+  }
 }

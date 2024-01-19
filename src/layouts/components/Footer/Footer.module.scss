@@ -1,3 +1,14 @@
-.inner{
-  
+.divider {
+  height: 0.25rem;
+  background: linear-gradient(var(--secondary), var(--primary));
+  margin-bottom: 5rem;
+}
+ul {
+  & li::before {
+    content: "•";
+    padding: 0.5rem;
+  }
+  & li {
+    padding-bottom: 0.5rem;
+  }
 }
