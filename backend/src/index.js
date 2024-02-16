@@ -18,15 +18,6 @@ app.get('/', async (req, res) => {
   res.send(students);
 })
 
-// let request = new sql.Request();
-
-// let sqlQuery = 'SELECT * FROM your_table';
-// request.query(sqlQuery, function (err, data) {
-//     if (err) console.log(err)
-//     console.log(data);
-//     sql.close();
-// });
-
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
