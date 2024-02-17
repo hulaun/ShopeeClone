@@ -1,6 +1,8 @@
 import classNames from "classnames/bind";
 import styles from "./Home.module.scss";
 
+import HomeFooter from "./components/HomeFooter";
+
 const cx = classNames.bind(styles);
 function Home() {
   var products;
@@ -19,6 +21,7 @@ function Home() {
           <p className={cx("product-purchased")}></p>
         </div>
       </div>
+      <HomeFooter />
     </div>
   );
 }

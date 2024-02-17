@@ -4,11 +4,18 @@
   margin-bottom: 5rem;
 }
 ul {
+  list-style-type: none;
   & li::before {
-    content: "•";
+    content: "";
     padding: 0.5rem;
   }
   & li {
     padding-bottom: 0.5rem;
   }
+}
+
+.d-flex {
+  display: flex;
+  flex: 1fr;
+  justify-content: space-between;
 }
