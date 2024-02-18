@@ -19,9 +19,15 @@ $colors: (
 
   --primary: rgb(245, 62, 45);
   --secondary: rgb(254, 100, 50);
+
+  --background-primary: rgb(251,251,251);
+  --background-secondary: rgb(245,245,245);
+  --background-tertiary: $colors["white"];
+  
   font-family: "Roboto", sans-serif;
   font-size: 0.9rem;
 }
+
 
 //utils
 

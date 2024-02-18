@@ -1,8 +1,17 @@
-.container {
+
+.wrapper{
   background: linear-gradient(0deg, var(--secondary), var(--primary));
-  padding: 0.6rem 0.6rem 0 0.3rem;
-  color: var(--white-color);
+  display: grid;
+  place-items: center;
+  height: 8rem;
+  .container {
+    color: var(--white-color);
+    width: 100%;
+    max-width: 75rem;
+    padding-top: 0.3rem;
+  }
 }
+
 
 .d-flex {
   display: flex;
