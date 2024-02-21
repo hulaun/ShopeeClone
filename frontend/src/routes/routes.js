@@ -3,11 +3,23 @@ import Login from "../pages/Login";
 import Profile from "../pages/Profile";
 import Signup from "../pages/Signup";
 import config from "../config";
+import DefaultLayout from "../layouts/DefaultLayout";
+import AuthLayout from "../layouts/AuthLayout";
 
 const publicRoutes = [
-  { path: config.routes.home, component: Home },
-  { path: config.routes.login, component: Login, layout: null },
-  { path: config.routes.signup, component: Signup },
+  { path: config.routes.home, component: Home, layout: DefaultLayout },
+  {
+    path: config.routes.login,
+    component: Login,
+    layout: AuthLayout,
+    headline: "Đăng nhập",
+  },
+  {
+    path: config.routes.signup,
+    component: Signup,
+    layout: AuthLayout,
+    headline: "Đăng ký",
+  },
 ];
 const privateRoutes = [{ path: config.routes.profile, component: Profile }];
 

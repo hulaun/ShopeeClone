@@ -3,12 +3,11 @@
   background: linear-gradient(0deg, var(--secondary), var(--primary));
   display: grid;
   place-items: center;
-  height: 8rem;
+  height: 6rem;
   .container {
     color: var(--white-color);
     width: 100%;
-    max-width: 75rem;
-    padding-top: 0.3rem;
+    max-width: 80rem;
   }
 }
 
@@ -17,36 +16,6 @@
   display: flex;
   flex: 1fr;
   justify-content: space-between;
-}
-
-.connections {
-  & div:nth-child(n + 2)::before {
-    content: "|";
-    padding-left: 0.6rem;
-    padding-right: 0.5rem;
-    opacity: 0.3;
-  }
-  .media-connections {
-    & :nth-child(n + 2) {
-      padding-left: 0.3rem;
-      transform: translateY(-10%);
-    }
-  }
-}
-
-.user-settings {
-  & div:nth-child(n) {
-    padding-left: 1rem;
-  }
-
-  & div p {
-    padding-inline: 0.25rem;
-  }
-
-  & img {
-    border-radius: 50%;
-    transform: translateY(-10%);
-  }
 }
 
 .main-header {
@@ -69,12 +38,15 @@
         outline: none;
       }
       & button {
-        width: 10%;
+        width: 12%;
         height: 80%;
         border: none;
         outline: none;
         background: linear-gradient(var(--primary), var(--secondary));
       }
+    }
+    .header-navbar{
+      padding-block: 0.5rem;
     }
   }
 

@@ -118,7 +118,7 @@ function Footer() {
         <div className={cx("container", "d-flex", "privileges")}>
           <p>© 2024 Shopee. Tất cả các quyền được bảo lưu.</p>
           <div className={cx("d-flex")}>
-            <lable>Quốc gia & Khu vực: </lable>
+            <label>Quốc gia & Khu vực: </label>
             <ul className={cx("d-flex")}>
               <li>Singapore</li>
               <li>Indonesia</li>

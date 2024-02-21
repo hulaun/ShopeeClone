@@ -5,7 +5,6 @@ import HomeFooter from "./components/HomeFooter";
 
 const cx = classNames.bind(styles);
 function Home() {
-  var products;
   return (
     <div>
       {/* {

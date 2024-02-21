@@ -1,21 +1,18 @@
 import classNames from "classnames/bind";
-import styles from "./Header.module.scss";
+import styles from "./SettingsHeader.module.scss";
 
-import images from "../../../assets/images";
 import {
-  CartIcon,
-  SearchIcon,
   FacebookIcon,
   InstagramIcon,
   BellIcon,
   HelpIcon,
   GlobeIcon,
   DownIcon,
-} from "../../../components/Icons";
+} from "../../../../components/Icons";
 
 const cx = classNames.bind(styles);
 
-function Header() {
+function SettingsHeader() {
   return (
     <header className={cx("wrapper", "text-white")}>
       <div className={cx("container")}>
@@ -49,35 +46,9 @@ function Header() {
             </div>
           </div>
         </div>
-        <div className={cx("main-header", "d-flex")}>
-          <div className={cx("logo")}>
-            <img src={images.logo} alt="Shopee" />
-          </div>
-          <div className={cx("nav-wrapper")}>
-            <div className={cx("search-bar", "bg-white", "d-flex")}>
-              <input placeholder="Shoppe Thời Trang"></input>
-              <button className={cx("search-button")}>
-                <SearchIcon />
-              </button>
-            </div>
-            <div className={cx("header-nav-bar", "d-flex")}>
-              <div>Bộ Vệ Sinh Laptop</div>
-              <div>Ốp IPhone</div>
-              <div>Tinh Dầu bưởi</div>
-              <div>etc</div>
-              <div>etc</div>
-              <div>etc</div>
-              <div>etc</div>
-              <div>etc</div>
-            </div>
-          </div>
-          <div className={cx("cart-icon")}>
-            <CartIcon />
-          </div>
-        </div>
       </div>
     </header>
   );
 }
 
-export default Header;
+export default SettingsHeader;
