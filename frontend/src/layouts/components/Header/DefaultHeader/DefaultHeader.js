@@ -2,10 +2,30 @@ import classNames from "classnames/bind";
 import styles from "./DefaultHeader.module.scss";
 
 import { CartIcon, SearchIcon, ShopeeLogo } from "../../../../components/Icons";
+import { PrimaryButton } from "../../../../components/Buttons";
+import InputBox from "../../../../components/InputBox";
 
 const cx = classNames.bind(styles);
 
 function DefaultHeader() {
+  const inputBoxStyle = {
+    padding: "0.35rem",
+    height: "3rem",
+    width: "100%",
+  };
+
+  const inputProps = {
+    type: "text",
+    id: "search-input",
+    name: "search",
+    placeholder: "Shoppe Thời Trang",
+  };
+
+  const primaryButtonStyle = {
+    width: "5rem",
+    height: "100%",
+  };
+
   return (
     <header className={cx("wrapper", "text-white")}>
       <div className={cx("container")}>
@@ -14,12 +34,11 @@ function DefaultHeader() {
             <ShopeeLogo />
           </div>
           <div className={cx("nav-wrapper")}>
-            <div className={cx("search-bar", "bg-white", "d-flex")}>
-              <input placeholder="Shoppe Thời Trang"></input>
-              <button className={cx("search-button")}>
+            <InputBox inputProps={inputProps} inputBoxStyle={inputBoxStyle}>
+              <PrimaryButton style={primaryButtonStyle}>
                 <SearchIcon />
-              </button>
-            </div>
+              </PrimaryButton>
+            </InputBox>
             <div className={cx("header-navbar", "d-flex")}>
               <div>Bộ Vệ Sinh Laptop</div>
               <div>Ốp IPhone</div>

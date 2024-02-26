@@ -30,19 +30,18 @@
       align-items: center;
       justify-content: space-evenly;
       height: 2.5rem;
+      background-color: var(--background-tertiary);
 
       & input {
-        width: 85%;
         height: 100%;
         border: none;
         outline: none;
       }
       & button {
-        width: 12%;
         height: 80%;
         border: none;
         outline: none;
-        background: linear-gradient(var(--primary), var(--secondary));
+        background: var(--tertiary);
       }
     }
     .header-navbar{

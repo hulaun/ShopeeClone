@@ -39,7 +39,7 @@
       .card-container{
         display: flex;
         flex-direction: column;
-        padding: 1.5rem 2rem 2rem 2rem;
+        padding: 2.5rem 2rem 2rem 2rem;
         gap: 2rem;
         
         & div:first-child{
@@ -50,16 +50,13 @@
           padding: 2rem;
         }
 
-        .section.form{
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-        }
-
         .input-section {
           display: flex;
           flex-direction: column;
-          gap: 1rem;
+          gap: 2rem;
+          input{
+            height: 3rem;
+          }
         }
 
       }
