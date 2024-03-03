@@ -5,9 +5,16 @@ import Signup from "../pages/Signup";
 import config from "../config";
 import DefaultLayout from "../layouts/DefaultLayout";
 import AuthLayout from "../layouts/AuthLayout";
+import Test from "../pages/Test";
 
 const publicRoutes = [
   { path: config.routes.home, component: Home, layout: DefaultLayout },
+  {
+    path: config.routes.test,
+    component: Test,
+    layout: AuthLayout,
+    headline: "Đăng nhập",
+  },
   {
     path: config.routes.login,
     component: Login,

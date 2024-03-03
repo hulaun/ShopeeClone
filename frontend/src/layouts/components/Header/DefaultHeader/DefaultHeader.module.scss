@@ -26,22 +26,19 @@
   .nav-wrapper {
     margin-top: 1rem;
     width: 100%;
-    & .search-bar {
+    .search-bar {
+      display: flex;
       align-items: center;
       justify-content: space-evenly;
-      height: 2.5rem;
       background-color: var(--background-tertiary);
+      padding: 0.35rem 0.35rem 0.35rem 0.75rem;
+      height: 3rem;
+      width: 100%;
 
-      & input {
-        height: 100%;
+      .input {
+        width: 100%;
         border: none;
         outline: none;
-      }
-      & button {
-        height: 80%;
-        border: none;
-        outline: none;
-        background: var(--tertiary);
       }
     }
     .header-navbar{

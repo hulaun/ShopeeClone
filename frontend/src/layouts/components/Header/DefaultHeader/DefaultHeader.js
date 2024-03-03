@@ -1,31 +1,35 @@
 import classNames from "classnames/bind";
 import styles from "./DefaultHeader.module.scss";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 
 import { CartIcon, SearchIcon, ShopeeLogo } from "../../../../components/Icons";
 import { PrimaryButton } from "../../../../components/Buttons";
-import InputBox from "../../../../components/InputBox";
 
 const cx = classNames.bind(styles);
 
 function DefaultHeader() {
-  const inputBoxStyle = {
-    padding: "0.35rem",
-    height: "3rem",
-    width: "100%",
-  };
-
-  const inputProps = {
-    type: "text",
-    id: "search-input",
-    name: "search",
-    placeholder: "Shoppe Thời Trang",
-  };
-
-  const primaryButtonStyle = {
+  const buttonChildren = useMemo(() => <SearchIcon />, []);
+  const [text, setText] = useState("");
+  const searchRef = useRef();
+  const primaryButtonStyle = useRef({
     width: "5rem",
-    height: "100%",
-  };
+    height: "80%",
+  });
+  useEffect(() => {
+    const searchBar = searchRef.current.parentNode;
+    const handleSearchClick = () => {
+      searchRef.current.focus();
+    };
+    searchBar.addEventListener("click", handleSearchClick);
 
+    return () => {
+      searchBar.removeEventListener("click", handleSearchClick);
+    };
+  }, []);
+  const handleChange = useCallback(() => {
+    setText(searchRef.current.value);
+    console.log(text);
+  }, [text]);
   return (
     <header className={cx("wrapper", "text-white")}>
       <div className={cx("container")}>
@@ -34,11 +38,20 @@ function DefaultHeader() {
             <ShopeeLogo />
           </div>
           <div className={cx("nav-wrapper")}>
-            <InputBox inputProps={inputProps} inputBoxStyle={inputBoxStyle}>
-              <PrimaryButton style={primaryButtonStyle}>
-                <SearchIcon />
+            <div className={cx("search-bar")}>
+              <input
+                className={cx("input")}
+                onChange={handleChange}
+                // type="text"
+                // id="search-input"
+                // name="search"
+                placeholder="Shoppe Thời Trang"
+                ref={searchRef}
+              ></input>
+              <PrimaryButton style={primaryButtonStyle.current}>
+                {buttonChildren}
               </PrimaryButton>
-            </InputBox>
+            </div>
             <div className={cx("header-navbar", "d-flex")}>
               <div>Bộ Vệ Sinh Laptop</div>
               <div>Ốp IPhone</div>
