@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import styles from "./SettingsHeader.module.scss";
-
+import config from "../../../../config";
 import {
   FacebookIcon,
   InstagramIcon,
@@ -9,6 +9,7 @@ import {
   GlobeIcon,
   DownIcon,
 } from "../../../../components/Icons";
+import { Link } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
@@ -40,10 +41,10 @@ function SettingsHeader() {
               <p>Language</p>
               <DownIcon />
             </div>
-            <div className={cx("d-flex")}>
+            <Link to={config.routes.login} className={cx("d-flex")}>
               <img src="https://picsum.photos/20/20" alt="#"></img>
               <p>User</p>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

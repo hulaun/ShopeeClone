@@ -11,3 +11,11 @@ export const PrimaryButton = memo(({ children, style = {} }) => {
     </button>
   );
 });
+
+export const OutlineButton = memo(({ children, style = {} }) => {
+  return (
+    <button className={cx("outline-button")} style={style}>
+      {children}
+    </button>
+  );
+});
