@@ -1,24 +1,30 @@
-const express = require('express')
-const app = express()
-const port = 3000
-const db = require('./config/db');
+const express = require("express");
+const app = express();
+const port = 3000;
+const db = require("./config/db");
 
-async function getStudents() {
+async function getUsers() {
   try {
-      const pool = await db.connect();
-      const result = await pool.request().query('SELECT * FROM Student');
-      return result.recordset;
+    const pool = await db.connect();
+    const result = await pool.request().query("SELECT * FROM Users"); // Use the Users table
+    return result.recordset;
   } catch (error) {
-      console.log(error);
+    console.log(error);
   }
 }
 
-app.get('/', async (req, res) => {
-  const students = await getStudents();
-  res.send(students);
-})
+// const users = [];
+// for (let i = 0; i < 20; i++) {
+//   users.push(generateRandomUser());
+// }
 
+// insertUsersIntoDb();
+
+app.get("/", async (req, res) => {
+  const usersFromDb = await getUsers();
+  res.send({ usersFromDb });
+});
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
