@@ -48,3 +48,5 @@ async function insertUsersIntoDb() {
     console.error("Error inserting users:", error);
   }
 }
+
+module.exports = { generateRandomUser, insertUsersIntoDb };
