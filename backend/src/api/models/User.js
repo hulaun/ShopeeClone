@@ -4,32 +4,32 @@ const sequelize = new Sequelize("mssql://sa:12345@localhost:1433/ShopeeClone");
 const User = sequelize.define(
   "User",
   {
-    Id: {
+    id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    Username: {
+    username: {
       type: DataTypes.STRING(20),
       allowNull: true,
     },
-    Password: {
+    password: {
       type: DataTypes.STRING(255),
       allowNull: true,
     },
-    Email: {
+    email: {
       type: DataTypes.STRING(30),
-      allowNull: false,
+      allowNull: true,
     },
-    GoogleID: {
+    googleID: {
       type: DataTypes.STRING(100),
       allowNull: true,
     },
-    FacebookID: {
+    facebookID: {
       type: DataTypes.STRING(100),
       allowNull: true,
     },
-    ProfilePicture: {
+    profilePicture: {
       type: DataTypes.STRING(100),
       allowNull: true,
     },

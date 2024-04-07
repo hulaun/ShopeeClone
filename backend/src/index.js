@@ -1,7 +1,19 @@
 const express = require("express");
 const app = express();
 const port = 3000;
+
 const db = require("./config/db");
+const route = require("./routes");
+
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+
+app.use(express.json());
+
+app.use(methodOverride("_method"));
 
 async function getUsers() {
   try {
@@ -19,6 +31,8 @@ async function getUsers() {
 // }
 
 // insertUsersIntoDb();
+
+route(app);
 
 app.get("/", async (req, res) => {
   const usersFromDb = await getUsers();

@@ -2,10 +2,10 @@ const User = require("../models/User");
 
 class UserController {
   show(req, res, next) {
-    User.find({})
+    User.findAll()
       .then((users) => {
         req.users = users; // Save users to request object
-        res.redirect("/users");
+        res.redirect("/");
       })
       .catch((error) => {
         // handle error
@@ -16,10 +16,13 @@ class UserController {
     const user = new User(req.body);
     user
       .save()
-      .then(() => res.redirect("/me/stored/courses"))
+      .then(() => res.redirect("/"))
       .catch((error) => {});
   }
 }
+
+module.exports = new UserController();
+
 /** app.post('/register', async (req, res) => {
     const { email, username, password } = req.body;
 
