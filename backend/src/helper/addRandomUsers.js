@@ -1,8 +1,9 @@
 const faker = require("faker");
 const crypto = require("crypto");
+const db = require("../config/db");
 
-function generateRandomUser() {
-  const username = faker.internet.userName();
+function generateRandomcustomer() {
+  const customerName = faker.name.findName();
   const email = faker.internet.email();
   const googleId = null;
   const facebookId = null;
@@ -14,7 +15,7 @@ function generateRandomUser() {
     .toString("hex");
 
   return {
-    username,
+    customerName,
     email,
     googleId,
     facebookId,
@@ -24,29 +25,29 @@ function generateRandomUser() {
   };
 }
 
-async function insertUsersIntoDb() {
+async function insertcustomersIntoDb(customers) {
   try {
     const pool = await db.connect();
 
-    for (const user of users) {
+    for (const customer of customers) {
       await pool
         .request()
-        .input("Username", user.username)
-        .input("Password", user.passwordHash)
-        .input("Email", user.email)
-        .input("GoogleID", user.googleId)
-        .input("FacebookID", user.facebookId)
-        .input("ProfilePicture", user.profilePicture)
+        .input("Username", customer.customerName)
+        .input("Password", customer.passwordHash)
+        .input("Email", customer.email)
+        .input("GoogleID", customer.googleId)
+        .input("FacebookID", customer.facebookId)
+        .input("ProfilePicture", customer.profilePicture)
         .query(
-          "INSERT INTO Users (Username, Password, Email, GoogleID, FacebookID, ProfilePicture) " +
+          "INSERT INTO Customer (Username, Password, Email, GoogleID, FacebookID, ProfilePicture) " +
             "VALUES (@Username, @Password, @Email, @GoogleID, @FacebookID, @ProfilePicture)"
         );
     }
 
-    console.log("Generated users inserted successfully.");
+    console.log("Generated customers inserted successfully.");
   } catch (error) {
-    console.error("Error inserting users:", error);
+    console.error("Error inserting customers:", error);
   }
 }
 
-module.exports = { generateRandomUser, insertUsersIntoDb };
+module.exports = { generateRandomcustomer, insertcustomersIntoDb };

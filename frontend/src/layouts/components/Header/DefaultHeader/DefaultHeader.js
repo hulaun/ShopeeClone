@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import styles from "./DefaultHeader.module.scss";
-import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useState, useCallback, useEffect, customeref, useMemo } from "react";
 
 import { CartIcon, SearchIcon, ShopeeLogo } from "../../../../components/Icons";
 import { PrimaryButton } from "../../../../components/Buttons";
@@ -10,8 +10,8 @@ const cx = classNames.bind(styles);
 function DefaultHeader() {
   const buttonChildren = useMemo(() => <SearchIcon />, []);
   const [text, setText] = useState("");
-  const searchRef = useRef();
-  const primaryButtonStyle = useRef({
+  const searchRef = customeref();
+  const primaryButtonStyle = customeref({
     width: "5rem",
     height: "80%",
   });

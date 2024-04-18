@@ -27,7 +27,7 @@ function SettingsHeader() {
               <InstagramIcon />
             </div>
           </div>
-          <div className={cx("user-settings", "d-flex")}>
+          <div className={cx("customer-settings", "d-flex")}>
             <div className={cx("d-flex")}>
               <BellIcon />
               <p>Thông báo</p>
@@ -43,7 +43,7 @@ function SettingsHeader() {
             </div>
             <Link to={config.routes.login} className={cx("d-flex")}>
               <img src="https://picsum.photos/20/20" alt="#"></img>
-              <p>User</p>
+              <p>customer</p>
             </Link>
           </div>
         </div>

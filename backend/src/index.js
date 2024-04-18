@@ -13,30 +13,34 @@ app.use(
 
 app.use(express.json());
 
-app.use(methodOverride("_method"));
+// app.use(methodOverride("_method"));
 
-async function getUsers() {
+// const {
+//   generateRandomcustomer,
+//   insertcustomersIntoDb,
+// } = require("./helper/addRandomUsers");
+
+// const customers = [];
+// for (let i = 0; i < 20; i++) {
+//   customers.push(generateRandomcustomer());
+// }
+// insertcustomersIntoDb(customers);
+
+async function getCustomers() {
   try {
     const pool = await db.connect();
-    const result = await pool.request().query("SELECT * FROM Users"); // Use the Users table
+    const result = await pool.request().query("SELECT * FROM customer"); // Use the customers table
     return result.recordset;
   } catch (error) {
     console.log(error);
   }
 }
 
-// const users = [];
-// for (let i = 0; i < 20; i++) {
-//   users.push(generateRandomUser());
-// }
-
-// insertUsersIntoDb();
-
 route(app);
 
 app.get("/", async (req, res) => {
-  const usersFromDb = await getUsers();
-  res.send({ usersFromDb });
+  const customersFromDb = await getCustomers();
+  res.send({ customersFromDb });
 });
 
 app.listen(port, () => {

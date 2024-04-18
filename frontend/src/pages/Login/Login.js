@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 
 import { OutlineButton } from "../../components/Buttons";
 import { GoogleIcon, ShopeeIcon, FacebookIcon } from "../../components/Icons";
-import { useRef } from "react";
+import { customeref } from "react";
 
 const cx = classNames.bind(styles);
 
 function Home() {
-  const outlineButtonStyle = useRef({
+  const outlineButtonStyle = customeref({
     width: "10rem",
     height: "3rem",
     display: "flex",

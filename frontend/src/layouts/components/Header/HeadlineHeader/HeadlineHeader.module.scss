@@ -1,5 +1,4 @@
-
-.wrapper{
+.wrapper {
   background: linear-gradient(0deg, var(--secondary), var(--primary));
   display: grid;
   place-items: center;
@@ -11,7 +10,6 @@
     padding-top: 0.3rem;
   }
 }
-
 
 .d-flex {
   display: flex;
@@ -34,7 +32,7 @@
   }
 }
 
-.user-settings {
+.customer-settings {
   & div:nth-child(n) {
     padding-left: 1rem;
   }
