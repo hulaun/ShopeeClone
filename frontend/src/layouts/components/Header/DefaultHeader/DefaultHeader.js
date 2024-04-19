@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import styles from "./DefaultHeader.module.scss";
-import { useState, useCallback, useEffect, customeref, useMemo } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 
 import { CartIcon, SearchIcon, ShopeeLogo } from "../../../../components/Icons";
 import { PrimaryButton } from "../../../../components/Buttons";
@@ -9,12 +9,15 @@ const cx = classNames.bind(styles);
 
 function DefaultHeader() {
   const buttonChildren = useMemo(() => <SearchIcon />, []);
+
   const [text, setText] = useState("");
-  const searchRef = customeref();
-  const primaryButtonStyle = customeref({
+
+  const searchRef = useRef();
+  const primaryButtonStyle = useRef({
     width: "5rem",
     height: "80%",
   });
+
   useEffect(() => {
     const searchBar = searchRef.current.parentNode;
     const handleSearchClick = () => {
@@ -26,10 +29,12 @@ function DefaultHeader() {
       searchBar.removeEventListener("click", handleSearchClick);
     };
   }, []);
+
   const handleChange = useCallback(() => {
     setText(searchRef.current.value);
     console.log(text);
   }, [text]);
+
   return (
     <header className={cx("wrapper", "text-white")}>
       <div className={cx("container")}>
