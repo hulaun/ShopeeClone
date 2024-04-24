@@ -1,19 +1,113 @@
 
+
 .wrapper{
   display: grid;
   place-items: center;
-  background-color: var(--background-secondary);
+  background-color: var(--tertiary);
+  height: 67vh;
+  
   .container {
+    height: 80%;
     width: 100%;
     max-width: 80rem;
-    padding: 1.5rem 0 1rem 0;
-    h3{
-      padding-block: 1rem;
+    
+    .logo{
+      display: grid;
+      place-items: center;
+      color:white;
+      text-align: center;
+
+      h1{
+        font-size: 4rem;
+        font-weight: 400;
+        padding-bottom: 4rem;
+      }
+      
+      h2{
+        font-size: 1.75rem;
+        font-weight: 300;
+        line-height: 3rem;
+      }
+     
     }
-    ul {
-      li {
-        list-style-position: inside;
-        padding-block: 0.5rem;
+
+    .card{
+      max-width: 25rem;
+      width: 100%;
+      border-radius: 0.5rem;
+      background-color: var(--background-tertiary);
+
+      .card-container{
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+        gap: 2rem;
+        
+        .login{
+          font-size: 1.5rem;
+        }
+
+        .form{
+
+          .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            input{
+              height: 3rem;
+            }
+          }
+  
+          .submit-section{
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+  
+            input {
+              width: 100%;
+              height: 2.5rem;
+              border: none;
+              outline: none;
+              background: var(--secondary);
+              color:white
+            }
+            input:hover{
+              background: var(--tertiary);
+            }
+  
+            div{
+              color: var(--smoke-white);
+              display: flex;
+              align-items: center;
+              flex: 1;
+              gap: 1.5rem;
+              text-transform: uppercase;
+            }
+  
+            div::after, div::before{
+              content: "-";
+              font-size: 0.05rem;
+              padding-inline: 3rem;
+              background-color: var(--smoke-white);;
+              flex: 1;
+            }
+  
+          }
+
+          .oauth-section{
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-block: 1.5rem;
+          }
+
+        }
+
+
+        .signup-link{
+          display: flex;
+          justify-content: center;
+        }
       }
     }
   }
@@ -24,4 +118,9 @@
   height: 0.25rem;
   background: linear-gradient(var(--secondary), var(--primary));
   margin: 5rem 0 1rem 0;
+}
+
+.d-flex{
+  display: flex;
+  justify-content: space-evenly;
 }
