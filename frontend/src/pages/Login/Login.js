@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { OutlineButton } from "../../components/Buttons";
 import { GoogleIcon, ShopeeIcon, FacebookIcon } from "../../components/Icons";
 import { useCallback, useRef, useState } from "react";
+import httpRequest from "../../utils/httpRequest";
 
 const cx = classNames.bind(styles);
 
@@ -21,26 +22,45 @@ function Login() {
 
   const [userInputValue, setUserInputValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
+  const [inputErrors, setInputErrors] = useState({
+    username: false,
+    password: false,
+  });
   const userInputErrorRef = useRef();
   const passwordErrorRef = useRef();
 
   const handleBlur = (event) => {
     if (event.target.name === "username" && !userInputValue) {
       userInputErrorRef.current.style.display = "block";
+      setInputErrors((prev) => ({
+        ...prev,
+        username: true,
+      }));
     } else if (event.target.name === "password" && !passwordValue) {
       passwordErrorRef.current.style.display = "block";
+      setInputErrors((prev) => ({
+        ...prev,
+        password: true,
+      }));
     }
   };
 
   const handleInput = (event) => {
-    if (event.target.name === "username") {
-      setUserInputValue(event.target.value);
-      if (event.target.value) {
+    const fieldName = event.target.name;
+    const inputValue = event.target.value;
+    setInputErrors((prev) => ({
+      ...prev,
+      [fieldName]: false,
+    }));
+
+    if (fieldName === "username") {
+      setUserInputValue(inputValue);
+      if (inputValue) {
         userInputErrorRef.current.style.display = "none";
       }
-    } else if (event.target.name === "password") {
-      setPasswordValue(event.target.value);
-      if (event.target.value) {
+    } else if (fieldName === "password") {
+      setPasswordValue(inputValue);
+      if (inputValue) {
         passwordErrorRef.current.style.display = "none";
       }
     }
@@ -49,37 +69,30 @@ function Login() {
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
 
-    const validateInput = (input) => {
-      const emailRegex = /^[a-zA-Z0-9]+@gmail\.com$/;
-      const phoneRegex = /^\d{10}$/;
-      const usernameRegex = /^[a-zA-Z0-9._-]{3,16}$/;
+    // const validateInput = (input) => {
+    //   const emailRegex = /^[a-zA-Z0-9]+@gmail\.com$/;
+    //   const phoneRegex = /^\d{10}$/;
+    //   const usernameRegex = /^[a-zA-Z0-9._-]{3,16}$/;
 
-      if (emailRegex.test(input)) {
-        return "Gmail";
-      } else if (phoneRegex.test(input)) {
-        return "Phone number";
-      } else if (usernameRegex.test(input)) {
-        return "Username";
-      } else {
-        return "Invalid input";
-      }
-    };
+    //   if (emailRegex.test(input)) {
+    //     return "Gmail";
+    //   } else if (phoneRegex.test(input)) {
+    //     return "Phone number";
+    //   } else if (usernameRegex.test(input)) {
+    //     return "Username";
+    //   } else {
+    //     return "Invalid input";
+    //   }
+    // };
+    // const inputType = validateInput(userInputValue);
+    // if (inputType === "Invalid input") {
+    //   userInputErrorRef.current.style.display = "block";
+    //   return;
+    // }
 
-    const inputType = validateInput(userInputValue);
-    if (inputType === "Invalid input") {
-      userInputErrorRef.current.style.display = "block";
-      return;
-    }
-
-    const response = await fetch("https://your-api.com/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        loginKey: userInputValue,
-        password: passwordValue,
-      }),
+    const response = await httpRequest.post("customer/login", {
+      loginKey: userInputValue,
+      password: passwordValue,
     });
 
     if (response.ok) {
@@ -119,13 +132,14 @@ function Login() {
                   aria-invalid="false"
                   onBlur={handleBlur}
                   onInput={handleInput}
+                  className={cx({ "field-error": inputErrors.username })}
                 ></input>
                 <div
-                  id="authentication-input-error"
                   aria-live="polite"
                   ref={userInputErrorRef}
+                  className={cx("label-error")}
                 >
-                  Invalid input
+                  Vui lòng điền vào mục này
                 </div>
               </div>
               <div className={cx("input-section")}>
@@ -138,13 +152,14 @@ function Login() {
                   aria-invalid="false"
                   onBlur={handleBlur}
                   onInput={handleInput}
+                  className={cx({ "field-error": inputErrors.password })}
                 ></input>
                 <div
-                  id="authentication-input-error"
                   aria-live="polite"
                   ref={passwordErrorRef}
+                  className={cx("label-error")}
                 >
-                  Please enter your password
+                  Vui lòng điền vào mục này
                 </div>
               </div>
               <div className={cx("submit-section")}>

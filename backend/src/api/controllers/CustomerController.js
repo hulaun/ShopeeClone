@@ -12,11 +12,11 @@ class customerController {
     }
   }
   async store(req, res, next) {
-    const customer = new customer(req.body);
-    customer
-      .save()
-      .then(() => res.redirect("/"))
-      .catch((error) => {});
+    console.log(req.body);
+  }
+  async login(req, res, next) {
+    console.log(req.body);
+    res.json({ message: "Login successful!" });
   }
 }
 

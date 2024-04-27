@@ -2,7 +2,7 @@ const faker = require("faker");
 const crypto = require("crypto");
 const db = require("../config/db");
 
-function generateRandomcustomer() {
+function generateRandomCustomer() {
   const customerName = faker.name.findName();
   const email = faker.internet.email();
   const googleId = null;
@@ -13,6 +13,10 @@ function generateRandomcustomer() {
   const passwordHash = crypto
     .pbkdf2Sync(password, salt, 10000, 64, "sha512")
     .toString("hex");
+  const fullName = faker.name.findName();
+  const gender = faker.datatype.boolean() ? "F" : "M";
+  const userAddress = faker.address.streetAddress();
+  const phoneNumber = faker.phone.phoneNumber();
 
   return {
     customerName,
@@ -22,10 +26,14 @@ function generateRandomcustomer() {
     profilePicture,
     passwordHash,
     salt,
+    fullName,
+    gender,
+    userAddress,
+    phoneNumber,
   };
 }
 
-async function insertcustomersIntoDb(customers) {
+async function insertCustomersIntoDb(customers) {
   try {
     const pool = await db.connect();
 
@@ -38,9 +46,13 @@ async function insertcustomersIntoDb(customers) {
         .input("GoogleID", customer.googleId)
         .input("FacebookID", customer.facebookId)
         .input("ProfilePicture", customer.profilePicture)
+        .input("FullName", customer.fullName)
+        .input("Gender", customer.gender)
+        .input("UserAddress", customer.userAddress)
+        .input("PhoneNumber", customer.phoneNumber)
         .query(
-          "INSERT INTO Customer (Username, Password, Email, GoogleID, FacebookID, ProfilePicture) " +
-            "VALUES (@Username, @Password, @Email, @GoogleID, @FacebookID, @ProfilePicture)"
+          "INSERT INTO Customer (Username, Password, Email, GoogleID, FacebookID, ProfilePicture, FullName, Gender, UserAddress, PhoneNumber) " +
+            "VALUES (@Username, @Password, @Email, @GoogleID, @FacebookID, @ProfilePicture, @FullName, @Gender, @UserAddress, @PhoneNumber)"
         );
     }
 
@@ -50,4 +62,4 @@ async function insertcustomersIntoDb(customers) {
   }
 }
 
-module.exports = { generateRandomcustomer, insertcustomersIntoDb };
+module.exports = { generateRandomCustomer, insertCustomersIntoDb };

@@ -1,23 +1,35 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = 3000;
+const port = 3001;
 
 const db = require("./config/db");
 const route = require("./routes");
 
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (
+//         [
+//           "http://localhost:3001",
+//           "http://127.0.0.1:3001",
+//           "http://localhost:8080",
+//           "http://127.0.0.1:8080",
+//         ].indexOf(origin) !== -1
+//       ) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     optionsSuccessStatus: 200,
+//   })
+// );
+
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (
-        ["http://localhost:8080", "http://127.0.0.1:8080"].indexOf(origin) !==
-        -1
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: "*",
+    optionsSuccessStatus: 200,
   })
 );
 
@@ -32,15 +44,15 @@ app.use(express.json());
 // app.use(methodOverride("_method"));
 
 // const {
-//   generateRandomcustomer,
-//   insertcustomersIntoDb,
+//   generateRandomCustomer,
+//   insertCustomersIntoDb,
 // } = require("./helper/addRandomUsers");
 
 // const customers = [];
 // for (let i = 0; i < 20; i++) {
-//   customers.push(generateRandomcustomer());
+//   customers.push(generateRandomCustomer());
 // }
-// insertcustomersIntoDb(customers);
+// insertCustomersIntoDb(customers);
 
 async function getCustomers() {
   try {

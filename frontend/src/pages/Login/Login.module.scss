@@ -49,11 +49,22 @@
         .form{
 
           .input-section {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
+            position: relative;
+            padding-bottom: 2rem;
             input{
               height: 3rem;
+              width: 100%;
+            }
+            .field-error{
+              border-color: red;
+              border-radius: 0.25rem;
+              border-width: 0.1rem;
+              background-color: rgba(255, 140, 140, 0.1);
+            }
+            .label-error{
+              color: red;
+              position: absolute;
+              transform: translateY(25%);
             }
           }
   
