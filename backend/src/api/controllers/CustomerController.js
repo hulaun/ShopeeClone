@@ -15,8 +15,25 @@ class customerController {
     console.log(req.body);
   }
   async login(req, res, next) {
-    console.log(req.body);
-    res.json({ message: "Login successful!" });
+    try {
+      const loginKey = req.body.loginKey;
+      const password = req.body.password;
+
+      const pool = await db.connect();
+      const query = `
+            SELECT * FROM Customer
+            WHERE Username = ${loginKey}
+               OR Email = ${loginKey}
+               OR PhoneNumber = ${loginKey}
+               AND Password = ${password}`;
+
+      const result = await pool.request().query(query);
+
+      const customer = result.recordset;
+      res.json({ customer });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

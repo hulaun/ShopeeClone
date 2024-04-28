@@ -14,7 +14,11 @@ create table Customer(
 	UserAddress nvarchar(100) null,
 	PhoneNumber varchar(50) unique not null,
 )
-SELECT [id], [Username], [Password], [Email], [GoogleID], [FacebookID], [ProfilePicture] FROM [Customer] AS [Customers];
+
 select * from customer
+select * from customer where username='adm'
+
 drop table customer
+
+insert into customer values ('adm', 'adm', null, null, null, null, 'adm', 'M',null, '0356864894')
 

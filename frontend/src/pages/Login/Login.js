@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 import { OutlineButton } from "../../components/Buttons";
 import { GoogleIcon, ShopeeIcon, FacebookIcon } from "../../components/Icons";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import httpRequest from "../../utils/httpRequest";
 
 const cx = classNames.bind(styles);
@@ -29,6 +29,11 @@ function Login() {
   const userInputErrorRef = useRef();
   const passwordErrorRef = useRef();
 
+  useEffect(() => {
+    userInputErrorRef.current.style.display = "none";
+    passwordErrorRef.current.style.display = "none";
+  }, []);
+
   const handleBlur = (event) => {
     if (event.target.name === "username" && !userInputValue) {
       userInputErrorRef.current.style.display = "block";
@@ -48,6 +53,7 @@ function Login() {
   const handleInput = (event) => {
     const fieldName = event.target.name;
     const inputValue = event.target.value;
+
     setInputErrors((prev) => ({
       ...prev,
       [fieldName]: false,
@@ -74,31 +80,13 @@ function Login() {
     //   const phoneRegex = /^\d{10}$/;
     //   const usernameRegex = /^[a-zA-Z0-9._-]{3,16}$/;
 
-    //   if (emailRegex.test(input)) {
-    //     return "Gmail";
-    //   } else if (phoneRegex.test(input)) {
-    //     return "Phone number";
-    //   } else if (usernameRegex.test(input)) {
-    //     return "Username";
-    //   } else {
-    //     return "Invalid input";
-    //   }
-    // };
-    // const inputType = validateInput(userInputValue);
-    // if (inputType === "Invalid input") {
-    //   userInputErrorRef.current.style.display = "block";
-    //   return;
-    // }
-
-    const response = await httpRequest.post("customer/login", {
+    const response = await httpRequest.post("customers/login", {
       loginKey: userInputValue,
       password: passwordValue,
     });
 
-    if (response.ok) {
-      console.log("Login successful");
-    } else {
-      console.error("Failed to login");
+    if (response.status >= 200 && response.status <= 300) {
+      window.location.href = config.routes.home;
     }
   }, []);
 
