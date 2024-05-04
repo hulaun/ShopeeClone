@@ -42,6 +42,7 @@ async function insertCustomersIntoDb(customers) {
         .request()
         .input("Username", customer.customerName)
         .input("Password", customer.passwordHash)
+        .input("Salt", customer.salt)
         .input("Email", customer.email)
         .input("GoogleID", customer.googleId)
         .input("FacebookID", customer.facebookId)
@@ -51,8 +52,8 @@ async function insertCustomersIntoDb(customers) {
         .input("UserAddress", customer.userAddress)
         .input("PhoneNumber", customer.phoneNumber)
         .query(
-          "INSERT INTO Customer (Username, Password, Email, GoogleID, FacebookID, ProfilePicture, FullName, Gender, UserAddress, PhoneNumber) " +
-            "VALUES (@Username, @Password, @Email, @GoogleID, @FacebookID, @ProfilePicture, @FullName, @Gender, @UserAddress, @PhoneNumber)"
+          "INSERT INTO Customer (Username, Password, Salt, Email, GoogleID, FacebookID, ProfilePicture, FullName, Gender, UserAddress, PhoneNumber) " +
+            "VALUES (@Username, @Password, @Salt, @Email, @GoogleID, @FacebookID, @ProfilePicture, @FullName, @Gender, @UserAddress, @PhoneNumber)"
         );
     }
 

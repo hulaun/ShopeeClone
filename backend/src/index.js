@@ -54,15 +54,15 @@ app.use(express.json());
 // }
 // insertCustomersIntoDb(customers);
 
-async function getCustomers() {
-  try {
-    const pool = await db.connect();
-    const result = await pool.request().query("SELECT * FROM customer"); // Use the customers table
-    return result.recordset;
-  } catch (error) {
-    console.log(error);
-  }
-}
+// async function getCustomers() {
+//   try {
+//     const pool = await db.connect();
+//     const result = await pool.request().query("SELECT * FROM customer"); // Use the customers table
+//     return result.recordset;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 route(app);
 
