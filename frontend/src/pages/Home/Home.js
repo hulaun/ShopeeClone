@@ -2,13 +2,28 @@ import classNames from "classnames/bind";
 import styles from "./Home.module.scss";
 
 import HomeFooter from "./components/HomeFooter";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, React } from "react";
+import { DropDownSuggestions } from "../../components/DrowDownSuggestions";
 
 import * as httpRequest from "../../utils/httpRequest";
 
 const cx = classNames.bind(styles);
 function Home() {
   const [customers, setCustomers] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const compStyles = {
+    dropDownStyle: {
+      position: "absolute",
+      backgroundColor: "grey",
+    },
+  };
+  const handleMouseOver = () => {
+    setShowDropdown(true);
+  };
+  const handleMouseOut = () => {
+    setShowDropdown(false);
+  };
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -16,12 +31,12 @@ function Home() {
       setCustomers(res.customersFromDb);
     };
 
-    fetchCustomers();
+    //fetchCustomers();
   }, []);
 
   return (
     <div>
-      {customers.map((customer) => {
+      {/* {customers.map((customer) => {
         return (
           <div>
             <div>{customer.Username} </div>
@@ -29,7 +44,29 @@ function Home() {
             <br></br>
           </div>
         );
-      })}
+      })} */}
+
+      <div
+        style={compStyles.labelStyle}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+      >
+        Hello
+        {showDropdown ? (
+          <DropDownSuggestions>
+            <div>
+              <ul>
+                <li>Tài khoản của tôi</li>
+                <li>Đơn mua</li>
+                <li>Đăng xuất</li>
+              </ul>
+            </div>
+          </DropDownSuggestions>
+        ) : (
+          <></>
+        )}
+      </div>
+
       <div className={cx("product")}>
         <div className={cx("product-image")}>{/* todo */}</div>
         <div className={cx("product-description")}>

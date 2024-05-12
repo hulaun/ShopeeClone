@@ -2,11 +2,9 @@ const faker = require("faker");
 const crypto = require("crypto");
 const db = require("../config/db");
 
-function generateRandomCustomer() {
-  const customerName = faker.name.findName();
+function generateRandomUser() {
+  const userName = faker.name.findName();
   const email = faker.internet.email();
-  const googleId = null;
-  const facebookId = null;
   const profilePicture = faker.image.avatar();
   const password = faker.internet.password();
   const salt = crypto.randomBytes(16).toString("hex");
@@ -19,10 +17,8 @@ function generateRandomCustomer() {
   const phoneNumber = faker.phone.phoneNumber();
 
   return {
-    customerName,
+    userName,
     email,
-    googleId,
-    facebookId,
     profilePicture,
     passwordHash,
     salt,
@@ -33,34 +29,32 @@ function generateRandomCustomer() {
   };
 }
 
-async function insertCustomersIntoDb(customers) {
+async function insertUsersIntoDb(users) {
   try {
     const pool = await db.connect();
 
-    for (const customer of customers) {
+    for (const user of users) {
       await pool
         .request()
-        .input("Username", customer.customerName)
-        .input("Password", customer.passwordHash)
-        .input("Salt", customer.salt)
-        .input("Email", customer.email)
-        .input("GoogleID", customer.googleId)
-        .input("FacebookID", customer.facebookId)
-        .input("ProfilePicture", customer.profilePicture)
-        .input("FullName", customer.fullName)
-        .input("Gender", customer.gender)
-        .input("UserAddress", customer.userAddress)
-        .input("PhoneNumber", customer.phoneNumber)
+        .input("Username", user.userName)
+        .input("Password", user.passwordHash)
+        .input("Salt", user.salt)
+        .input("Email", user.email)
+        .input("ProfilePicture", user.profilePicture)
+        .input("FullName", user.fullName)
+        .input("Gender", user.gender)
+        .input("UserAddress", user.userAddress)
+        .input("PhoneNumber", user.phoneNumber)
         .query(
-          "INSERT INTO Customer (Username, Password, Salt, Email, GoogleID, FacebookID, ProfilePicture, FullName, Gender, UserAddress, PhoneNumber) " +
-            "VALUES (@Username, @Password, @Salt, @Email, @GoogleID, @FacebookID, @ProfilePicture, @FullName, @Gender, @UserAddress, @PhoneNumber)"
+          "INSERT INTO [User] (Username, Password, Salt, Email, ProfilePicture, FullName, Gender, UserAddress, PhoneNumber) " +
+            "VALUES (@Username, @Password, @Salt, @Email, @ProfilePicture, @FullName, @Gender, @UserAddress, @PhoneNumber)"
         );
     }
 
-    console.log("Generated customers inserted successfully.");
+    console.log("Generated Users inserted successfully.");
   } catch (error) {
-    console.error("Error inserting customers:", error);
+    console.error("Error inserting Users:", error);
   }
 }
 
-module.exports = { generateRandomCustomer, insertCustomersIntoDb };
+module.exports = { generateRandomUser, insertUsersIntoDb };

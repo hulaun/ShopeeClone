@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = 3001;
+const port = 3000;
 
 const db = require("./config/db");
 const route = require("./routes");
@@ -44,31 +44,31 @@ app.use(express.json());
 // app.use(methodOverride("_method"));
 
 // const {
-//   generateRandomCustomer,
-//   insertCustomersIntoDb,
+//   generateRandomUser,
+//   insertUsersIntoDb,
 // } = require("./helper/addRandomUsers");
 
-// const customers = [];
+// const users = [];
 // for (let i = 0; i < 20; i++) {
-//   customers.push(generateRandomCustomer());
+//   users.push(generateRandomUser());
 // }
-// insertCustomersIntoDb(customers);
+// insertUsersIntoDb(users);
 
-// async function getCustomers() {
-//   try {
-//     const pool = await db.connect();
-//     const result = await pool.request().query("SELECT * FROM customer"); // Use the customers table
-//     return result.recordset;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
+async function getUsers() {
+  try {
+    const pool = await db.connect();
+    const result = await pool.request().query("SELECT * FROM [User]"); // Use the users table
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 route(app);
 
 app.get("/", async (req, res) => {
-  const customersFromDb = await getCustomers();
-  res.send({ customersFromDb });
+  const usersFromDb = await getUsers();
+  res.send({ usersFromDb });
 });
 
 app.listen(port, () => {

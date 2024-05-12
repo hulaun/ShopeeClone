@@ -1,0 +1,13 @@
+.primary{
+  padding: 1rem 1rem;
+  position: absolute;
+  display: inline;
+  border-radius: 1rem;
+  outline: none;
+  background: var(--tertiary);
+}
+.outline-button {
+  border-width: 0.1rem;
+  border-color: var(--smoke-white);
+  background: var(--background-tertiary);
+}
