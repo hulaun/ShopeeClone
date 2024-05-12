@@ -1,7 +1,7 @@
 create database ShopeeClone
 use ShopeeClone
 
-create table Customer(
+create table [User](
 	Id int identity(1,1) primary key,
 	Username varchar(30) null,
 	Password varchar(255) null,
@@ -11,18 +11,17 @@ create table Customer(
 	FullName nvarchar(100) null,
 	Gender char(1) CHECK (Gender='M' OR Gender='F'),
 	UserAddress nvarchar(100) null,
-	PhoneNumber varchar(50) unique not null,
+	PhoneNumber varchar(50) NULL,
 )
 
-ALTER TABLE Customer
-ALTER COLUMN PhoneNumber varchar(50) NULL;
 
-select * from customer
-select * from customer where username='adm'
+
+select * from [User]
+select * from [User] where username='adm'
 
 drop table customer
-delete from customer where username = 'adm'
+delete from User where username = 'adm'
 
-INSERT INTO Customer (username, Password, Salt, PhoneNumber)
+INSERT INTO User (username, Password, Salt, PhoneNumber)
         VALUES ('adm','adm' , 'haha', '0356864894')
 

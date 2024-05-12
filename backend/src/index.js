@@ -11,8 +11,6 @@ const route = require("./routes");
 //     origin: function (origin, callback) {
 //       if (
 //         [
-//           "http://localhost:3001",
-//           "http://127.0.0.1:3001",
 //           "http://localhost:8080",
 //           "http://127.0.0.1:8080",
 //         ].indexOf(origin) !== -1
@@ -46,7 +44,7 @@ app.use(express.json());
 // const {
 //   generateRandomUser,
 //   insertUsersIntoDb,
-// } = require("./helper/addRandomUsers");
+// } = require("./utils/addRandomUsers");
 
 // const users = [];
 // for (let i = 0; i < 20; i++) {

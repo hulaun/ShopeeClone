@@ -1,6 +1,6 @@
 const faker = require("faker");
 const crypto = require("crypto");
-const db = require("../config/db");
+const db = require("../../config/db");
 
 function generateRandomUser() {
   const userName = faker.name.findName();
