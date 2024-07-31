@@ -1,10 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = 3000;
+const port = 5500;
 
 const db = require("./config/db");
-const route = require("./routes");
+const route = require("./api/routes");
 
 // app.use(
 //   cors({
@@ -44,7 +44,7 @@ app.use(express.json());
 // const {
 //   generateRandomUser,
 //   insertUsersIntoDb,
-// } = require("./utils/addRandomUsers");
+// } = require("./utils/UsersUtils");
 
 // const users = [];
 // for (let i = 0; i < 20; i++) {

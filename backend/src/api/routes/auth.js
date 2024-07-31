@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const authenticationController = require("../controllers/AuthenticationController");
+const AuthController = require("../controllers/AuthController");
 
-router.post("/signup", authenticationController.signup);
-router.post("/signin", authenticationController.signin);
-router.post("/signin/oauth/google", authenticationController.signin);
-router.post("/signin/oauth/facebook", authenticationController.signin);
+router.post("/signup", AuthController.signup);
+router.post("/signin", AuthController.signin);
+router.post("/signin/oauth/google", AuthController.signin);
+router.post("/signin/oauth/facebook", AuthController.signin);
 
 module.exports = router;
