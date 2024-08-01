@@ -1,16 +1,14 @@
 const faker = require("faker");
-const crypto = require("crypto");
 const db = require("../../config/db");
+const { createSalt, hashPassword } = require("./AuthUtils");
 
 function generateRandomUser() {
   const userName = faker.name.findName();
   const email = faker.internet.email();
   const profilePicture = faker.image.avatar();
   const password = faker.internet.password();
-  const salt = crypto.randomBytes(16).toString("hex");
-  const passwordHash = crypto
-    .pbkdf2Sync(password, salt, 10000, 64, "sha512")
-    .toString("hex");
+  const salt = createSalt();
+  const passwordHash = hashPassword(password, salt);
   const fullName = faker.name.findName();
   const gender = faker.datatype.boolean() ? "F" : "M";
   const userAddress = faker.address.streetAddress();

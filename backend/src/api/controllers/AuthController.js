@@ -1,44 +1,22 @@
 const sql = require("mssql");
 const db = require("../../config/db");
 const crypto = require("crypto");
-const { validatePassword } = require("../services/AuthService");
+const AuthService = require("../services/AuthService");
+const { createSalt, hashPassword } = require("../utils/AuthUtils");
 
 class AuthController {
   async signup(req, res, next) {
     try {
       const loginKey = req.body.loginKey;
       const password = req.body.password;
-
-      const pool = await db.connect();
-
-      const salt = crypto.randomBytes(16).toString("hex");
-      const passwordHash = crypto
-        .pbkdf2Sync(password, salt, 1000, 64, "sha512")
-        .toString("hex");
-
-      let column;
-      if (loginKey.includes("@")) {
-        column = "Email";
-      } else {
-        column = "Username";
-      }
-
-      const query = `
-        INSERT INTO [User] (${column}, Password, Salt)
-        VALUES (@LoginKey, @PasswordHash, @Salt)
-      `;
-
-      await pool
-        .request()
-        .input("LoginKey", sql.VarChar(255), loginKey)
-        .input("PasswordHash", sql.VarChar(255), passwordHash)
-        .input("Salt", sql.VarChar(255), salt)
-        .query(query);
-
-      res.status(200).json({ status: "success" });
-      console.log("User created successfully.");
+      const appStatus = await AuthService.signup(loginKey, password);
+      console.log("appStatus:", appStatus);
+      res
+        .status(appStatus.status)
+        .json({ message: appStatus.message, data: appStatus.data });
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.error("Error signing up:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
   }
   async signin(req, res, next) {
