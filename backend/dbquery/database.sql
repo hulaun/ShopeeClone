@@ -25,3 +25,12 @@ delete from User where username = 'adm'
 INSERT INTO User (username, Password, Salt, PhoneNumber)
         VALUES ('adm','adm' , 'haha', '0356864894')
 
+ALTER TABLE [User]
+ADD Role VARCHAR(20);
+
+UPDATE [User]
+SET Role = 'customer';
+
+UPDATE [User]
+SET Role = 'admin'
+where [User].username like 'admin%'

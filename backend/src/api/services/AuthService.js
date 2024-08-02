@@ -1,7 +1,3 @@
-const { omit } = require("lodash");
-const { db } = require("../../config/db");
-const crypto = require("crypto");
-const { sql } = require("mssql");
 const AuthRepo = require("../repos/AuthRepo");
 const { hashPassword, createSalt } = require("../utils/AuthUtils");
 class AuthService {
@@ -13,7 +9,6 @@ class AuthService {
   }
 
   async signup(loginKey, password) {
-    console.log(await AuthRepo.hasAccount(loginKey));
     if (await AuthRepo.hasAccount(loginKey)) {
       return {
         status: 400,
@@ -23,48 +18,38 @@ class AuthService {
     }
     const salt = createSalt();
     const passwordHash = hashPassword(password, salt);
-    const user = await AuthRepo.signup(loginKey, passwordHash, salt);
+    const user = await AuthRepo.addUser(loginKey, passwordHash, salt);
+
+    const token = jwt.sign(
+      { id: user.id, loginKey: user.loginKey, role: user.role },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1h" }
+    );
+
     return { status: 200, message: "Success", data: { user: user } };
   }
 
-  async validatePassword(loginKey, password) {
+  async signin(loginKey, password) {
     if (!loginKey || typeof loginKey !== "string") {
-      throw new Error(loginKey + "is null " + password);
+      return {
+        status: 400,
+        message: "Please fill in your username or email.",
+        data: { user: null },
+      };
     }
-
-    const pool = await db.connect();
-
-    let column;
-    if (loginKey.includes("@")) {
-      column = "Email";
-    } else {
-      column = "Username";
+    const userData = await AuthRepo.getUserAccount(loginKey, password);
+    if (!userData.user) {
+      return {
+        status: 400,
+        message: userData.message,
+        data: { user: userData.user },
+      };
     }
-
-    const query = `
-      SELECT * FROM [User] 
-      WHERE ${column} = @LoginKey
-    `;
-
-    const result = await pool
-      .request()
-      .input("LoginKey", sql.VarChar(255), loginKey)
-      .query(query);
-
-    if (result.recordset.length > 0) {
-      const user = result.recordset[0];
-      const passwordHash = crypto
-        .pbkdf2Sync(password, user.Salt, 1000, 64, "sha512")
-        .toString("hex");
-
-      if (passwordHash === user.Password) {
-        return omit(user.toJSON(), ["password", "salt"]);
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
+    return {
+      status: 200,
+      message: userData.message,
+      data: userData.user,
+    };
   }
 }
 const instance = new AuthService();

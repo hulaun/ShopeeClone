@@ -48,8 +48,6 @@ async function insertUsersIntoDb(users) {
             "VALUES (@Username, @Password, @Salt, @Email, @ProfilePicture, @FullName, @Gender, @UserAddress, @PhoneNumber)"
         );
     }
-
-    console.log("Generated Users inserted successfully.");
   } catch (error) {
     console.error("Error inserting Users:", error);
   }

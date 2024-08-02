@@ -18,7 +18,6 @@ export const CartIcon = memo(
 );
 export const ShopeeLogo = memo(
   ({ width = "144", height = "64", className, color = "white" }) => {
-    console.log("hello");
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"

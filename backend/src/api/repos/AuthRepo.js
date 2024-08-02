@@ -1,6 +1,7 @@
 const sql = require("mssql");
-const { hashPassword } = require("../utils/AuthUtils");
 const db = require("../../config/db");
+const { hashPassword } = require("../utils/AuthUtils");
+const { omit } = require("lodash");
 class AuthRepo {
   constructor() {
     if (AuthRepo.instance) {
@@ -9,7 +10,7 @@ class AuthRepo {
     AuthRepo.instance = this;
   }
 
-  async signup(loginKey, password, salt) {
+  async addUser(loginKey, password, salt) {
     try {
       const pool = await db.connect();
 
@@ -34,14 +35,13 @@ class AuthRepo {
         .query(query);
 
       const user = result.recordset[0];
-      console.log("User created successfully:", user);
       return user;
     } catch (error) {
       console.error("Error creating user:", error);
     }
   }
 
-  async signin(loginKey, password) {
+  async getUserAccount(loginKey, password) {
     try {
       const pool = await db.connect();
 
@@ -68,18 +68,18 @@ class AuthRepo {
 
         if (passwordHash === user.Password) {
           return {
-            appStatus: "Login successful",
-            user: omit(user.toJSON(), ["password", "salt"]),
+            message: "Login successful",
+            user: omit(user, ["Password", "Salt"]),
           };
         } else {
           return {
-            appStatus: "Invalid password",
+            message: "Invalid password",
             user: null,
           };
         }
       } else {
         return {
-          appStatus: "User not found",
+          message: "User not found",
           user: null,
         };
       }

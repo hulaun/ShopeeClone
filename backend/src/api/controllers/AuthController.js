@@ -13,7 +13,6 @@ class AuthController {
       const loginKey = req.body.loginKey;
       const password = req.body.password;
       const appStatus = await AuthService.signup(loginKey, password);
-      console.log("appStatus:", appStatus);
       res
         .status(appStatus.status)
         .json({ message: appStatus.message, data: appStatus.data });
@@ -27,9 +26,13 @@ class AuthController {
       const loginKey = req.body.loginKey;
       const password = req.body.password;
 
-      var user = await validatePassword(loginKey, password);
+      const appStatus = await AuthService.signin(loginKey, password);
+      res
+        .status(appStatus.status)
+        .json({ message: appStatus.message, data: appStatus.data });
     } catch (error) {
       console.error("Error logging in:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 }

@@ -32,7 +32,6 @@ function DefaultHeader() {
 
   const handleChange = useCallback(() => {
     setText(searchRef.current.value);
-    console.log(text);
   }, [text]);
 
   return (
