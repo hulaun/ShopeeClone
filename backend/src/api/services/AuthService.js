@@ -5,8 +5,16 @@ const { sql } = require("mssql");
 const AuthRepo = require("../repos/AuthRepo");
 const { hashPassword, createSalt } = require("../utils/AuthUtils");
 class AuthService {
+  constructor() {
+    if (AuthService.instance) {
+      return AuthService.instance;
+    }
+    AuthService.instance = this;
+  }
+
   async signup(loginKey, password) {
-    if (AuthRepo.hasAccount(loginKey)) {
+    console.log(await AuthRepo.hasAccount(loginKey));
+    if (await AuthRepo.hasAccount(loginKey)) {
       return {
         status: 400,
         message: "Account already exists.",
@@ -59,5 +67,7 @@ class AuthService {
     }
   }
 }
+const instance = new AuthService();
+Object.freeze(instance);
 
-module.exports = new AuthService();
+module.exports = instance;

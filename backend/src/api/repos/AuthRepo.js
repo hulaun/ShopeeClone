@@ -2,6 +2,13 @@ const sql = require("mssql");
 const { hashPassword } = require("../utils/AuthUtils");
 const db = require("../../config/db");
 class AuthRepo {
+  constructor() {
+    if (AuthRepo.instance) {
+      return AuthRepo.instance;
+    }
+    AuthRepo.instance = this;
+  }
+
   async signup(loginKey, password, salt) {
     try {
       const pool = await db.connect();
@@ -19,7 +26,7 @@ class AuthRepo {
         VALUES (@LoginKey, @PasswordHash, @Salt)
       `;
 
-      const refult = await pool
+      const result = await pool
         .request()
         .input("LoginKey", sql.VarChar(255), loginKey)
         .input("PasswordHash", sql.VarChar(255), password)
@@ -90,7 +97,6 @@ class AuthRepo {
       } else {
         column = "Username";
       }
-      console.log("column:", column, "loginKey:", loginKey);
 
       const query = `
         SELECT * FROM [User] 
@@ -102,8 +108,6 @@ class AuthRepo {
         .input("LoginKey", sql.VarChar(255), loginKey)
         .query(query);
 
-      console.log("result:", result.recordset[0]);
-
       return result.recordset.length > 0;
     } catch (error) {
       console.error("Error creating user:", error);
@@ -111,4 +115,7 @@ class AuthRepo {
   };
 }
 
-module.exports = new AuthRepo();
+const instance = new AuthRepo();
+Object.freeze(instance);
+
+module.exports = instance;

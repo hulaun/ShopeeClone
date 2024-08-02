@@ -1,10 +1,13 @@
-const sql = require("mssql");
-const db = require("../../config/db");
-const crypto = require("crypto");
 const AuthService = require("../services/AuthService");
-const { createSalt, hashPassword } = require("../utils/AuthUtils");
 
 class AuthController {
+  constructor() {
+    if (AuthController.instance) {
+      return AuthController.instance;
+    }
+    AuthController.instance = this;
+  }
+
   async signup(req, res, next) {
     try {
       const loginKey = req.body.loginKey;
@@ -31,4 +34,7 @@ class AuthController {
   }
 }
 
-module.exports = new AuthController();
+const instance = new AuthController();
+Object.freeze(instance);
+
+module.exports = instance;
