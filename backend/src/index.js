@@ -3,6 +3,8 @@ const cors = require("cors");
 const app = express();
 const port = 5500;
 
+require("dotenv").config({ path: ".env.local" });
+
 const db = require("./config/db");
 const route = require("./api/routes");
 
@@ -55,7 +57,7 @@ app.use(express.json());
 async function getUsers() {
   try {
     const pool = await db.connect();
-    const result = await pool.request().query("SELECT * FROM [User]"); // Use the users table
+    const result = await pool.request().query("SELECT * FROM [User]");
     return result.recordset;
   } catch (error) {
     console.log(error);

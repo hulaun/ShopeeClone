@@ -1,3 +1,4 @@
+const { omit } = require("lodash");
 const AuthService = require("../services/AuthService");
 
 class AuthController {
@@ -13,9 +14,16 @@ class AuthController {
       const loginKey = req.body.loginKey;
       const password = req.body.password;
       const appStatus = await AuthService.signup(loginKey, password);
-      res
-        .status(appStatus.status)
-        .json({ message: appStatus.message, data: appStatus.data });
+      res.cookie("refreshToken", appStatus.data.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      res.status(appStatus.status).json({
+        message: appStatus.message,
+        data: omit(appStatus.data, ["refreshToken"]),
+      });
     } catch (error) {
       console.error("Error signing up:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -27,9 +35,16 @@ class AuthController {
       const password = req.body.password;
 
       const appStatus = await AuthService.signin(loginKey, password);
-      res
-        .status(appStatus.status)
-        .json({ message: appStatus.message, data: appStatus.data });
+      res.cookie("refreshToken", appStatus.data.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      res.status(appStatus.status).json({
+        message: appStatus.message,
+        data: omit(appStatus.data, ["refreshToken"]),
+      });
     } catch (error) {
       console.error("Error logging in:", error);
       res.status(500).json({ message: "Internal server error" });

@@ -1,5 +1,10 @@
 const AuthRepo = require("../repos/AuthRepo");
-const { hashPassword, createSalt } = require("../utils/AuthUtils");
+const {
+  hashPassword,
+  createSalt,
+  signAccessToken,
+  signRefreshToken,
+} = require("../utils/AuthUtils");
 class AuthService {
   constructor() {
     if (AuthService.instance) {
@@ -20,13 +25,18 @@ class AuthService {
     const passwordHash = hashPassword(password, salt);
     const user = await AuthRepo.addUser(loginKey, passwordHash, salt);
 
-    const token = jwt.sign(
-      { id: user.id, loginKey: user.loginKey, role: user.role },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1h" }
-    );
+    const accessToken = signAccessToken(user);
+    const refreshToken = signRefreshToken(user);
 
-    return { status: 200, message: "Success", data: { user: user } };
+    return {
+      status: 200,
+      message: "Success",
+      data: {
+        user: user,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      },
+    };
   }
 
   async signin(loginKey, password) {
@@ -45,10 +55,18 @@ class AuthService {
         data: { user: userData.user },
       };
     }
+
+    const accessToken = signAccessToken(userData.user);
+    const refreshToken = signRefreshToken(userData.user);
+
     return {
       status: 200,
       message: userData.message,
-      data: userData.user,
+      data: {
+        user: userData.user,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      },
     };
   }
 }
