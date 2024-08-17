@@ -1,17 +1,10 @@
-import classNames from "classnames/bind";
-import styles from "./Home.module.scss";
-
 import HomeFooter from "./components/HomeFooter";
 import { useEffect, useRef, useState, React } from "react";
-import { DropDownSuggestions } from "../../components/DrowDownSuggestions";
 
-import * as httpRequest from "../../utils/httpRequest";
-import Category from "./components/Category";
+import ProductCategory from "./components/ProductCategory";
+import SuggestedProducts from "./components/SuggestedProducts";
 
-const cx = classNames.bind(styles);
 function Home() {
-  const [customers, setCustomers] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
   const [currentIndexCarousel, setCurrentIndexCarousel] = useState(0);
   const images = [
     'https://picsum.photos/id/236/800/200',
@@ -19,13 +12,6 @@ function Home() {
     'https://picsum.photos/id/238/800/200',
     'https://picsum.photos/id/239/800/200',
   ];
-
-  const compStyles = {
-    dropDownStyle: {
-      position: "absolute",
-      backgroundColor: "grey",
-    },
-  };
   
   const handlePrev = () => {
     setCurrentIndexCarousel((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
@@ -34,25 +20,10 @@ function Home() {
   const handleNext = () => {
     setCurrentIndexCarousel((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
   };
-  const handleMouseOver = () => {
-    setShowDropdown(true);
-  };
-  const handleMouseOut = () => {
-    setShowDropdown(false);
-  };
-
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      const res = await httpRequest.get("");
-      setCustomers(res.customersFromDb);
-    };
-
-    //fetchCustomers();
-  }, []);
-
+  
   return (
-    <div>
-      <div className="lg:px-40">
+    <div className="lg:px-4 bg-grey-100">
+      <div className="lg:px-64">
         <div className="relative flex items-center justify-center mt-4">
           <div onClick={handlePrev} className="left-4 w-7 absolute">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
@@ -68,23 +39,11 @@ function Home() {
             </svg>
           </div>
         </div>
-        <Category />
-        <div
-          style={compStyles.labelStyle}
-          onMouseOver={handleMouseOver}
-          onMouseOut={handleMouseOut}
-        >
-          {showDropdown && (
-            <DropDownSuggestions>
-              <div>
-                <ul>
-                  <li>Tài khoản của tôi</li>
-                  <li>Đơn mua</li>
-                  <li>Đăng xuất</li>
-                </ul>
-              </div>
-            </DropDownSuggestions>
-          )}
+        <div className="mt-5">
+          <ProductCategory />
+        </div>
+        <div className="mt-5">
+          <SuggestedProducts />
         </div>
       </div>
       <HomeFooter />
