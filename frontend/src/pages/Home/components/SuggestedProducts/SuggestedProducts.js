@@ -3,36 +3,94 @@ import { useState } from "react";
 function SuggestedProducts() {
   const [SuggestedProducts, setSuggestedProducts] = useState([
     {
-      name: "Clothing",
+      id: 1,
+      name: "Iphone 12 Pro Max",
       image: "https://via.placeholder.com/150",
+      price: 13_000_000,
+      category: "Phones",
+      description: "The most powerful iPhone ever",
+      manufacturer: "Apple",
     },
     {
-      name: "Shoes",
+      id: 2,
+      name: "Samsung Galaxy S21 Ultra",
       image: "https://via.placeholder.com/150",
+      price: 12_000_000,
+      category: "Phones",
+      description: "The most powerful Samsung phone ever",
+      manufacturer: "Samsung",
     },
     {
-      name: "Accessories",
+      id: 3,
+      name: "Macbook Pro 2021",
       image: "https://via.placeholder.com/150",
+      price: 40_000_000,
+      category: "Laptops",
+      description: "The most powerful Macbook ever",
+      manufacturer: "Apple",
     },
     {
-      name: "Bags",
+      id: 4,
+      name: "Dell XPS 15",
       image: "https://via.placeholder.com/150",
+      price: 30_000_000,
+      category: "Laptops",
+      description: "The most powerful Dell laptop ever",
+      manufacturer: "Dell",
     },
     {
-      name: "Jewelry",
+      id: 5,
+      name: "Sony WH-1000XM4",
       image: "https://via.placeholder.com/150",
+      price: 5_000_000,
+      category: "Headphones",
+      description: "The most powerful Sony headphones ever",
+      manufacturer: "Sony",
     },
     {
-      name: "Watches",
+      id: 6,
+      name: "Airpods Pro",
       image: "https://via.placeholder.com/150",
+      price: 4_000_000,
+      category: "Headphones",
+      description: "The most powerful Apple headphones ever",
+      manufacturer: "Apple",
     },
     {
-      name: "Phones",
+      id: 7,
+      name: "Canon EOS R5",
       image: "https://via.placeholder.com/150",
+      price: 60_000_000,
+      category: "Cameras",
+      description: "The most powerful Canon camera ever",
+      manufacturer: "Canon",
     },
     {
-      name: "Laptops",
+      id: 8,
+      name: "Sony A7R IV",
       image: "https://via.placeholder.com/150",
+      price: 50_000_000,
+      category: "Cameras",
+      description: "The most powerful Sony camera ever",
+      manufacturer: "Sony",
+    },
+    {
+      id: 9,
+      name: "Samsung Galaxy Watch 4",
+      image: "https://via.placeholder.com/150",
+      price: 7_000_000,
+      category: "Watches",
+      description: "The most powerful Samsung watch ever",
+      manufacturer: "Samsung",
+    },
+    {
+      id: 10,
+      name: "Apple Watch Series 6",
+      image: "https://via.placeholder.com/150",
+      price: 8_000_000,
+      category: "Watches",
+      description: "The most powerful Apple watch ever",
+      manufacturer: "Apple",
     },
   ]);
 
@@ -41,7 +99,7 @@ function SuggestedProducts() {
       <h2 className="px-5 text-2xl py-4 border-secondary border-b-4 uppercase text-center text-primary">
         Gợi ý hôm nay
       </h2>
-      <div className="grid grid-cols-4 gap-4 p-5">
+      <div className="bg-grey-100 grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-3 p-3">
         {SuggestedProducts.map((product) => (
           <Product key={product.name} {...product} />
         ))}
@@ -50,15 +108,29 @@ function SuggestedProducts() {
   );
 }
 
+const truncateTwoLinesStyle = {
+  display: "-webkit-box",
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: "vertical",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+};
 function Product(product) {
   return (
-    <div className="flex flex-col items-center">
+    <div className="h-80 flex flex-col bg-white border border-grey-200">
       <img
         src={product.image}
         alt={product.name}
-        className="w-32 h-32 object-cover"
+        className="h-48 object-cover"
       />
-      <p className="text-center mt-2">{product.name}</p>
+      <div className="h-full flex flex-col justify-between p-2">
+        <div className="text-lg" style={truncateTwoLinesStyle}>
+          {product.name}
+        </div>
+        <div className="text-primary font-bold">
+          đ {product.price.toLocaleString()}
+        </div>
+      </div>
     </div>
   );
 }
