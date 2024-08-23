@@ -7,6 +7,32 @@ import { ShopeeIcon } from "../../components/Icons";
 
 const cx = classNames.bind(styles);
 function Home() {
+  const googleRef = useRef();
+  const facebookRef = useRef();
+
+  useEffect(() => {
+    const googleButton = googleRef.current;
+    const facebookButton = facebookRef.current;
+
+    googleButton.addEventListener("click", () => {
+      console.log("Google");
+    });
+
+    facebookButton.addEventListener("click", () => {
+      console.log("Facebook");
+    });
+
+    return () => {
+      googleButton.removeEventListener("click", () => {
+        console.log("Google");
+      });
+
+      facebookButton.removeEventListener("click", () => {
+        console.log("Facebook");
+      });
+    };
+  }, []);
+
   return (
     <div className={cx("wrapper")}>
       <div className={cx("container", "d-flex")}>
@@ -64,8 +90,8 @@ function Home() {
               </div>
             </form>
             <div className={cx("section oauth-buttons")}>
-              <button>Facebook</button>
-              <button>Google</button>
+              <button ref={facebookRef}>Facebook</button>
+              <button ref={googleRef}>Google</button>
             </div>
             <div className={cx("section signup-link")}>
               Bạn mới biết Shopee?

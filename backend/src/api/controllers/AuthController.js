@@ -50,6 +50,36 @@ class AuthController {
       res.status(500).json({ message: "Internal server error" });
     }
   }
+
+  async signinWithGoogleLogin(req, res, next) {
+    try {
+      const authorizationUri = await AuthService.signinWithGoogleLogin();
+      res.redirect(authorizationUri);
+    } catch (error) {
+      console.error("Error logging in with Google:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  async signinWithGoogleCallback(req, res, next) {
+    try {
+      const code = req.query.code;
+      const appStatus = await AuthService.signinWithGoogleCallback(code);
+      res.cookie("refreshToken", appStatus.data.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      res.status(appStatus.status).json({
+        message: appStatus.message,
+        data: omit(appStatus.data, ["refreshToken"]),
+      });
+    } catch (error) {
+      console.error("Error logging in with Google:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }
 
 const instance = new AuthController();
