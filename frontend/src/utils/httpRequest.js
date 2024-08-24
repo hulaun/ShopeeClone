@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const httpRequest = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: process.env.REACT_APP_SERVER_ENDPOINT,
 });
 
 export const get = async (path, options = {}) => {

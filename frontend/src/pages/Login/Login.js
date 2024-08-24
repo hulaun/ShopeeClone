@@ -68,11 +68,11 @@ function Login() {
   const handleInput = (event) => {
     const fieldName = event.target.name;
     const inputValue = event.target.value;
-
     setInputErrors((prev) => ({
       ...prev,
       [fieldName]: false,
     }));
+    console.log(userInputValue, passwordValue);
 
     if (fieldName === "username") {
       setUserInputValue(inputValue);
@@ -87,23 +87,31 @@ function Login() {
     }
   };
 
-  const handleSubmit = useCallback(async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // const validateInput = (input) => {
-    //   const emailRegex = /^[a-zA-Z0-9]+@gmail\.com$/;
-    //   const phoneRegex = /^\d{10}$/;
-    //   const usernameRegex = /^[a-zA-Z0-9._-]{3,16}$/;
+    try {
+      const response = await httpRequest.post("auth/signin", {
+        loginKey: userInputValue,
+        password: passwordValue,
+      });
 
-    const response = await httpRequest.post("customers/login", {
-      loginKey: userInputValue,
-      password: passwordValue,
-    });
-
-    if (response.status >= 200 && response.status <= 300) {
-      window.location.href = config.routes.home;
+      if (response.status >= 200 && response.status <= 300) {
+        window.location.href = config.routes.home;
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        setInputErrors({
+          username: true,
+          password: true,
+        });
+        userInputErrorRef.current.style.display = "block";
+        passwordErrorRef.current.style.display = "block";
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
     }
-  }, []);
+  };
 
   return (
     <div className={cx("wrapper")}>

@@ -15,9 +15,7 @@ function App() {
                 key={index}
                 path={route.path}
                 element={
-                  <Layout
-                    {...(route.headline ? { headline: route.headline } : {})}
-                  >
+                  <Layout {...(route.headline && { headline: route.headline })}>
                     <Page />
                   </Layout>
                 }
