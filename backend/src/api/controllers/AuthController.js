@@ -18,7 +18,7 @@ class AuthController {
         httpOnly: true,
         secure: true,
         sameSite: "Strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: 3 * 24 * 60 * 60 * 1000,
       });
       res.status(appStatus.status).json({
         message: appStatus.message,
@@ -39,7 +39,7 @@ class AuthController {
         httpOnly: true,
         secure: true,
         sameSite: "Strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: 3 * 24 * 60 * 60 * 1000,
       });
       res.status(appStatus.status).json({
         message: appStatus.message,
@@ -69,7 +69,7 @@ class AuthController {
         httpOnly: true,
         secure: true,
         sameSite: "Strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: 3 * 24 * 60 * 60 * 1000,
       });
       res.status(appStatus.status).json({
         message: appStatus.message,

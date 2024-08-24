@@ -3,7 +3,6 @@ import styles from "./Login.module.scss";
 import config from "../../config";
 import { Link } from "react-router-dom";
 
-import { OutlineButton } from "../../components/Buttons";
 import { GoogleIcon, ShopeeIcon, FacebookIcon } from "../../components/Icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import httpRequest from "../../utils/httpRequest";
@@ -11,15 +10,6 @@ import httpRequest from "../../utils/httpRequest";
 const cx = classNames.bind(styles);
 
 function Login() {
-  const outlineButtonStyle = useRef({
-    width: "10rem",
-    height: "3rem",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "0.2rem",
-  });
-
   const [userInputValue, setUserInputValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [inputErrors, setInputErrors] = useState({
@@ -28,11 +18,36 @@ function Login() {
   });
   const userInputErrorRef = useRef();
   const passwordErrorRef = useRef();
+  const googleButtonRef = useRef();
+  const facebookButtonRef = useRef();
 
   useEffect(() => {
+    const googleButton = googleButtonRef.current;
+    const facebookButton = facebookButtonRef.current;
+
+    // Hide the error messages
     userInputErrorRef.current.style.display = "none";
     passwordErrorRef.current.style.display = "none";
+
+    // Add event listeners using the captured refs
+    googleButton.addEventListener("click", handleGoogleClick);
+    facebookButton.addEventListener("click", handleFacebookClick);
+
+    // Cleanup function to remove the event listeners using the captured refs
+    return () => {
+      googleButton.removeEventListener("click", handleGoogleClick);
+      facebookButton.removeEventListener("click", handleFacebookClick);
+    };
   }, []);
+
+  const handleGoogleClick = () => {
+    console.log(process.env.REACT_APP_SERVER_ENDPOINT);
+    window.location.href = `${process.env.REACT_APP_SERVER_ENDPOINT}/auth/signin/oauth/google/login`;
+  };
+
+  const handleFacebookClick = () => {
+    console.log("Facebook button clicked");
+  };
 
   const handleBlur = (event) => {
     if (event.target.name === "username" && !userInputValue) {
@@ -120,7 +135,15 @@ function Login() {
                   aria-invalid="false"
                   onBlur={handleBlur}
                   onInput={handleInput}
-                  className={cx({ "field-error": inputErrors.username })}
+                  className={cx(
+                    "border",
+                    "border-grey-400",
+                    "rounded-sm",
+                    "p-2",
+                    {
+                      "field-error": inputErrors.username,
+                    }
+                  )}
                 ></input>
                 <div
                   aria-live="polite"
@@ -140,7 +163,14 @@ function Login() {
                   aria-invalid="false"
                   onBlur={handleBlur}
                   onInput={handleInput}
-                  className={cx({ "field-error": inputErrors.password })}
+                  className={cx(
+                    "border",
+                    "border-grey-400",
+                    "rounded-sm",
+                    "p-2",
+
+                    { "field-error": inputErrors.password }
+                  )}
                 ></input>
                 <div
                   aria-live="polite"
@@ -161,14 +191,20 @@ function Login() {
                 <div>Hoặc</div>
               </div>
               <div className={cx("oauth-section")}>
-                <OutlineButton style={outlineButtonStyle.current}>
+                <button
+                  ref={facebookButtonRef}
+                  className="button w-1/2 bg-white border border-grey-400 flex justify-center items-center p-2 rounded-sm"
+                >
                   <FacebookIcon color="blue" />
                   Facebook
-                </OutlineButton>
-                <OutlineButton style={outlineButtonStyle.current}>
+                </button>
+                <button
+                  ref={googleButtonRef}
+                  className="button w-1/2 bg-white border border-grey-400 flex justify-center items-center p-2 rounded-sm"
+                >
                   <GoogleIcon color="red" />
                   Google
-                </OutlineButton>
+                </button>
               </div>
             </form>
             <div className={cx("section", "signup-link")}>
