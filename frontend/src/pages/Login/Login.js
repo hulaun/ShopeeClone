@@ -4,12 +4,14 @@ import config from "../../config";
 import { Link } from "react-router-dom";
 
 import { GoogleIcon, ShopeeIcon, FacebookIcon } from "../../components/Icons";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import httpRequest from "../../utils/httpRequest";
+import { useAuth } from "../../context/AuthContext";
 
 const cx = classNames.bind(styles);
 
 function Login() {
+  const { setCurrentUser, setAccessToken, setAuthorizationHeader } = useAuth();
   const [userInputValue, setUserInputValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [inputErrors, setInputErrors] = useState({
@@ -25,15 +27,12 @@ function Login() {
     const googleButton = googleButtonRef.current;
     const facebookButton = facebookButtonRef.current;
 
-    // Hide the error messages
     userInputErrorRef.current.style.display = "none";
     passwordErrorRef.current.style.display = "none";
 
-    // Add event listeners using the captured refs
     googleButton.addEventListener("click", handleGoogleClick);
     facebookButton.addEventListener("click", handleFacebookClick);
 
-    // Cleanup function to remove the event listeners using the captured refs
     return () => {
       googleButton.removeEventListener("click", handleGoogleClick);
       facebookButton.removeEventListener("click", handleFacebookClick);
@@ -97,6 +96,12 @@ function Login() {
       });
 
       if (response.status >= 200 && response.status <= 300) {
+        console.log(response.data.data);
+        const { user, accessToken } = response.data.data;
+        setCurrentUser(user);
+        setAccessToken(accessToken);
+        setAuthorizationHeader(accessToken);
+
         window.location.href = config.routes.home;
       }
     } catch (error) {

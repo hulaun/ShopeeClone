@@ -1,4 +1,5 @@
 const { omit } = require("lodash");
+const querystring = require("querystring");
 const AuthService = require("../services/AuthService");
 
 class AuthController {
@@ -71,10 +72,20 @@ class AuthController {
         sameSite: "Strict",
         maxAge: 3 * 24 * 60 * 60 * 1000,
       });
-      res.status(appStatus.status).json({
-        message: appStatus.message,
-        data: omit(appStatus.data, ["refreshToken"]),
+
+      const responseData = omit(appStatus.data, ["refreshToken"]);
+      Object.keys(responseData).forEach((key) => {
+        res.cookie(key, responseData[key], {
+          httpOnly: true,
+          secure: true,
+          sameSite: "Strict",
+          maxAge: 30 * 1000,
+        });
       });
+
+      // Redirect to the client URL without response data in the URL
+      const clientUrl = `${process.env.CLIENT_URL}/oauth/callback`;
+      res.redirect(clientUrl);
     } catch (error) {
       console.error("Error logging in with Google:", error);
       res.status(500).json({ message: "Internal server error" });
