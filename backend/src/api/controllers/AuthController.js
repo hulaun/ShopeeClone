@@ -38,11 +38,11 @@ class AuthController {
       const appStatus = await AuthService.signin(loginKey, password);
       res.cookie("refreshToken", appStatus.data.refreshToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "Strict",
+        secure: false,
+        sameSite: "Lax",
         maxAge: 3 * 24 * 60 * 60 * 1000,
       });
-      res.status(appStatus.status).json({
+      return res.status(appStatus.status).json({
         message: appStatus.message,
         data: omit(appStatus.data, ["refreshToken"]),
       });
@@ -67,24 +67,20 @@ class AuthController {
       const code = req.query.code;
       const appStatus = await AuthService.signinWithGoogleCallback(code);
       res.cookie("refreshToken", appStatus.data.refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "Strict",
+        sameSite: "Lax",
         maxAge: 3 * 24 * 60 * 60 * 1000,
       });
 
       const responseData = omit(appStatus.data, ["refreshToken"]);
       Object.keys(responseData).forEach((key) => {
         res.cookie(key, responseData[key], {
-          httpOnly: true,
-          secure: true,
-          sameSite: "Strict",
+          sameSite: "Lax",
           maxAge: 30 * 1000,
         });
       });
 
       // Redirect to the client URL without response data in the URL
-      const clientUrl = `${process.env.CLIENT_URL}/oauth/callback`;
+      const clientUrl = `${process.env.CLIENT_URL}`;
       res.redirect(clientUrl);
     } catch (error) {
       console.error("Error logging in with Google:", error);

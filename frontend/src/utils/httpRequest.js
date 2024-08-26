@@ -2,6 +2,7 @@ import axios from "axios";
 
 const httpRequest = axios.create({
   baseURL: process.env.REACT_APP_SERVER_ENDPOINT,
+  withCredentials: true,
 });
 
 export const get = async (path, options = {}) => {

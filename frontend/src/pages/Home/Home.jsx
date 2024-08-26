@@ -1,10 +1,13 @@
 import HomeFooter from "./components/HomeFooter";
 import { useEffect, useRef, useState, React } from "react";
+import Cookies from 'js-cookie';
+import {useAuth} from "../../context/AuthContext";
 
 import ProductCategory from "./components/ProductCategory";
 import SuggestedProducts from "./components/SuggestedProducts";
 
 function Home() {
+  const {setAuthorizationHeader, accessToken} = useAuth();
   const [currentIndexCarousel, setCurrentIndexCarousel] = useState(0);
   const images = [
     'https://picsum.photos/id/236/800/200',
@@ -12,6 +15,24 @@ function Home() {
     'https://picsum.photos/id/238/800/200',
     'https://picsum.photos/id/239/800/200',
   ];
+
+  useEffect(() => {
+
+    const refreshToken =  Cookies.get('refreshToken');
+    console.log(refreshToken);
+    console.log(accessToken);
+    if (accessToken) {
+      setAuthorizationHeader(accessToken);
+    }
+
+    const interval = setInterval(() => {
+      setCurrentIndexCarousel((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    }, 3000);
+
+    
+
+    return () => clearInterval(interval);
+  }, []);
   
   const handlePrev = () => {
     setCurrentIndexCarousel((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
