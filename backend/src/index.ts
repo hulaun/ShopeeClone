@@ -8,23 +8,9 @@ require("dotenv").config({ path: ".env.local" });
 const db = require("./config/db");
 const route = require("./api/routes");
 
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       if (
-//         [
-//           "http://localhost:8080",
-//           "http://127.0.0.1:8080",
-//         ].indexOf(origin) !== -1
-//       ) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     optionsSuccessStatus: 200,
-//   })
-// );
+import { Request, Response } from "express";
+
+
 
 app.use(
   cors({
@@ -67,9 +53,13 @@ async function getUsers() {
 
 route(app);
 
-app.get("/", async (req, res) => {
-  const usersFromDb = await getUsers();
-  res.send({ usersFromDb });
+app.get("/", async (req: Request, res: Response) => {
+  try {
+    const usersFromDb = await getUsers();
+    res.json({usersFromDb});
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.listen(port, () => {

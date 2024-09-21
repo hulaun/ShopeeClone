@@ -1,6 +1,6 @@
 const sql = require("mssql");
 
-let pool;
+let pool: any;
 
 async function connect() {
   try {
