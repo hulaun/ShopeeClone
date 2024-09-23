@@ -29,24 +29,21 @@ function generateRandomUser() {
 
 async function insertUsersIntoDb(users) {
   try {
-    const pool = await db.connect();
-
     for (const user of users) {
-      await pool
-        .request()
-        .input("Username", user.userName)
-        .input("Password", user.passwordHash)
-        .input("Salt", user.salt)
-        .input("Email", user.email)
-        .input("ProfilePicture", user.profilePicture)
-        .input("FullName", user.fullName)
-        .input("Gender", user.gender)
-        .input("UserAddress", user.userAddress)
-        .input("PhoneNumber", user.phoneNumber)
-        .query(
-          "INSERT INTO [User] (Username, Password, Salt, Email, ProfilePicture, FullName, Gender, UserAddress, PhoneNumber) " +
-            "VALUES (@Username, @Password, @Salt, @Email, @ProfilePicture, @FullName, @Gender, @UserAddress, @PhoneNumber)"
-        );
+      await db
+        .insert(users)
+        .values({
+          Username: user.userName,
+          Password: user.passwordHash,
+          Salt: user.salt,
+          Email: user.email,
+          ProfilePicture: user.profilePicture,
+          FullName: user.fullName,
+          Gender: user.gender,
+          UserAddress: user.userAddress,
+          PhoneNumber: user.phoneNumber,
+        })
+        .run();
     }
   } catch (error) {
     console.error("Error inserting Users:", error);

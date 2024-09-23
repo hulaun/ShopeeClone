@@ -1,5 +1,4 @@
 const { omit } = require("lodash");
-const querystring = require("querystring");
 const AuthService = require("../services/AuthService");
 
 class AuthController {

@@ -5,9 +5,9 @@
         "module": "commonjs",
         "strict": true,
         "allowJs": true,
-        "rootDir": "src",
         "esModuleInterop": true,
         "skipLibCheck": true,
+        "rootDir": "../backend",
         "forceConsistentCasingInFileNames": true,
         "outDir": "./dist"
     },

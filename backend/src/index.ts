@@ -28,40 +28,39 @@ app.use(
 
 app.use(express.json());
 
-// app.use(methodOverride("_method"));
+const {
+  generateRandomUser,
+  insertUsersIntoDb,
+} = require("./utils/UsersUtils");
 
-// const {
-//   generateRandomUser,
-//   insertUsersIntoDb,
-// } = require("./utils/UsersUtils");
-
-// const users = [];
-// for (let i = 0; i < 20; i++) {
-//   users.push(generateRandomUser());
-// }
-// insertUsersIntoDb(users);
+const users = Array.from({ length: 20 }, generateRandomUser);
+insertUsersIntoDb(users);
 
 async function getUsers() {
   try {
-    const pool = await db.connect();
-    const result = await pool.request().query("SELECT * FROM [User]");
-    return result.recordset;
+    const allUsers = await db
+      .select()
+      .from(users) // Adjust based on your schema definition
+      .all();
+    return allUsers;
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching users:", error);
+    throw error; // Rethrow the error to handle it in the route
   }
 }
 
-route(app);
-
+// Route to handle GET requests to the root
 app.get("/", async (req: Request, res: Response) => {
   try {
     const usersFromDb = await getUsers();
-    res.json({usersFromDb});
+    res.json({ usersFromDb });
   } catch (error) {
-    console.log(error);
+    console.error("Error in route handler:", error);
+    res.status(500).json({ message: "Internal Server Error" }); // Send error response
   }
 });
 
+// Start the server
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

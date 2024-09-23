@@ -1,11 +1,11 @@
 import type { Config } from "drizzle-kit";
 
 export default {
-  dialect: "sqlite", // SQLite dialect
-  schema: "./src/**/schema.ts", // Path to your schema definition
-  out: "./migrations", // Where to output migrations
+  dialect: "sqlite",
+  schema: "./db/schema.ts",
+  out: "./migrations",
   dbCredentials: {
-    url: "./mydatabase.db", // Path to the SQLite file
+    url: "./db/main.db",
   },
   strict: true,
   verbose: true,

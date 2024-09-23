@@ -7,7 +7,8 @@
     "start": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate": "drizzle-kit generate",
-    "migrate": "drizzle-kit migrate"
+    "migrate": "drizzle-kit migrate",
+    "drop": "drizzle-kit drop"
   },
   "author": "",
   "license": "ISC",
@@ -19,9 +20,7 @@
     "express": "^4.18.2",
     "faker": "^5.5.3",
     "jsonwebtoken": "^9.0.2",
-    "lodash": "^4.17.21",
-    "mssql": "^10.0.2",
-    "querystring": "^0.2.1"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.11",
