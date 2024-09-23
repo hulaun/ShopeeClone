@@ -1,6 +1,7 @@
 const faker = require("faker");
 const db = require("../../config/db");
 const { createSalt, hashPassword } = require("./AuthUtils");
+const schema = require("../../../db/schema");
 
 function generateRandomUser() {
   const userName = faker.name.findName();
@@ -30,18 +31,19 @@ function generateRandomUser() {
 async function insertUsersIntoDb(users) {
   try {
     for (const user of users) {
-      await db
-        .insert(users)
+      console.log("Inserting user:", user);
+      await db.db
+        .insert(schema.User)
         .values({
-          Username: user.userName,
-          Password: user.passwordHash,
-          Salt: user.salt,
-          Email: user.email,
-          ProfilePicture: user.profilePicture,
-          FullName: user.fullName,
-          Gender: user.gender,
-          UserAddress: user.userAddress,
-          PhoneNumber: user.phoneNumber,
+          username: user.userName,
+          password: user.passwordHash,
+          salt: user.salt,
+          email: user.email,
+          profilePicture: user.profilePicture,
+          fullName: user.fullName,
+          gender: user.gender,
+          userAddress: user.userAddress,
+          phoneNumber: user.phoneNumber,
         })
         .run();
     }
