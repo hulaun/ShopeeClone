@@ -1,22 +1,13 @@
-const express = require("express");
-const cors = require("cors");
-const app = express();
-const port = 5500;
-
-require("dotenv").config({ path: ".env.local" });
-
-const route = require("./api/routes");
-
-import { query, Request, Response } from "express";
+import express, { Express, Request, Response } from "express";
 import * as schema from "../db/schema";
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-
-const sqlite = new Database("./db/main.db");
-export const db = drizzle(sqlite, {
-  schema,
-});
-
+import { db } from "./config/db";
+import dotenv from "dotenv";
+import { userRouter } from "./api/routes/user";
+dotenv.config({ path: ".env.local" });
+const cors = require("cors");
+const app: Express = express();
+const port = process.env.SERVER_PORT;
+const route = require("./api/routes");
 
 // app.use(
 //   cors({
@@ -33,6 +24,8 @@ app.use(
 );
 
 app.use(express.json());
+route(app);
+
 
 // const {
 //   generateRandomUser,

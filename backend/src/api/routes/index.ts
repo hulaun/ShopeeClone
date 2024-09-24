@@ -1,9 +1,10 @@
-// const userRouter = require("./user");
-// const authRouter = require("./auth");
+import {Express}from 'express';
+import {userRouter} from "./user";
+import {authRouter} from "./auth";
 
-// function route(app) {
-//   app.use("/user", userRouter);
-//   app.use("/auth", authRouter);
-// }
+function route(app: Express) {
+    app.use("/user", userRouter);
+    // app.use("/auth", authRouter);
+}
 
-// module.exports = route;
+module.exports = route;
