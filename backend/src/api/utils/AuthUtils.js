@@ -33,10 +33,21 @@ const verifyToken = (token) => {
     return null;
   }
 };
+
+const setRefreshTokenCookie = (res, refreshToken) => {
+  return res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    maxAge: 3 * 24 * 60 * 60 * 1000,
+  });
+};
+
 module.exports = {
   createSalt,
   hashPassword,
   signAccessToken,
   signRefreshToken,
   verifyToken,
+  setRefreshTokenCookie,
 };

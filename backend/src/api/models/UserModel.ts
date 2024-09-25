@@ -1,7 +1,7 @@
 
 
 export type UserModel={
-    id: number | undefined
+    id: string | undefined
     username: string | undefined
     password: string | undefined
     salt: string | undefined
@@ -11,4 +11,6 @@ export type UserModel={
     gender: "M" | "F" | "O" | undefined
     userAddress: string | undefined
     phoneNumber: string | undefined
+    roleId: string
+    createdAt: string | undefined
 }

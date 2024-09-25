@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import {db} from "../../config/db";
-import { User } from "../../../db/schema";
-import { UserModel } from "../models/UserModel"
 import { eq } from "drizzle-orm";
+import { db } from "../../config/db";
+import { User } from "../../../db/schema";
+import { UserModel } from "../models/UserModel";
+import UserService from "../services/UserService"
 class UserController {
 
   private static instance: UserController;
@@ -15,18 +16,12 @@ class UserController {
   }
 
   async viewAll(req: Request, res: Response, next: NextFunction) {
-    try {
-      const response = await db.select().from(User)
-      res.json({ response });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Internal server error" });
-    }
+    await UserService.viewAll(req, res, next);
   }
   
   async view(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId: number = parseInt(req.params.id)
+      const userId: string = req.params.id
       const response = await db.select().from(User).where(eq(User.id, userId))
       res.json({ response });
     } catch (error) {
@@ -59,7 +54,7 @@ class UserController {
 
   async delete(req: Request, res: Response, next: NextFunction){
     try {
-      const userId: number=parseInt(req.params.id)
+      const userId: string=req.params.id
       const user = await db
         .delete(User)
         .where(eq(User.id,userId))
@@ -73,7 +68,7 @@ class UserController {
 
   async update(req: Request, res: Response, next: NextFunction){
     try {
-      const userId: number=parseInt(req.params.id)
+      const userId: string=req.params.id
       const updateData: UserModel = req.body
       const user = await db
         .update(User)

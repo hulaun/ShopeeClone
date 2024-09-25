@@ -1,18 +1,41 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "a304299b-9591-45ac-9344-7797bad4a155",
+  "id": "5e719bf2-59f5-4749-8c64-7e41f5de272d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "Role": {
+      "name": "Role",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "text(36)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Role": {
+          "name": "Role",
+          "type": "text(50)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "User": {
       "name": "User",
       "columns": {
         "Id": {
           "name": "Id",
-          "type": "integer",
+          "type": "text(36)",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "Username": {
           "name": "Username",
@@ -76,10 +99,39 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "RoleId": {
+          "name": "RoleId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "current_timestamp"
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "User_RoleId_Role_Id_fk": {
+          "name": "User_RoleId_Role_Id_fk",
+          "tableFrom": "User",
+          "tableTo": "Role",
+          "columnsFrom": [
+            "RoleId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }
