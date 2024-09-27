@@ -1,31 +1,33 @@
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
+import crypto from "crypto";
+import { UserModel } from "../models/model";
+import { Response } from "express";
 
-const createSalt = () => {
+export const createSalt = () => {
   return crypto.randomBytes(16).toString("hex");
 };
 
-const hashPassword = (password, salt) => {
+export const hashPassword = (password: string, salt: string) => {
   return crypto.pbkdf2Sync(password, salt, 1000, 64, "sha512").toString("hex");
 };
 
-const signAccessToken = (user) => {
+export const signAccessToken = (user: UserModel) => {
   return jwt.sign(
-    { id: user.id, loginKey: user.loginKey, role: user.role },
+    { id: user.id, username: user.username, email: user.email, role: user.role },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: "1h" }
   );
 };
 
-const signRefreshToken = (user) => {
+export const signRefreshToken = (user: UserModel) => {
   return jwt.sign(
-    { id: user.id, loginKey: user.loginKey, role: user.role },
+    { id: user.id, username: user.username,email: user.email, role: user.role },
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: "3d" }
   );
 };
 
-const verifyToken = (token) => {
+export const verifyToken = (token: string) => {
   try {
     return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
   } catch (error) {
@@ -34,7 +36,7 @@ const verifyToken = (token) => {
   }
 };
 
-const setRefreshTokenCookie = (res, refreshToken) => {
+export const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
   return res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: true,
@@ -43,11 +45,3 @@ const setRefreshTokenCookie = (res, refreshToken) => {
   });
 };
 
-module.exports = {
-  createSalt,
-  hashPassword,
-  signAccessToken,
-  signRefreshToken,
-  verifyToken,
-  setRefreshTokenCookie,
-};

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import {db} from "../../config/db";
 import { User } from "../../../db/schema";
-import { UserModel } from "../models/UserModel"
+import { UserModel } from "../models/model"
 import { eq } from "drizzle-orm";
 
 class UserRepo {
@@ -25,7 +25,7 @@ class UserRepo {
     }
   }
   
-  async find(userId: string) {
+  async findById(userId: string) {
     try{
       const user = await db.select().from(User).where(eq(User.id, userId))
       return user

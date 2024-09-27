@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { setRefreshTokenCookie } from "../utils/AuthUtils";
-
+import AuthService from "../services/AuthService";
 const { omit } = require("lodash");
-const AuthService = require("../services/AuthService");
 
 class AuthController {
 
@@ -91,4 +90,4 @@ class AuthController {
 const instance = new AuthController();
 Object.freeze(instance);
 
-module.exports = instance;
+export default instance;

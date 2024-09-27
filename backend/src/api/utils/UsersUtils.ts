@@ -1,50 +1,43 @@
+import { UserModel } from "../models/model";
+import { db } from "../../config/db"
 const faker = require("faker");
-const db = require("../../config/db");
 const { createSalt, hashPassword } = require("./AuthUtils");
 const schema = require("../../../db/schema");
 
 function generateRandomUser() {
-  const userName = faker.name.findName();
+  const username = faker.name.findName();
   const email = faker.internet.email();
   const profilePicture = faker.image.avatar();
-  const password = faker.internet.password();
+  const passwordV1 = faker.internet.password();
   const salt = createSalt();
-  const passwordHash = hashPassword(password, salt);
+  const password = hashPassword(passwordV1, salt);
   const fullName = faker.name.findName();
-  const gender = faker.datatype.boolean() ? "F" : "M";
+  const gender = faker.random.arrayElement(["F", "M", "O"]);
   const userAddress = faker.address.streetAddress();
   const phoneNumber = faker.phone.phoneNumber();
+  const role = faker.random.arrayElement(["Consumer", "Vendor"]);
 
   return {
-    userName,
+    username,
     email,
     profilePicture,
-    passwordHash,
+    password,
     salt,
     fullName,
     gender,
     userAddress,
     phoneNumber,
+    role,
   };
 }
 
-async function insertUsersIntoDb(users) {
+async function insertUsersIntoDb(users: UserModel[]) {
   try {
     for (const user of users) {
       console.log("Inserting user:", user);
-      await db.db
+      await db
         .insert(schema.User)
-        .values({
-          username: user.userName,
-          password: user.passwordHash,
-          salt: user.salt,
-          email: user.email,
-          profilePicture: user.profilePicture,
-          fullName: user.fullName,
-          gender: user.gender,
-          userAddress: user.userAddress,
-          phoneNumber: user.phoneNumber,
-        })
+        .values({...user})
         .run();
     }
   } catch (error) {

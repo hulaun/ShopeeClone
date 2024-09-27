@@ -1,71 +1,67 @@
-import { Request, Response, NextFunction } from "express";
-import { UserModel } from "../models/UserModel";
+import { UserModel } from "../models/model";
 import UserRepo from "../repos/UserRepo";
 
 class UserService {
-  async create(req: Request, res: Response, next: NextFunction) {
+  private static instance: UserService;
+
+  constructor() {
+    if (UserService.instance) {
+      return UserService.instance;
+    }
+    UserService.instance = this;
+  }
+
+  async create(newUser: UserModel) {
     try {
-      const newUser: UserModel = req.body as UserModel;
       const user = await UserRepo.create(newUser);
-      res.status(201).json(user);
+      return user;
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Internal server error" });
+      console.error("Error creating user:", error);
+      throw new Error("Internal server error");
     }
   }
 
-  async viewAll(req: Request, res: Response, next: NextFunction) {
+  async viewAll() {
     try {
       const users = await UserRepo.findAll();
-      res.json(users);
+      return users;
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Internal server error" });
+      console.error("Error fetching users:", error);
+      throw new Error("Internal server error");
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction) {
-    const userId: string = req.params.userId;
-    const updateData: UserModel = req.body as UserModel;
-
-    if (!userId || typeof userId !== "string") {
-      return res.status(400).json({
-        message: "Please provide a valid user id",
-      });
+  async view(userId: string) {
+    try {
+      const user = await UserRepo.findById(userId);
+      return user;
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      throw new Error("Internal server error");
     }
+  }
 
+  async update(userId: string, updateData: UserModel) {
     try {
       const user = await UserRepo.update(userId, updateData);
-      res.status(200).json({
-        message: "User updated successfully",
-        data: user,
-      });
+      return user;
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Internal server error" });
+      console.error("Error updating user:", error);
+      throw new Error("Internal server error");
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction) {
-    const userId: string = req.params.userId;
-
-    if (!userId || typeof userId !== "string") {
-      return res.status(400).json({
-        message: "Please provide a valid user id",
-      });
-    }
-
+  async delete(userId: string) {
     try {
       await UserRepo.delete(userId);
-      res.status(200).json({
-        message: "User deleted successfully",
-      });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Internal server error" });
+      console.error("Error deleting user:", error);
+      throw new Error("Internal server error");
     }
   }
 }
 
 const instance = new UserService();
+Object.freeze(instance);
+
 export default instance;

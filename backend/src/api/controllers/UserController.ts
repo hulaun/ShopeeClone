@@ -2,13 +2,12 @@ import { Request, Response, NextFunction } from "express";
 import { eq } from "drizzle-orm";
 import { db } from "../../config/db";
 import { User } from "../../../db/schema";
-import { UserModel } from "../models/UserModel";
-import UserService from "../services/UserService"
-class UserController {
+import UserService from "../services/UserService";
 
+class UserController {
   private static instance: UserController;
-  
-  public constructor() {
+
+  constructor() {
     if (UserController.instance) {
       return UserController.instance;
     }
@@ -16,68 +15,56 @@ class UserController {
   }
 
   async viewAll(req: Request, res: Response, next: NextFunction) {
-    await UserService.viewAll(req, res, next);
+    try {
+      const users = await UserService.viewAll();
+      res.json(users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   }
-  
+
   async view(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId: string = req.params.id
-      const response = await db.select().from(User).where(eq(User.id, userId))
-      res.json({ response });
+      const userId: string = req.params.id;
+      const user = await UserService.view(userId);
+      res.json(user);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching user:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   }
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      if(typeof req.body !== 'object'  || req.body ===null){
-        res.status(400).json({
-          message : "request is invalid"
-        })
-      }
-      const newUser: UserModel= req.body as UserModel
-      const user = await db
-        .insert(User)
-        .values({
-          ...newUser
-        })
-        .returning({insertedId: User.id, username: User.username})
-      res.json(user)
-
+      const newUser = req.body;
+      const user = await UserService.create(newUser);
+      res.status(201).json(user);
     } catch (error) {
-      console.log(error)
+      console.error("Error creating user:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction){
+  async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId: string=req.params.id
-      const user = await db
-        .delete(User)
-        .where(eq(User.id,userId))
-        .returning({id:User.id, username:User.username})
-      res.json(user)
+      const userId: string = req.params.id;
+      const updateData = req.body;
+      const user = await UserService.update(userId, updateData);
+      res.status(200).json(user);
     } catch (error) {
-      console.log(error)
+      console.error("Error updating user:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction){
+  async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId: string=req.params.id
-      const updateData: UserModel = req.body
-      const user = await db
-        .update(User)
-        .set({...updateData})
-        .where(eq(User.id,userId))
-        .returning()
-      res.json(user)
+      const userId: string = req.params.id;
+      await UserService.delete(userId);
+      res.status(200).json({ message: "User deleted successfully" });
     } catch (error) {
-      console.log(error)
+      console.error("Error deleting user:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   }

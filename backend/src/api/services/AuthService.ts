@@ -1,6 +1,7 @@
 require("dotenv").config();
 
-const AuthRepo = require("../repos/AuthRepo");
+import { UserModel } from "../models/model";
+import AuthRepo from "../repos/AuthRepo";
 const {
   hashPassword,
   createSalt,
@@ -27,7 +28,12 @@ class AuthService {
     }
     const salt = createSalt();
     const passwordHash = hashPassword(password, salt);
-    const user = await AuthRepo.addUser(loginKey, passwordHash, salt);
+    const newUser: UserModel = {
+      username: loginKey,
+      password: passwordHash,
+      salt: salt,
+    } as UserModel;
+    const user = await AuthRepo.addConsumerAccount(newUser);
 
     const accessToken = signAccessToken(user);
     const refreshToken = signRefreshToken(user);
@@ -111,7 +117,7 @@ class AuthService {
     const user = await userData.json();
     const userExists = await AuthRepo.hasAccount(user.email);
     if (!userExists) {
-      await AuthRepo.addUser(user.email, null, null, user.name, user.picture);
+      await AuthRepo.addConsumerAccount(user);
     }
 
     const accessToken = signAccessToken(user);
