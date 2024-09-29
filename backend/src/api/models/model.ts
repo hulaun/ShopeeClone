@@ -12,9 +12,14 @@ export type UserModel = {
     role: "Admin" | "Consumer" | "Vendor";
     createdAt: string | null;
 };
-
 export type VendorExtraModel = {
     userId: string;
+};
+
+export type CartModel = {
+    id: string;
+    userId: string | null;
+    createdAt: string | null;
 };
 
 export type ShopModel = {
@@ -56,7 +61,7 @@ export type ProductCategoryRelationsModel = {
     categoryId: string;
 };
 
-export type OrderProductsRelationsModel = {
+export type CartProductsRelationsModel = {
     orderId: string;
     productId: string;
     quantity: number | null;
@@ -68,6 +73,7 @@ export type OrderModel = {
     status: "Pending" | "Processing" | "Delivered" | "Cancelled";
     totalAmount: number | null;
     userId: string | null;
+    createdAt: string | null;
 };
 
 export type VoucherModel = {

@@ -1,19 +1,31 @@
-CREATE TABLE `Order` (
+CREATE TABLE `Cart` (
 	`Id` text(36) PRIMARY KEY NOT NULL,
-	`OrderDate` text DEFAULT current_timestamp,
-	`Status` text(20) NOT NULL,
-	`TotalAmount` integer,
 	`UserId` text(36),
 	FOREIGN KEY (`UserId`) REFERENCES `User`(`Id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE TABLE `OrderProductsRelations` (
-	`OrderId` text(36),
+CREATE TABLE `CartProductsRelations` (
+	`CartId` text(36),
 	`ProductId` text(36),
 	`Quantity` integer,
-	PRIMARY KEY(`OrderId`, `ProductId`),
-	FOREIGN KEY (`OrderId`) REFERENCES `Order`(`Id`) ON UPDATE no action ON DELETE no action,
+	`Price` integer,
+	PRIMARY KEY(`CartId`, `ProductId`),
+	FOREIGN KEY (`CartId`) REFERENCES `Cart`(`Id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`ProductId`) REFERENCES `Product`(`Id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE TABLE `Order` (
+	`Id` text(36) PRIMARY KEY NOT NULL,
+	`CartId` text(36),
+	`OrderDate` text DEFAULT current_timestamp,
+	`Status` text(20) NOT NULL,
+	`TotalAmount` integer,
+	`ShippingAddress` text,
+	`UserId` text(36),
+	`CreatedAt` text DEFAULT current_timestamp,
+	FOREIGN KEY (`CartId`) REFERENCES `Cart`(`Id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`ShippingAddress`) REFERENCES `User`(`UserAddress`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`UserId`) REFERENCES `User`(`Id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `Product` (
@@ -99,6 +111,14 @@ CREATE TABLE `Voucher` (
 	`Type` text(20) NOT NULL,
 	`Code` text(20),
 	`Discount` integer
+);
+--> statement-breakpoint
+CREATE TABLE `VoucherProductRelations` (
+	`VoucherId` text(36),
+	`ProductId` text(36),
+	PRIMARY KEY(`VoucherId`, `ProductId`),
+	FOREIGN KEY (`VoucherId`) REFERENCES `Voucher`(`Id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`ProductId`) REFERENCES `Product`(`Id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `VoucherRules` (

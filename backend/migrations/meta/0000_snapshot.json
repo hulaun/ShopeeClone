@@ -1,9 +1,118 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "1cf83ad9-27d0-4636-b298-be9a46154711",
+  "id": "9e9eea8f-59b6-44da-bc2f-34b2867444ea",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "Cart": {
+      "name": "Cart",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "text(36)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "UserId": {
+          "name": "UserId",
+          "type": "text(36)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Cart_UserId_User_Id_fk": {
+          "name": "Cart_UserId_User_Id_fk",
+          "tableFrom": "Cart",
+          "tableTo": "User",
+          "columnsFrom": [
+            "UserId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "CartProductsRelations": {
+      "name": "CartProductsRelations",
+      "columns": {
+        "CartId": {
+          "name": "CartId",
+          "type": "text(36)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "ProductId": {
+          "name": "ProductId",
+          "type": "text(36)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "Quantity": {
+          "name": "Quantity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "Price": {
+          "name": "Price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "CartProductsRelations_CartId_Cart_Id_fk": {
+          "name": "CartProductsRelations_CartId_Cart_Id_fk",
+          "tableFrom": "CartProductsRelations",
+          "tableTo": "Cart",
+          "columnsFrom": [
+            "CartId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "CartProductsRelations_ProductId_Product_Id_fk": {
+          "name": "CartProductsRelations_ProductId_Product_Id_fk",
+          "tableFrom": "CartProductsRelations",
+          "tableTo": "Product",
+          "columnsFrom": [
+            "ProductId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "CartProductsRelations_CartId_ProductId_pk": {
+          "columns": [
+            "CartId",
+            "ProductId"
+          ],
+          "name": "CartProductsRelations_CartId_ProductId_pk"
+        }
+      },
+      "uniqueConstraints": {}
+    },
     "Order": {
       "name": "Order",
       "columns": {
@@ -12,6 +121,13 @@
           "type": "text(36)",
           "primaryKey": true,
           "notNull": true,
+          "autoincrement": false
+        },
+        "CartId": {
+          "name": "CartId",
+          "type": "text(36)",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "OrderDate": {
@@ -36,16 +152,57 @@
           "notNull": false,
           "autoincrement": false
         },
+        "ShippingAddress": {
+          "name": "ShippingAddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "UserId": {
           "name": "UserId",
           "type": "text(36)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "current_timestamp"
         }
       },
       "indexes": {},
       "foreignKeys": {
+        "Order_CartId_Cart_Id_fk": {
+          "name": "Order_CartId_Cart_Id_fk",
+          "tableFrom": "Order",
+          "tableTo": "Cart",
+          "columnsFrom": [
+            "CartId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Order_ShippingAddress_User_UserAddress_fk": {
+          "name": "Order_ShippingAddress_User_UserAddress_fk",
+          "tableFrom": "Order",
+          "tableTo": "User",
+          "columnsFrom": [
+            "ShippingAddress"
+          ],
+          "columnsTo": [
+            "UserAddress"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "Order_UserId_User_Id_fk": {
           "name": "Order_UserId_User_Id_fk",
           "tableFrom": "Order",
@@ -61,71 +218,6 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "OrderProductsRelations": {
-      "name": "OrderProductsRelations",
-      "columns": {
-        "OrderId": {
-          "name": "OrderId",
-          "type": "text(36)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "ProductId": {
-          "name": "ProductId",
-          "type": "text(36)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "Quantity": {
-          "name": "Quantity",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "OrderProductsRelations_OrderId_Order_Id_fk": {
-          "name": "OrderProductsRelations_OrderId_Order_Id_fk",
-          "tableFrom": "OrderProductsRelations",
-          "tableTo": "Order",
-          "columnsFrom": [
-            "OrderId"
-          ],
-          "columnsTo": [
-            "Id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "OrderProductsRelations_ProductId_Product_Id_fk": {
-          "name": "OrderProductsRelations_ProductId_Product_Id_fk",
-          "tableFrom": "OrderProductsRelations",
-          "tableTo": "Product",
-          "columnsFrom": [
-            "ProductId"
-          ],
-          "columnsTo": [
-            "Id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "OrderProductsRelations_OrderId_ProductId_pk": {
-          "columns": [
-            "OrderId",
-            "ProductId"
-          ],
-          "name": "OrderProductsRelations_OrderId_ProductId_pk"
-        }
-      },
       "uniqueConstraints": {}
     },
     "Product": {
@@ -681,6 +773,64 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "VoucherProductRelations": {
+      "name": "VoucherProductRelations",
+      "columns": {
+        "VoucherId": {
+          "name": "VoucherId",
+          "type": "text(36)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "ProductId": {
+          "name": "ProductId",
+          "type": "text(36)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "VoucherProductRelations_VoucherId_Voucher_Id_fk": {
+          "name": "VoucherProductRelations_VoucherId_Voucher_Id_fk",
+          "tableFrom": "VoucherProductRelations",
+          "tableTo": "Voucher",
+          "columnsFrom": [
+            "VoucherId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "VoucherProductRelations_ProductId_Product_Id_fk": {
+          "name": "VoucherProductRelations_ProductId_Product_Id_fk",
+          "tableFrom": "VoucherProductRelations",
+          "tableTo": "Product",
+          "columnsFrom": [
+            "ProductId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "VoucherProductRelations_VoucherId_ProductId_pk": {
+          "columns": [
+            "VoucherId",
+            "ProductId"
+          ],
+          "name": "VoucherProductRelations_VoucherId_ProductId_pk"
+        }
+      },
       "uniqueConstraints": {}
     },
     "VoucherRules": {

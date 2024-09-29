@@ -66,20 +66,29 @@ export const ProductCategoryRelations = sqliteTable('ProductCategoryRelations', 
     pk: primaryKey({columns: [table.productId, table.categoryId]}),
 }})
 
-export const OrderProductsRelations = sqliteTable('OrderProductsRelations', {
-    orderId: text('OrderId', { length: 36 }).references(()=> Order.id),
+export const CartProductsRelations = sqliteTable('CartProductsRelations', {
+    cartId: text('CartId', { length: 36 }).references(()=> Cart.id),
     productId: text('ProductId', { length: 36 }).references(()=> Product.id),
     quantity: integer('Quantity'),
+    price: integer('Price'),
 },(table)=>{return{
-    pk: primaryKey({columns: [table.orderId, table.productId]}),
+    pk: primaryKey({columns: [table.cartId, table.productId]}),
 }})
+
+export const Cart = sqliteTable('Cart', {
+    id: text('Id', { length: 36 }).primaryKey().$defaultFn(()=> crypto.randomUUID()),
+    userId: text('UserId', { length: 36 }).references(()=> User.id),
+})
 
 export const Order = sqliteTable('Order', {
     id: text('Id', { length: 36 }).primaryKey().$defaultFn(()=> crypto.randomUUID()),
+    cartId: text('CartId', { length: 36 }).references(()=> Cart.id),
     orderDate: text('OrderDate').default(sql`current_timestamp`),
     status: text('Status', {length: 20, enum: ["Pending", "Processing", "Delivered", "Cancelled"]}).notNull(),
     totalAmount: integer('TotalAmount'),
+    shippingAddress: text('ShippingAddress').references(()=> User.userAddress),
     userId: text('UserId', { length: 36 }).references(()=> User.id),
+    createdAt: text('CreatedAt').default(sql`current_timestamp`),
 })
 
 export const Voucher = sqliteTable('Voucher', {
@@ -96,6 +105,13 @@ export const VoucherRules = sqliteTable('VoucherRules', {
     value1: text('Value1'),
     value2: text('Value2'),
 })
+
+export const VoucherProductRelations = sqliteTable('VoucherProductRelations', {
+    voucherId: text('VoucherId', { length: 36 }).references(()=> Voucher.id),
+    productId: text('ProductId', { length: 36 }).references(()=> Product.id),
+},(table)=>{return{
+    pk: primaryKey({columns: [table.voucherId, table.productId]}),
+}})
 
 export const UserVoucherRelations = sqliteTable('UserVoucherRelations', {
     userId: text('UserId', { length: 36 }).references(()=> User.id),
