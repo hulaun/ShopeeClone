@@ -1,7 +1,7 @@
 import HomeFooter from "./components/HomeFooter";
 import { useEffect, useRef, useState, React } from "react";
 import Cookies from 'js-cookie';
-import {useAuth} from "../../context/AuthContext";
+import {useAuth} from "../../../context/AuthContext";
 
 import ProductCategory from "./components/ProductCategory";
 import SuggestedProducts from "./components/SuggestedProducts";

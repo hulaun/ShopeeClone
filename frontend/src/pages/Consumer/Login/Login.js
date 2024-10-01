@@ -1,12 +1,16 @@
 import classNames from "classnames/bind";
 import styles from "./Login.module.scss";
-import config from "../../config";
+import config from "../../../config";
 import { Link } from "react-router-dom";
 
-import { GoogleIcon, ShopeeIcon, FacebookIcon } from "../../components/Icons";
+import {
+  GoogleIcon,
+  ShopeeIcon,
+  FacebookIcon,
+} from "../../../components/Icons";
 import { useEffect, useRef, useState } from "react";
-import httpRequest from "../../utils/httpRequest";
-import { useAuth } from "../../context/AuthContext";
+import httpRequest from "../../../utils/httpRequest";
+import { useAuth } from "../../../context/AuthContext";
 
 const cx = classNames.bind(styles);
 
@@ -102,7 +106,7 @@ function Login() {
         setAccessToken(accessToken);
         setAuthorizationHeader(accessToken);
 
-        window.location.href = config.routes.home;
+        window.location.href = config.routes.public.home;
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -196,7 +200,7 @@ function Login() {
               <div className={cx("submit-section")}>
                 <input type="submit" value="ĐĂNG NHẬP" />
                 <Link
-                  to={config.routes.login}
+                  to={config.routes.public.login}
                   style={{ textDecoration: "none", color: "blue" }}
                 >
                   Quên mật khẩu
@@ -223,7 +227,7 @@ function Login() {
             <div className={cx("section", "signup-link")}>
               Bạn mới biết Shopee?
               <Link
-                to={config.routes.signup}
+                to={config.routes.public.signup}
                 style={{ textDecoration: "none", color: "red" }}
               >
                 Đăng ký

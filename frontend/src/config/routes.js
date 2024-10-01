@@ -1,8 +1,21 @@
 const routes = {
-  home: "/",
-  profile: "/profile",
-  login: "/login",
-  signup: "/signup",
-  test: "/test",
+  public: {
+    home: "/",
+    login: "/login",
+    signup: "/signup",
+    test: "/test",
+  },
+  consumer: {
+    profile: "/consumer/profile",
+  },
+  vendor: {},
+  admin: {
+    dashboard: "/admin/",
+    user: "/admin/user",
+    analitics: "/admin/analitics",
+    calendar: "/admin/calendar",
+    settings: "/admin/settings",
+    messages: "/admin/messages",
+  },
 };
 export default routes;

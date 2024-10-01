@@ -1,9 +1,13 @@
 import classNames from "classnames/bind";
 import styles from "./Signup.module.scss";
-import config from "../../config";
+import config from "../../../config";
 import { Link } from "react-router-dom";
 
-import { GoogleIcon, ShopeeIcon, FacebookIcon } from "../../components/Icons";
+import {
+  GoogleIcon,
+  ShopeeIcon,
+  FacebookIcon,
+} from "../../../components/Icons";
 import { useRef, useEffect } from "react";
 
 const cx = classNames.bind(styles);
@@ -101,7 +105,7 @@ function Signup() {
             <div className={cx("section", "signup-link")}>
               Bạn mới biết Shopee?
               <Link
-                to={config.routes.login}
+                to={config.routes.public.login}
                 style={{ textDecoration: "none", color: "red" }}
               >
                 Đăng nhập

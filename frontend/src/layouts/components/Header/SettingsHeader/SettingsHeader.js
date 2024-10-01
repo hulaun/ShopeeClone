@@ -41,7 +41,7 @@ function SettingsHeader() {
               <p>Language</p>
               <DownIcon />
             </div>
-            <Link to={config.routes.login} className={cx("d-flex")}>
+            <Link to={config.routes.public.login} className={cx("d-flex")}>
               <img src="https://picsum.photos/20/20" alt="#"></img>
               <p>customer</p>
             </Link>
