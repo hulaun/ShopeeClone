@@ -1,10 +1,13 @@
+import DefaultLayout from "../layouts/DefaultLayout";
+import AuthLayout from "../layouts/AuthLayout";
+import AdminLayout from "../layouts/AdminLayout";
+
+import config from "../config";
+
 import Home from "../pages/Consumer/Home";
 import Login from "../pages/Consumer/Login";
 import Profile from "../pages/Consumer/Profile";
 import Signup from "../pages/Consumer/Signup";
-import config from "../config";
-import DefaultLayout from "../layouts/DefaultLayout";
-import AuthLayout from "../layouts/AuthLayout";
 import Test from "../pages/Test";
 import AdminDashboard from "../pages/Admin/Dashboard/Dashboard";
 
@@ -39,6 +42,7 @@ const adminRoutes = [
   {
     path: config.routes.admin.dashboard,
     component: AdminDashboard,
+    layout: AdminLayout,
   },
 ];
 

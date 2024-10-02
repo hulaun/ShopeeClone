@@ -22,8 +22,19 @@ function App() {
           );
         })}
         {adminRoutes.map((route, index) => {
+          let Layout = route.layout;
           let Page = route.component;
-          return <Route key={index} path={route.path} element={<Page />} />;
+          return (
+            <Route
+              key={index}
+              path={route.path}
+              element={
+                <Layout>
+                  <Page />
+                </Layout>
+              }
+            />
+          );
         })}
       </Routes>
     </Router>
