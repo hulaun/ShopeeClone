@@ -8,9 +8,9 @@ function AdminDashboard() {
     setDateDropdown(!dateDropdown);
   }
   return (
-    <div className='w-full pl-8'>
-      <header className='flex flex-row justify-between items-between'>
-        <h1 className='text-2xl font-bold'>Dashboard</h1>
+    <div className='w-full p-8'>
+      <header className='flex flex-row justify-between items-center'>
+        <h1 className='text-2xl font-semibold'>Dashboard</h1>
         <button 
           className='bg-secondary py-3 px-7 rounded-md text-white flex gap-4 items-center'
           onClick={handleDateDropdown}>

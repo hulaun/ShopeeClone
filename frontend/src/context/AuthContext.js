@@ -21,12 +21,27 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const isConsumer = () => {
+    return currentUser?.role === "Consumer";
+  };
+
+  const isAdmin = () => {
+    return currentUser?.role === "Admin";
+  };
+
+  const isVendor = () => {
+    return currentUser?.role === "Vendor";
+  };
+
   const value = {
     setAuthorizationHeader,
     currentUser,
     setCurrentUser,
     accessToken,
     setAccessToken,
+    isConsumer,
+    isAdmin,
+    isVendor,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

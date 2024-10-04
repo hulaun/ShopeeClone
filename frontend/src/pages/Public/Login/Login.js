@@ -1,7 +1,7 @@
 import classNames from "classnames/bind";
 import styles from "./Login.module.scss";
 import config from "../../../config";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   GoogleIcon,
@@ -15,7 +15,14 @@ import { useAuth } from "../../../context/AuthContext";
 const cx = classNames.bind(styles);
 
 function Login() {
-  const { setCurrentUser, setAccessToken, setAuthorizationHeader } = useAuth();
+  const {
+    setCurrentUser,
+    setAccessToken,
+    setAuthorizationHeader,
+    isAdmin,
+    isConsumer,
+    isVendor,
+  } = useAuth();
   const [userInputValue, setUserInputValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [inputErrors, setInputErrors] = useState({
@@ -26,6 +33,8 @@ function Login() {
   const passwordErrorRef = useRef();
   const googleButtonRef = useRef();
   const facebookButtonRef = useRef();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const googleButton = googleButtonRef.current;
@@ -44,7 +53,6 @@ function Login() {
   }, []);
 
   const handleGoogleClick = () => {
-    console.log(process.env.REACT_APP_SERVER_ENDPOINT);
     window.location.href = `${process.env.REACT_APP_SERVER_ENDPOINT}/auth/signin/oauth/google/login`;
   };
 
@@ -75,7 +83,6 @@ function Login() {
       ...prev,
       [fieldName]: false,
     }));
-    console.log(userInputValue, passwordValue);
 
     if (fieldName === "username") {
       setUserInputValue(inputValue);
@@ -106,7 +113,16 @@ function Login() {
         setAccessToken(accessToken);
         setAuthorizationHeader(accessToken);
 
-        window.location.href = config.routes.public.home;
+        if (isConsumer()) {
+          console.log("isConsumer");
+          navigate(config.routes.public.home);
+        } else if (isVendor()) {
+          console.log("isVendor");
+          navigate(config.routes.public.home);
+        } else if (isAdmin()) {
+          console.log("isAdmin");
+          navigate(config.routes.admin.dashboard);
+        }
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {

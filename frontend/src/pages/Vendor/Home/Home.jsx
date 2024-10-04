@@ -17,13 +17,7 @@ function Home() {
   ];
 
   useEffect(() => {
-
-    const refreshToken =  Cookies.get('refreshToken');
-    console.log(refreshToken);
-    console.log(accessToken);
-    if (accessToken) {
-      setAuthorizationHeader(accessToken);
-    }
+    console.log(accessToken)
 
     const interval = setInterval(() => {
       setCurrentIndexCarousel((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));

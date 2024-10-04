@@ -10,8 +10,8 @@ const routes = {
   },
   vendor: {},
   admin: {
-    dashboard: "/admin/",
-    user: "/admin/user",
+    dashboard: "/admin/dashboard",
+    users: "/admin/users",
     analitics: "/admin/analitics",
     calendar: "/admin/calendar",
     settings: "/admin/settings",
