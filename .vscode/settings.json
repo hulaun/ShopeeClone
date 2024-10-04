@@ -1,4 +1,11 @@
 {
-    "sqltools.connections": [],
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "shopeeclone",
+            "database": "${workspaceFolder:ShopeeClone}/backend/db/main.db"
+        }
+    ],
     "sqltools.useNodeRuntime": true
 }

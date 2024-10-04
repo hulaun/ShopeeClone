@@ -31,6 +31,16 @@ class UserService {
     }
   }
 
+  async viewPage(page: number, limit: number) {
+    try {
+      const users = await UserRepo.findSome(page, limit);
+      return users;
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      throw new Error("Internal server error");
+    }
+  }
+
   async view(userId: string) {
     try {
       const user = await UserRepo.findById(userId);

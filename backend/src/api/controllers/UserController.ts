@@ -1,7 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { eq } from "drizzle-orm";
-import { db } from "../../config/db";
-import { User } from "../../../db/schema";
 import UserService from "../services/UserService";
 
 class UserController {
@@ -17,6 +14,18 @@ class UserController {
   async viewAll(req: Request, res: Response, next: NextFunction) {
     try {
       const users = await UserService.viewAll();
+      res.json(users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  async viewPage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const page = parseInt(req.params.page as string) ||1;
+      const limit = parseInt(req.query.limit as string)||10;
+      const users = await UserService.viewPage(page, limit);
       res.json(users);
     } catch (error) {
       console.error("Error fetching users:", error);

@@ -30,19 +30,19 @@ class AuthRepo {
 
   async getUserAccount(loginKey: string, password: string) {
     try {
-      const user: UserModel = await db
+      const user: UserModel[] = await db
         .select()
         .from(User)
         .where(eq(User.username, loginKey))
-        .limit(1) as unknown as UserModel;
+        .limit(1) as UserModel[];
 
-      if (user) {
-        const passwordHash = hashPassword(password, user.salt as string);
+      if (user[0]) {
+        const passwordHash = hashPassword(password, user[0].salt);
 
-        if (passwordHash === user.password) {
+        if (passwordHash === user[0].password) {
           return {
             message: "Login successful",
-            user: omit(user, ["Password", "Salt"]),
+            user: omit(user[0], ["password", "salt"]),
           };
         } else {
           return {

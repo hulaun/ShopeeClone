@@ -7,7 +7,7 @@ export const createSalt = () => {
   return crypto.randomBytes(16).toString("hex");
 };
 
-export const hashPassword = (password: string, salt: string) => {
+export const hashPassword = (password: string, salt: any) => {
   return crypto.pbkdf2Sync(password, salt, 1000, 64, "sha512").toString("hex");
 };
 

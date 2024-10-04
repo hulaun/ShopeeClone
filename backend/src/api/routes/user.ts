@@ -1,4 +1,4 @@
-import e, { Router } from "express";
+import { Router } from "express";
 import UserController from "../controllers/UserController";
 
 
@@ -13,5 +13,9 @@ router
     .get(UserController.view)
     .patch(UserController.update)
     .delete(UserController.delete);
+
+router
+    .route("/page/:page")
+    .get(UserController.viewPage);
 
 export {router as userRouter}

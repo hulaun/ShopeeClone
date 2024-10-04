@@ -3,6 +3,7 @@ import {db} from "../../config/db";
 import { User } from "../../../db/schema";
 import { UserModel } from "../models/model"
 import { eq } from "drizzle-orm";
+import { omit } from "lodash";
 
 class UserRepo {
 
@@ -17,7 +18,33 @@ class UserRepo {
 
   async findAll() {
     try{
-      const users = await db.select().from(User)
+      const users = await db.select({
+        id: User.id,
+        username: User.username,
+        email: User.email,
+        fullName: User.fullName,
+        createdAt: User.createdAt,
+        role: User.role,
+      }).from(User)
+      return users
+    }catch(error){
+      console.log(error)
+      return error
+    }
+  }
+
+  async findSome(page: number, limit: number) {
+    try{
+      const users = await db.select({
+        id: User.id,
+        username: User.username,
+        email: User.email,
+        fullName: User.fullName,
+        createdAt: User.createdAt,
+        role: User.role,
+      }).from(User)
+      .limit(limit)
+      .offset((page-1)*limit)
       return users
     }catch(error){
       console.log(error)
