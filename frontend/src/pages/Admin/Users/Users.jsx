@@ -1,28 +1,54 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import httpRequest from "../../../utils/httpRequest";
 import Dropdown from "../../../components/Drowdown/Drowdown";
 
 
 function AdminUsers() {
   const [users, setUsers] = useState([])
+  
+  const [usernameOption, setUsernameOption] = useState("ascending")
+  const [emailOption, setEmailOption] = useState("ascending")
+  const [fullNameOption, setFullNameOption] = useState("ascending")
+  const [roleOption, setRoleOption] = useState("consumer")
+
+  const [sortOption, setSortOption] = useState('username');
+  const [sortOrder, setSortOrder] = useState('asc');
+ 
+
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  
   
   const handlePageChange = (page) => {
     setCurrentPage(page)
   }
+  
+  const handleSortChange = (option) => {
+    setSortOption(option);
+  };
+
+  const handleSortOrderChange = (order) => {
+    setSortOrder(order);
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
       const response = await httpRequest.get("/user/page/1?limit=10")
-      console.log(response)
       if (response.status === 200) {
         setUsers(response.data)
       }
     }
     fetchUsers()
   }, [])
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await httpRequest.get(`/user/page/${currentPage}?limit=10&sort=${sortOption}&order=${sortOrder}`);
+      if (response.status === 200) {
+        setUsers(response.data);
+      }
+    };
+    fetchUsers();
+  }, [currentPage, sortOption, sortOrder]);
 
   return ( <div className="w-full p-8">
     <header className="flex justify-between items-center">
@@ -40,34 +66,34 @@ function AdminUsers() {
       <section className="flex col-start-2 col-span-3">
         <Dropdown styles="dropdown">
           <Dropdown.Button >Username</Dropdown.Button>
-          <Dropdown.Menu styles="dropdown-menu">
-            <Dropdown.Options styles="dropdown-option" id="ascending">Ascending</Dropdown.Options>
-            <Dropdown.Options styles="dropdown-option" id="descending">Descending</Dropdown.Options>
+          <Dropdown.Menu styles="dropdown-menu" value={usernameOption} onValueChange={setUsernameOption} >
+            <Dropdown.Options styles="dropdown-option" id="asc">Ascending</Dropdown.Options>
+            <Dropdown.Options styles="dropdown-option" id="desc">Descending</Dropdown.Options>
           </Dropdown.Menu>
         </Dropdown>
       </section>
       <section className="flex col-span-3">
         <Dropdown styles="dropdown">
           <Dropdown.Button >Email</Dropdown.Button>
-          <Dropdown.Menu styles="dropdown-menu">
-            <Dropdown.Options styles="dropdown-option" id="ascending">Ascending</Dropdown.Options>
-            <Dropdown.Options styles="dropdown-option" id="descending">Descending</Dropdown.Options>
+          <Dropdown.Menu styles="dropdown-menu" value={emailOption} onValueChange={setEmailOption}>
+            <Dropdown.Options styles="dropdown-option" id="asc">Ascending</Dropdown.Options>
+            <Dropdown.Options styles="dropdown-option" id="desc">Descending</Dropdown.Options>
           </Dropdown.Menu>
         </Dropdown>
       </section>
       <section className="flex col-span-3">
         <Dropdown styles="dropdown">
           <Dropdown.Button >Full Name</Dropdown.Button>
-          <Dropdown.Menu styles="dropdown-menu">
-            <Dropdown.Options styles="dropdown-option" id="ascending">Ascending</Dropdown.Options>
-            <Dropdown.Options styles="dropdown-option" id="descending">Descending</Dropdown.Options>
+          <Dropdown.Menu styles="dropdown-menu" value={fullNameOption} onValueChange={setFullNameOption}>
+            <Dropdown.Options styles="dropdown-option" id="asc">Ascending</Dropdown.Options>
+            <Dropdown.Options styles="dropdown-option" id="desc">Descending</Dropdown.Options>
           </Dropdown.Menu>
         </Dropdown>
       </section>
       <section className="flex">
         <Dropdown styles="dropdown">
           <Dropdown.Button >Role</Dropdown.Button>
-          <Dropdown.Menu styles="dropdown-menu">
+          <Dropdown.Menu styles="dropdown-menu" value={roleOption} onValueChange={setRoleOption}>
             <Dropdown.Options styles="dropdown-option" id="consumer">Consumer</Dropdown.Options>
             <Dropdown.Options styles="dropdown-option" id="vendor">Vendor</Dropdown.Options>
             <Dropdown.Options styles="dropdown-option" id="others">Others</Dropdown.Options>
@@ -87,7 +113,7 @@ function AdminUsers() {
             <div className="col-span-3 text-sm text-gray-500 truncate">{user.email}</div>
             <div className="col-span-3 text-sm text-gray-500 truncate">{user.fullName}</div>
             <div className="text-sm text-gray-500">{user.role}</div>
-            <div>
+            <div className="flex justify-end">
               <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 448 512">
                 <path d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"/>
               </svg>

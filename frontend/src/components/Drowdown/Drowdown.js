@@ -4,6 +4,7 @@ import React, {
   useState,
   useRef,
   useEffect,
+  forwardRef,
 } from "react";
 import { DropdownDownIcon, DropdownUpIcon } from "../Icons/Icons";
 
@@ -18,7 +19,6 @@ const useDropdown = () => {
 };
 
 const Dropdown = ({ children }) => {
-  const [choseOption, setChoseOption] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -42,71 +42,80 @@ const Dropdown = ({ children }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
   return (
     <DropdownContext.Provider
       value={{
         isOpen,
         toggleDropdown,
         closeDropdown,
-        dropdownRef,
-        choseOption,
-        setChoseOption,
       }}
     >
-      {children}
+      {React.Children.map(children, (child) => {
+        if (child.type === Button) {
+          return React.cloneElement(child, { ref: dropdownRef });
+        }
+        return child;
+      })}
     </DropdownContext.Provider>
   );
 };
 
-const Button = ({
-  children,
-  styles,
-  CloseIcon = DropdownDownIcon,
-  ActiveIcon = DropdownUpIcon,
-}) => {
-  const { toggleDropdown, isOpen } = useDropdown();
+const Button = forwardRef(
+  (
+    {
+      children,
+      styles,
+      CloseIcon = DropdownDownIcon,
+      ActiveIcon = DropdownUpIcon,
+    },
+    ref
+  ) => {
+    const { toggleDropdown, isOpen } = useDropdown();
 
-  return (
-    <button
-      className={`flex justify-center items-center ${styles}`}
-      onClick={toggleDropdown}
-    >
-      {children}
-      {isOpen ? <ActiveIcon /> : <CloseIcon />}
-    </button>
-  );
-};
+    return (
+      <button
+        ref={ref}
+        className={`flex justify-center items-center ${styles}`}
+        onClick={toggleDropdown}
+      >
+        {children}
+        {isOpen ? <ActiveIcon /> : <CloseIcon />}
+      </button>
+    );
+  }
+);
 
-const Menu = ({ children, styles }) => {
-  const { isOpen, dropdownRef } = useDropdown();
-
+const Menu = ({ children, styles, value, onValueChange }) => {
+  const { isOpen } = useDropdown();
   return (
     isOpen && (
       <div
-        ref={dropdownRef}
         className={`absolute mt-6 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 ${styles}`}
         role="menu"
         aria-orientation="vertical"
         tabIndex="-1"
       >
-        {children}
+        {React.Children.map(children, (child) => {
+          if (React.isValidElement(child)) {
+            return React.cloneElement(child, { value, onValueChange });
+          }
+        })}
       </div>
     )
   );
 };
 
-const Options = ({ children, styles, id }) => {
-  const { closeDropdown, setChoseOption, choseOption } = useDropdown();
+const Options = ({ children, styles, id, value, onValueChange }) => {
+  const { closeDropdown } = useDropdown();
   const handleClick = (e) => {
-    setChoseOption(e.target.id);
+    onValueChange(e.target.id);
     closeDropdown();
   };
 
   return (
     <div
       className={`block border border-grey-100 hover:bg-gray-700 truncate p-2 ${styles} ${
-        choseOption === id ? "bg-grey-300" : "bg-white"
+        value === id ? "bg-grey-300" : "bg-white"
       }`}
       onClick={handleClick}
       id={id}
