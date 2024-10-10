@@ -7,6 +7,7 @@ import React, {
   forwardRef,
 } from "react";
 import { DropdownDownIcon, DropdownUpIcon } from "../Icons/Icons";
+import { motion } from "framer-motion";
 
 const DropdownContext = createContext();
 
@@ -89,8 +90,12 @@ const Menu = ({ children, styles, value, onValueChange }) => {
   const { isOpen } = useDropdown();
   return (
     isOpen && (
-      <div
-        className={`absolute mt-6 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 ${styles}`}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.15 }}
+        className={`absolute mt-6 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 ${styles} `}
         role="menu"
         aria-orientation="vertical"
         tabIndex="-1"
@@ -100,7 +105,7 @@ const Menu = ({ children, styles, value, onValueChange }) => {
             return React.cloneElement(child, { value, onValueChange });
           }
         })}
-      </div>
+      </motion.div>
     )
   );
 };
@@ -114,7 +119,7 @@ const Options = ({ children, styles, id, value, onValueChange }) => {
 
   return (
     <div
-      className={`block border border-grey-100 hover:bg-gray-700 truncate p-2 ${styles} ${
+      className={`block border border-grey-100 hover:bg-grey-100 select-none first:rounded-t-md last:rounded-b-md truncate p-2 ${styles} ${
         value === id ? "bg-grey-300" : "bg-white"
       }`}
       onClick={handleClick}
