@@ -11,3 +11,15 @@ export const PrimaryButton = memo(({ children, style = {} }) => {
     </button>
   );
 });
+
+export const IconButton = memo(({ children, style = {}, handleClick }) => {
+  return (
+    <button
+      className="bg-primary rounded-full aspect-square p-2 w-10 flex items-center justify-center"
+      style={style}
+      onClick={handleClick}
+    >
+      {children}
+    </button>
+  );
+});

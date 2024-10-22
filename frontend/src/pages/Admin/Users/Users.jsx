@@ -32,16 +32,6 @@ function AdminUsers() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await httpRequest.get("/user/page/1?limit=10")
-      if (response.status === 200) {
-        setUsers(response.data)
-      }
-    }
-    fetchUsers()
-  }, [])
-
-  useEffect(() => {
-    const fetchUsers = async () => {
       const response = await httpRequest.get(`/user/page/${currentPage}?limit=10&sort=${sortOption}&order=${sortOrder}`);
       if (response.status === 200) {
         setUsers(response.data);
