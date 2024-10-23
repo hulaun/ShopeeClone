@@ -67,7 +67,8 @@ class UserRepo {
       const user = await db
         .insert(User)
         .values({
-          ...newUser
+          ...newUser,
+          status: "Inactive",
         })
         .returning({insertedId: User.id, username: User.username})
       return user

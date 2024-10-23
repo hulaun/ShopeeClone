@@ -14,6 +14,25 @@ CREATE TABLE `CartProductsRelations` (
 	FOREIGN KEY (`ProductId`) REFERENCES `Product`(`Id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
+CREATE TABLE `ChatRoom` (
+	`Id` text(36) PRIMARY KEY NOT NULL,
+	`Name` text(50),
+	`CreatedAt` text DEFAULT current_timestamp,
+	`UserId` text(36),
+	FOREIGN KEY (`UserId`) REFERENCES `User`(`Id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE TABLE `Messages` (
+	`Id` text(36) PRIMARY KEY NOT NULL,
+	`ChatRoomId` text(36),
+	`SenderId` text(36),
+	`Content` text,
+	`CreatedAt` text DEFAULT current_timestamp,
+	`Status` text(20) NOT NULL,
+	FOREIGN KEY (`ChatRoomId`) REFERENCES `ChatRoom`(`Id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`SenderId`) REFERENCES `User`(`Id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
 CREATE TABLE `Order` (
 	`Id` text(36) PRIMARY KEY NOT NULL,
 	`CartId` text(36),
@@ -79,7 +98,18 @@ CREATE TABLE `User` (
 	`UserAddress` text,
 	`PhoneNumber` text(50),
 	`Role` text(20) NOT NULL,
+	`Status` text(20),
 	`CreatedAt` text DEFAULT current_timestamp
+);
+--> statement-breakpoint
+CREATE TABLE `UserRelationship` (
+	`UserId` text(36),
+	`RelatedUserId` text(36),
+	`RelationshipType` text(20) NOT NULL,
+	`Status` text(20) NOT NULL,
+	PRIMARY KEY(`UserId`, `RelatedUserId`),
+	FOREIGN KEY (`UserId`) REFERENCES `User`(`Id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`RelatedUserId`) REFERENCES `User`(`Id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `UserVoucherRelations` (
@@ -95,6 +125,7 @@ CREATE TABLE `UserVoucherRelations` (
 --> statement-breakpoint
 CREATE TABLE `VendorExtra` (
 	`UserId` text(36) PRIMARY KEY NOT NULL,
+	`Status` text(20),
 	FOREIGN KEY (`UserId`) REFERENCES `User`(`Id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint

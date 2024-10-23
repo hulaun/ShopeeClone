@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "9e9eea8f-59b6-44da-bc2f-34b2867444ea",
+  "id": "3db024b5-cada-447e-aa63-6742b5de9715",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "Cart": {
@@ -111,6 +111,137 @@
           "name": "CartProductsRelations_CartId_ProductId_pk"
         }
       },
+      "uniqueConstraints": {}
+    },
+    "ChatRoom": {
+      "name": "ChatRoom",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "text(36)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Name": {
+          "name": "Name",
+          "type": "text(50)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "current_timestamp"
+        },
+        "UserId": {
+          "name": "UserId",
+          "type": "text(36)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ChatRoom_UserId_User_Id_fk": {
+          "name": "ChatRoom_UserId_User_Id_fk",
+          "tableFrom": "ChatRoom",
+          "tableTo": "User",
+          "columnsFrom": [
+            "UserId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "Messages": {
+      "name": "Messages",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "text(36)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ChatRoomId": {
+          "name": "ChatRoomId",
+          "type": "text(36)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "SenderId": {
+          "name": "SenderId",
+          "type": "text(36)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "Content": {
+          "name": "Content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "current_timestamp"
+        },
+        "Status": {
+          "name": "Status",
+          "type": "text(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Messages_ChatRoomId_ChatRoom_Id_fk": {
+          "name": "Messages_ChatRoomId_ChatRoom_Id_fk",
+          "tableFrom": "Messages",
+          "tableTo": "ChatRoom",
+          "columnsFrom": [
+            "ChatRoomId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Messages_SenderId_User_Id_fk": {
+          "name": "Messages_SenderId_User_Id_fk",
+          "tableFrom": "Messages",
+          "tableTo": "User",
+          "columnsFrom": [
+            "SenderId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "Order": {
@@ -556,6 +687,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "Status": {
+          "name": "Status",
+          "type": "text(20)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "CreatedAt": {
           "name": "CreatedAt",
           "type": "text",
@@ -568,6 +706,78 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "UserRelationship": {
+      "name": "UserRelationship",
+      "columns": {
+        "UserId": {
+          "name": "UserId",
+          "type": "text(36)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "RelatedUserId": {
+          "name": "RelatedUserId",
+          "type": "text(36)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "RelationshipType": {
+          "name": "RelationshipType",
+          "type": "text(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Status": {
+          "name": "Status",
+          "type": "text(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "UserRelationship_UserId_User_Id_fk": {
+          "name": "UserRelationship_UserId_User_Id_fk",
+          "tableFrom": "UserRelationship",
+          "tableTo": "User",
+          "columnsFrom": [
+            "UserId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "UserRelationship_RelatedUserId_User_Id_fk": {
+          "name": "UserRelationship_RelatedUserId_User_Id_fk",
+          "tableFrom": "UserRelationship",
+          "tableTo": "User",
+          "columnsFrom": [
+            "RelatedUserId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "UserRelationship_UserId_RelatedUserId_pk": {
+          "columns": [
+            "UserId",
+            "RelatedUserId"
+          ],
+          "name": "UserRelationship_UserId_RelatedUserId_pk"
+        }
+      },
       "uniqueConstraints": {}
     },
     "UserVoucherRelations": {
@@ -658,6 +868,13 @@
           "type": "text(36)",
           "primaryKey": true,
           "notNull": true,
+          "autoincrement": false
+        },
+        "Status": {
+          "name": "Status",
+          "type": "text(20)",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         }
       },

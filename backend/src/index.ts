@@ -18,7 +18,7 @@ app.use(
 // const {generateRandomUser, insertUsersIntoDb} = require("./api/utils/UsersUtils");
 // const users = [];
 // for (let i = 0; i < 10; i++) {
-  // users.push(generateRandomUser());
+//   users.push(generateRandomUser());
 // }
 // insertUsersIntoDb(users);
 

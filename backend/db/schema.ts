@@ -14,11 +14,13 @@ export const User = sqliteTable('User', {
     userAddress: text('UserAddress'),
     phoneNumber: text('PhoneNumber', { length: 50 }),
     role: text('Role', {length: 20, enum: ["Admin", "Consumer", "Vendor"]}).notNull(),
+    status: text('Status', {length: 20, enum: ["Active", "Inactive", "Blocked"]}),
     createdAt: text('CreatedAt').default(sql`current_timestamp`),
 })
 
 export const VendorExtra = sqliteTable('VendorExtra', {
     userId: text('UserId', { length: 36 }).primaryKey().references(()=> User.id),
+    status: text('Status', {length: 20, enum: ["Pending", "Rejected", "Approved"]}),
 })
 
 export const Shop = sqliteTable('Shop', {
@@ -51,6 +53,33 @@ export const Product = sqliteTable('Product', {
     createdAt: text('CreatedAt').default(sql`current_timestamp`),
     shopId: text('ShopId', { length: 36 }).references(()=> Shop.id),
 })
+
+export const ChatRoom = sqliteTable('ChatRoom', {
+    id: text('Id', { length: 36 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+    name: text('Name', { length: 50 }),
+    createdAt: text('CreatedAt').default(sql`current_timestamp`),
+    ownerId: text('UserId', { length: 36 }).references(() => User.id),
+});
+
+export const Messages = sqliteTable('Messages', {
+    id: text('Id', { length: 36 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+    chatRoomId: text('ChatRoomId', { length: 36 }).references(() => ChatRoom.id),
+    senderId: text('SenderId', { length: 36 }).references(() => User.id),
+    content: text('Content'),
+    createdAt: text('CreatedAt').default(sql`current_timestamp`),
+    status: text('Status', { length: 20, enum: ["Sent", "Delivered", "Read"] }).notNull(),
+});
+
+export const UserRelationship = sqliteTable('UserRelationship', {
+    userId: text('UserId', { length: 36 }).references(() => User.id),
+    relatedUserId: text('RelatedUserId', { length: 36 }).references(() => User.id),
+    relationshipType: text('RelationshipType', { length: 20, enum: ["Friend", "Blocked"] }).notNull(),
+    status: text('Status', { length: 20, enum: ["Pending", "Accepted", "Rejected"] }).notNull(),
+}, (table) => {
+    return {
+        pk: primaryKey({ columns: [table.userId, table.relatedUserId] }),
+    };
+});
 
 export const ProductCategory = sqliteTable('ProductCategory', {
     id: text('Id', { length: 36 }).primaryKey().$defaultFn(()=> crypto.randomUUID()),

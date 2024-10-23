@@ -10,10 +10,35 @@ export type UserModel = {
     userAddress: string | null;
     phoneNumber: string | null;
     role: "Admin" | "Consumer" | "Vendor";
+    status: "Active" | "Inactive" | "Blocked" | null;
     createdAt: string | null;
 };
 export type VendorExtraModel = {
     userId: string;
+    status: "Pending" | "Rejected" | "Approved" | null;
+};
+
+export type ChatRoomModel = {
+    id: string;
+    name: string | null;
+    createdAt: string | null;
+    ownerId: string | null;
+};
+
+export type MessagesModel = {
+    id: string;
+    chatRoomId: string | null;
+    senderId: string | null;
+    content: string | null;
+    createdAt: string | null;
+    status: "Sent" | "Delivered" | "Read";
+};
+
+export type UserRelationshipModel = {
+    userId: string;
+    relatedUserId: string;
+    relationshipType: "Friend" | "Blocked";
+    status: "Pending" | "Accepted" | "Rejected";
 };
 
 export type CartModel = {
