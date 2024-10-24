@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+ import { Request, Response, NextFunction } from "express";
 import ChatRoomService from "../services/ChatRoomService";
 
 class ChatRoomController {
@@ -9,6 +9,23 @@ class ChatRoomController {
       return ChatRoomController.instance;
     }
     ChatRoomController.instance = this;
+  }
+
+  handleConnection(io: any, socket: any) {
+    socket.on("joinRoom", async (chatRoomId: string) => {
+      socket.join(chatRoomId);
+      const chatRoom = await ChatRoomService.view(chatRoomId);
+      io.to(chatRoomId).emit("chatRoom", chatRoom);
+    });
+
+    socket.on("leaveRoom", (chatRoomId: string) => {
+      socket.leave(chatRoomId);
+    });
+
+    socket.on("message", async (message: any) => {
+      const chatRoomId = message.chatRoomId;
+      io.to(chatRoomId).emit("message", message);
+    });
   }
 
   async viewAll(req: Request, res: Response, next: NextFunction) {
