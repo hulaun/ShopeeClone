@@ -6,31 +6,36 @@ import io from 'socket.io-client';
 function AdminMessages() {
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
+  const [rooms, setRooms] = useState('');
 
   useEffect(() => {
     const newSocket = io('http://localhost:5500/chat');
-    console.log(newSocket)
     setSocket(newSocket);
 
-    newSocket.on('message', (message) => {
+    newSocket.emit('joinRoom', 'admin');
+    setRooms('admin');
+
+    newSocket.on('broadcastMessage', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
+
+    newSocket.on('chatRoom', (chatRoom) => {
+      console.log('chatRoom', chatRoom);
+    })
 
     return () => {
       newSocket.disconnect();
     };
   }, []);
 
-  const sendMessage = () => {
+  const sendMessage = (input) => {
     if (socket && input) {
-      socket.emit('chatMessage', input);
-      setInput('');
+      socket.emit('sendMessage', input, rooms);
     }
   };
   return ( <div className="w-full p-8 flex gap-8">
     <ChatRooms/>
-    <MainChat/>
+    <MainChat messages={messages} sendMessage={sendMessage}/>
   </div> );
 }
 

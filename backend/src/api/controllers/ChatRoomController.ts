@@ -12,19 +12,28 @@ class ChatRoomController {
   }
 
   handleConnection(io: any, socket: any) {
+    const messages = []
+
     socket.on("joinRoom", async (chatRoomId: string) => {
+      console.log("User joined room:", chatRoomId);
       socket.join(chatRoomId);
-      const chatRoom = await ChatRoomService.view(chatRoomId);
-      io.to(chatRoomId).emit("chatRoom", chatRoom);
+      // const chatRoom = await ChatRoomService.view(chatRoomId);
+      io.to(chatRoomId).emit("chatRoom", chatRoomId);
     });
 
     socket.on("leaveRoom", (chatRoomId: string) => {
+      console.log("User left room:", chatRoomId);
       socket.leave(chatRoomId);
     });
 
-    socket.on("message", async (message: any) => {
-      const chatRoomId = message.chatRoomId;
-      io.to(chatRoomId).emit("message", message);
+    socket.on("sendMessage", async (message: any, chatRoomId: string) => {
+      messages.push(message);
+      console.log("Message received:", message, chatRoomId);
+      io.to(chatRoomId).emit("broadcastMessage", message);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("User disconnected");
     });
   }
 

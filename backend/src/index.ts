@@ -20,7 +20,7 @@ const io = new Server(server, {
 const chatNamespace = io.of("/chat");
 chatNamespace.on("connection", (socket) => {
   console.log("a user connected");
-  ChatRoomController.handleConnection(io, socket);
+  ChatRoomController.handleConnection(chatNamespace, socket);
 });
 
 app.use(
