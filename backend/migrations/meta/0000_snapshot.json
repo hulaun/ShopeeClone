@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "3db024b5-cada-447e-aa63-6742b5de9715",
+  "id": "dbccb3e7-3abf-43c9-b852-42f2a2d55683",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "Cart": {
@@ -138,19 +138,78 @@
           "autoincrement": false,
           "default": "current_timestamp"
         },
+        "Type": {
+          "name": "Type",
+          "type": "text(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ChatRoomUserRelations": {
+      "name": "ChatRoomUserRelations",
+      "columns": {
+        "ChatRoomId": {
+          "name": "ChatRoomId",
+          "type": "text(36)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "UserId": {
           "name": "UserId",
           "type": "text(36)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "UserRole": {
+          "name": "UserRole",
+          "type": "text(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "LastSeenAt": {
+          "name": "LastSeenAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "current_timestamp"
+        },
+        "JoinedAt": {
+          "name": "JoinedAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "current_timestamp"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "ChatRoom_UserId_User_Id_fk": {
-          "name": "ChatRoom_UserId_User_Id_fk",
-          "tableFrom": "ChatRoom",
+        "ChatRoomUserRelations_ChatRoomId_ChatRoom_Id_fk": {
+          "name": "ChatRoomUserRelations_ChatRoomId_ChatRoom_Id_fk",
+          "tableFrom": "ChatRoomUserRelations",
+          "tableTo": "ChatRoom",
+          "columnsFrom": [
+            "ChatRoomId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ChatRoomUserRelations_UserId_User_Id_fk": {
+          "name": "ChatRoomUserRelations_UserId_User_Id_fk",
+          "tableFrom": "ChatRoomUserRelations",
           "tableTo": "User",
           "columnsFrom": [
             "UserId"
@@ -162,7 +221,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "ChatRoomUserRelations_ChatRoomId_UserId_pk": {
+          "columns": [
+            "ChatRoomId",
+            "UserId"
+          ],
+          "name": "ChatRoomUserRelations_ChatRoomId_UserId_pk"
+        }
+      },
       "uniqueConstraints": {}
     },
     "Messages": {

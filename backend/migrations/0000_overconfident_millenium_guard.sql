@@ -18,7 +18,17 @@ CREATE TABLE `ChatRoom` (
 	`Id` text(36) PRIMARY KEY NOT NULL,
 	`Name` text(50),
 	`CreatedAt` text DEFAULT current_timestamp,
+	`Type` text(20) NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `ChatRoomUserRelations` (
+	`ChatRoomId` text(36),
 	`UserId` text(36),
+	`UserRole` text(20) NOT NULL,
+	`LastSeenAt` text DEFAULT current_timestamp,
+	`JoinedAt` text DEFAULT current_timestamp,
+	PRIMARY KEY(`ChatRoomId`, `UserId`),
+	FOREIGN KEY (`ChatRoomId`) REFERENCES `ChatRoom`(`Id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`UserId`) REFERENCES `User`(`Id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint

@@ -58,7 +58,19 @@ export const ChatRoom = sqliteTable('ChatRoom', {
     id: text('Id', { length: 36 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
     name: text('Name', { length: 50 }),
     createdAt: text('CreatedAt').default(sql`current_timestamp`),
-    ownerId: text('UserId', { length: 36 }).references(() => User.id),
+    type: text('Type', { length: 20, enum: ["Private", "Public"] }).notNull(),
+});
+
+export const ChatRoomUserRelations = sqliteTable('ChatRoomUserRelations', {
+    chatRoomId: text('ChatRoomId', { length: 36 }).references(() => ChatRoom.id),
+    userId: text('UserId', { length: 36 }).references(() => User.id),
+    userRole: text('UserRole', { length: 20, enum: ["Admin", "Member"] }).notNull(),
+    lastSeenAt: text('LastSeenAt').default(sql`current_timestamp`),
+    joinedAt: text('JoinedAt').default(sql`current_timestamp`),
+}, (table) => {
+    return {
+        pk: primaryKey({ columns: [table.chatRoomId, table.userId] }),
+    };
 });
 
 export const Messages = sqliteTable('Messages', {

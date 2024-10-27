@@ -22,7 +22,15 @@ export type ChatRoomModel = {
     id: string;
     name: string | null;
     createdAt: string | null;
-    ownerId: string | null;
+    type: "Private" | "Public";
+};
+
+export type ChatRoomUserRelationsModel = {
+    chatRoomId: string;
+    userId: string;
+    userRole: "Admin" | "Member";
+    lastSeenAt: string | null;
+    jointAt: string | null;
 };
 
 export type MessagesModel = {

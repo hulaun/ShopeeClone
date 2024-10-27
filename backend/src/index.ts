@@ -40,6 +40,9 @@ app.use(
 // }
 // insertUsersIntoDb(users);
 
+// const { convertUserToAdmin } = require("./api/utils/UsersUtils");
+// convertUserToAdmin("c56f37af-9b11-47be-84ee-1c73fd824eea");
+
 app.use(
   express.urlencoded({
     extended: true,

@@ -19,7 +19,7 @@ class ChatRoomRepo {
         id: ChatRoom.id,
         name: ChatRoom.name,
         createdAt: ChatRoom.createdAt,
-        ownerId: ChatRoom.ownerId,
+        type: ChatRoom.type,
       }).from(ChatRoom);
       return chatRooms;
     } catch (error) {
@@ -34,7 +34,7 @@ class ChatRoomRepo {
         id: ChatRoom.id,
         name: ChatRoom.name,
         createdAt: ChatRoom.createdAt,
-        ownerId: ChatRoom.ownerId,
+        type: ChatRoom.type,
       }).from(ChatRoom)
         .limit(limit)
         .offset((page - 1) * limit);
