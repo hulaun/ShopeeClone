@@ -9,7 +9,7 @@ import {
   FacebookIcon,
 } from "../../../components/Icons";
 import { useEffect, useRef, useState } from "react";
-import httpRequest from "../../../utils/httpRequest";
+import { publicPost } from "../../../utils/httpRequest";
 import { useAuth } from "../../../context/AuthContext";
 
 const cx = classNames.bind(styles);
@@ -101,28 +101,28 @@ function Login() {
     event.preventDefault();
 
     try {
-      const response = await httpRequest.post("auth/signin", {
+      const response = await publicPost("auth/signin", {
         loginKey: userInputValue,
         password: passwordValue,
       });
 
       if (response.status >= 200 && response.status <= 300) {
-        console.log(response.data.data);
-        const { user, accessToken } = response.data.data;
+        console.log(response.data);
+        const { user, accessToken } = response.data;
         setCurrentUser(user);
         setAccessToken(accessToken);
         setAuthorizationHeader(accessToken);
 
-        if (isConsumer()) {
-          console.log("isConsumer");
-          navigate(config.routes.public.home);
-        } else if (isVendor()) {
-          console.log("isVendor");
-          navigate(config.routes.public.home);
-        } else if (isAdmin()) {
-          console.log("isAdmin");
-          navigate(config.routes.admin.dashboard);
-        }
+        // if (isConsumer()) {
+        console.log("isConsumer");
+        navigate(config.routes.public.home);
+        // } else if (isVendor()) {
+        //   console.log("isVendor");
+        //   navigate(config.routes.public.home);
+        // } else if (isAdmin()) {
+        //   console.log("isAdmin");
+        //   navigate(config.routes.admin.dashboard);
+        // }
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {

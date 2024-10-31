@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import httpRequest from "../../../utils/httpRequest";
+import { privateGet } from "../../../utils/httpRequest";
 import Dropdown from "../../../components/Drowdown/Drowdown";
 
 
@@ -32,7 +32,7 @@ function AdminUsers() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await httpRequest.get(`/user/page/${currentPage}?limit=10&sort=${sortOption}&order=${sortOrder}`);
+      const response = await privateGet(`/user/page/${currentPage}?limit=10&sort=${sortOption}&order=${sortOrder}`);
       if (response.status === 200) {
         setUsers(response.data);
       }

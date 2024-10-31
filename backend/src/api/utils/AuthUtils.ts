@@ -27,9 +27,18 @@ export const signRefreshToken = (user: UserModel) => {
   );
 };
 
-export const verifyToken = (token: string) => {
+export const verifyAccessToken = (token: string) => {
   try {
     return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    return null;
+  }
+};
+
+export const verifyRefreshToken = (token: string) => {
+  try {
+    return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
   } catch (error) {
     console.error("Token verification failed:", error);
     return null;
@@ -39,7 +48,7 @@ export const verifyToken = (token: string) => {
 export const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
   return res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: true,
+    secure: false,
     sameSite: "lax",
     maxAge: 3 * 24 * 60 * 60 * 1000,
   });

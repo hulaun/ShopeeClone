@@ -46,7 +46,7 @@ async function insertUsersIntoDb(users: UserModel[]) {
   }
 }
 
-async function convertUserToAdmin(userId: string) {
+async function convertUserToAdmin(userId: string, username: string="admin") {
   try {
     // Fetch the user by ID
     const user = await db.select().from(schema.User).where(eq(schema.User.id, userId));
@@ -56,10 +56,42 @@ async function convertUserToAdmin(userId: string) {
     }
 
     // Update user fields
-    const newUsername = 'admin2';
+    const newUsername = username;
     const newSalt = createSalt();
     const newPassword = hashPassword('admin', newSalt);
     const newRole = 'Admin';
+
+    // Update the user in the database
+    await db
+      .update(schema.User)
+      .set({
+        username: newUsername,
+        password: newPassword,
+        salt: newSalt,
+        role: newRole,
+      })
+      .where(eq(schema.User.id, userId));
+
+    console.log(`User with ID ${userId} has been converted to Admin`);
+  } catch (error) {
+    console.error("Error converting user to Admin:", error);
+  }
+}
+
+async function convertUserToConsumer(userId: string, username: string="consumer") {
+  try {
+    // Fetch the user by ID
+    const user = await db.select().from(schema.User).where(eq(schema.User.id, userId));
+
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+
+    // Update user fields
+    const newUsername = username;
+    const newSalt = createSalt();
+    const newPassword = hashPassword('consumer', newSalt);
+    const newRole = 'Consumer';
 
     // Update the user in the database
     await db

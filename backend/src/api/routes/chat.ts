@@ -14,4 +14,8 @@ router
     .patch(ChatRoomController.update)
     .delete(ChatRoomController.delete);
 
+router
+    .route("/page/:page")
+    .get(ChatRoomController.viewPage);
+
 export {router as chatRouter}

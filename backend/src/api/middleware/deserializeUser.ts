@@ -1,17 +1,23 @@
 import { NextFunction, Request, Response } from "express";
+import { signAccessToken, verifyAccessToken, verifyRefreshToken } from "../utils/AuthUtils";
 
-const { verifyToken } = require("../utils/AuthUtils");
-
-const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {
+export const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers["authorization"];
-  const accessToken =
-    req.cookies.accessToken || (authHeader && authHeader.split(" ")[1]);
-
+  let decoded;
+  let accessToken =
+    (authHeader && authHeader?.split(" ")[1]) || req.cookies?.accessToken;
   if (!accessToken) {
-    next();
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+      return next();
+    }
+    decoded = verifyRefreshToken(refreshToken);
+    accessToken = signAccessToken(decoded);
+    res.locals.token = accessToken;
   }
-
-  const decoded = verifyToken(accessToken);
+  else{
+    decoded = verifyAccessToken(accessToken);
+  }
 
   if (decoded) {
     res.locals.user = decoded;
@@ -19,4 +25,3 @@ const deserializeUser = async (req: Request, res: Response, next: NextFunction) 
   next();
 };
 
-module.exports = deserializeUser;

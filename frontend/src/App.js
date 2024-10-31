@@ -1,8 +1,17 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 
 import { adminRoutes, publicRoutes } from "./routes";
+import config from "./config";
+import { useAuth } from "./context/AuthContext";
 
 function App() {
+  const { isAdmin } = useAuth();
+
   return (
     <Router>
       <Routes>
@@ -30,7 +39,11 @@ function App() {
               path={route.path}
               element={
                 <Layout>
-                  <Page />
+                  {!isAdmin() ? (
+                    <Navigate to={config.routes.public.login} />
+                  ) : (
+                    <Page />
+                  )}
                 </Layout>
               }
             />

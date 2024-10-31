@@ -85,6 +85,16 @@ class AuthController {
       res.status(500).json({ message: "Internal server error" });
     }
   }
+
+  async signout(req: Request, res: Response, next: NextFunction) {
+    try {
+      res.clearCookie("refreshToken");
+      res.status(200).json({ message: "Sign out successful" });
+    } catch (error) {
+      console.error("Error signing out:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }
 
 const instance = new AuthController();

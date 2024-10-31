@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import cookieParser from "cookie-parser";
 import ChatRoomController from "./api/controllers/ChatRoomController";
 dotenv.config({ path: ".env.local" });
 const cors = require("cors");
@@ -27,21 +28,11 @@ app.use(
   cors({
     origin: ["http://localhost:8080", "http://127.0.0.1:8080"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    optionsSuccessStatus: 200,
     credentials: true,
   })
 );
 
-
-// const {generateRandomUser, insertUsersIntoDb} = require("./api/utils/UsersUtils");
-// const users = [];
-// for (let i = 0; i < 10; i++) {
-//   users.push(generateRandomUser());
-// }
-// insertUsersIntoDb(users);
-
-// const { convertUserToAdmin } = require("./api/utils/UsersUtils");
-// convertUserToAdmin("c56f37af-9b11-47be-84ee-1c73fd824eea");
+app.use(cookieParser());
 
 app.use(
   express.urlencoded({
@@ -52,6 +43,13 @@ app.use(
 app.use(express.json());
 
 route(app);
+
+// const {generateRandomUser, insertUsersIntoDb} = require("./api/utils/UsersUtils");
+// const users = [];
+// for (let i = 0; i < 10; i++) {
+//   users.push(generateRandomUser());
+// }
+// insertUsersIntoDb(users);
 
 // Start the server
 server.listen(port, () => {

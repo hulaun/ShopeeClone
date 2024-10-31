@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import httpRequest from "../utils/httpRequest";
+import { privateHttpRequest } from "../utils/httpRequest";
 
 const AuthContext = React.createContext();
 
@@ -13,11 +13,11 @@ export function AuthProvider({ children }) {
 
   const setAuthorizationHeader = (accessToken) => {
     if (accessToken) {
-      httpRequest.defaults.headers.common[
+      privateHttpRequest.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${accessToken}`;
     } else {
-      delete httpRequest.defaults.headers.common["Authorization"];
+      delete privateHttpRequest.defaults.headers.common["Authorization"];
     }
   };
 
