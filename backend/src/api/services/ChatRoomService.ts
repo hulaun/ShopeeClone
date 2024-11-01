@@ -1,4 +1,4 @@
-import { ChatRoomModel } from "../models/model";
+import { ChatRoomModel, UserModel } from "../models/model";
 import ChatRoomRepo from "../repos/ChatRoomRepo";
 
 class ChatRoomService {
@@ -21,9 +21,9 @@ class ChatRoomService {
     }
   }
 
-  async viewAll() {
+  async viewAll(user: UserModel) {
     try {
-      const chatRooms = await ChatRoomRepo.findAll();
+      const chatRooms = await ChatRoomRepo.findAll(user.id);
       return chatRooms;
     } catch (error) {
       console.error("Error fetching chat rooms:", error);
@@ -31,9 +31,9 @@ class ChatRoomService {
     }
   }
 
-  async viewPage(page: number, limit: number) {
+  async viewPage(user: UserModel, page: number, limit: number) {
     try {
-      const chatRooms = await ChatRoomRepo.findSome(page, limit);
+      const chatRooms = await ChatRoomRepo.findSome(user.id, page, limit);
       return chatRooms;
     } catch (error) {
       console.error("Error fetching chat rooms:", error);
@@ -41,9 +41,9 @@ class ChatRoomService {
     }
   }
 
-  async view(chatRoomId: string) {
+  async view(user: UserModel, chatRoomId: string) {
     try {
-      const chatRoom = await ChatRoomRepo.findById(chatRoomId);
+      const chatRoom = await ChatRoomRepo.findById(user.id, chatRoomId);
       return chatRoom;
     } catch (error) {
       console.error("Error fetching chat room:", error);

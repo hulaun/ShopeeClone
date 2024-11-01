@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { privateGet } from "../../../utils/httpRequest";
 import Dropdown from "../../../components/Drowdown/Drowdown";
+import { useAuth } from "../../../context/AuthContext";
 
 
 function AdminUsers() {
   const [users, setUsers] = useState([])
-  
+  const {accessToken} = useAuth()
   const [usernameOption, setUsernameOption] = useState("ascending")
   const [emailOption, setEmailOption] = useState("ascending")
   const [fullNameOption, setFullNameOption] = useState("ascending")
@@ -13,7 +14,6 @@ function AdminUsers() {
 
   const [sortOption, setSortOption] = useState('username');
   const [sortOrder, setSortOrder] = useState('asc');
- 
 
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -34,7 +34,7 @@ function AdminUsers() {
     const fetchUsers = async () => {
       const response = await privateGet(`/user/page/${currentPage}?limit=10&sort=${sortOption}&order=${sortOrder}`);
       if (response.status === 200) {
-        setUsers(response.data);
+        setUsers(response.data.data);
       }
     };
     fetchUsers();

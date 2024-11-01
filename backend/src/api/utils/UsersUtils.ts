@@ -110,4 +110,4 @@ async function convertUserToConsumer(userId: string, username: string="consumer"
   }
 }
 
-module.exports = { generateRandomUser, insertUsersIntoDb, convertUserToAdmin };
+module.exports = { generateRandomUser, insertUsersIntoDb, convertUserToAdmin, convertUserToConsumer };

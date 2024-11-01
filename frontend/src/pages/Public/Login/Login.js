@@ -15,14 +15,8 @@ import { useAuth } from "../../../context/AuthContext";
 const cx = classNames.bind(styles);
 
 function Login() {
-  const {
-    setCurrentUser,
-    setAccessToken,
-    setAuthorizationHeader,
-    isAdmin,
-    isConsumer,
-    isVendor,
-  } = useAuth();
+  const { setCurrentUser, setAccessToken, isAdmin, isConsumer, isVendor } =
+    useAuth();
   const [userInputValue, setUserInputValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [inputErrors, setInputErrors] = useState({
@@ -107,22 +101,17 @@ function Login() {
       });
 
       if (response.status >= 200 && response.status <= 300) {
-        console.log(response.data);
-        const { user, accessToken } = response.data;
+        const { user, accessToken } = response.data.data;
         setCurrentUser(user);
         setAccessToken(accessToken);
-        setAuthorizationHeader(accessToken);
 
-        // if (isConsumer()) {
-        console.log("isConsumer");
-        navigate(config.routes.public.home);
-        // } else if (isVendor()) {
-        //   console.log("isVendor");
-        //   navigate(config.routes.public.home);
-        // } else if (isAdmin()) {
-        //   console.log("isAdmin");
-        //   navigate(config.routes.admin.dashboard);
-        // }
+        if (isConsumer()) {
+          navigate(config.routes.public.home);
+        } else if (isVendor()) {
+          navigate(config.routes.public.home);
+        } else if (isAdmin()) {
+          navigate(config.routes.admin.dashboard);
+        }
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -196,6 +185,11 @@ function Login() {
                   aria-invalid="false"
                   onBlur={handleBlur}
                   onInput={handleInput}
+                  // onKeyDown={(e) => {
+                  //   if (e.key === "Enter") {
+                  //     handleSubmit(e);
+                  //   }
+                  // }}
                   className={cx(
                     "border",
                     "border-grey-400",

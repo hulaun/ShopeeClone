@@ -1,5 +1,4 @@
 import axios from "axios";
-import config from "../config";
 
 const publicHttpRequest = axios.create({
   baseURL: process.env.REACT_APP_SERVER_ENDPOINT,
@@ -11,23 +10,15 @@ export const privateHttpRequest = axios.create({
   withCredentials: true,
 });
 
-privateHttpRequest.interceptors.response.use(
-  (response) => {
-    // if(privateHttpRequest.defaults.headers.common["Authorization"])
-    if (response.data.data.accessToken) {
-      privateHttpRequest.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${response.data.data.accessToken}`;
-    }
-    return response;
-  },
-  async (error) => {
-    if (error.response.status === 401) {
-      window.location.href = config.routes.public.login;
-    }
-    return Promise.reject(error);
-  }
-);
+//interceptor
+
+axios.interceptors.response.use((req) => {
+  console.log(`${req.method} ${req.url}`);
+  return req;
+});
+
+//http methods
+
 export const publicGet = async (path, options = {}) => {
   return await publicHttpRequest.get(path, options);
 };

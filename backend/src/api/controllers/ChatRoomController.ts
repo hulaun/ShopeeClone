@@ -39,8 +39,13 @@ class ChatRoomController {
 
   async viewAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const chatRooms = await ChatRoomService.viewAll();
-      res.json(chatRooms);
+      const accessToken = res.locals.token;
+      const chatRooms = await ChatRoomService.viewAll(res.locals.user);
+      res.json({
+        data:chatRooms,
+        message:"Rooms fetched successfully",
+        accessToken
+      });
     } catch (error) {
       console.error("Error fetching chat rooms:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -49,10 +54,15 @@ class ChatRoomController {
 
   async viewPage(req: Request, res: Response, next: NextFunction) {
     try {
+      const accessToken = res.locals.token;
       const page = parseInt(req.params.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
-      const chatRooms = await ChatRoomService.viewPage(page, limit);
-      res.json(chatRooms);
+      const chatRooms = await ChatRoomService.viewPage(res.locals.user, page, limit);
+      res.json(res.json({
+        data:chatRooms,
+        message:"Rooms fetched successfully",
+        accessToken
+      }));
     } catch (error) {
       console.error("Error fetching chat rooms:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -61,9 +71,14 @@ class ChatRoomController {
 
   async view(req: Request, res: Response, next: NextFunction) {
     try {
+      const accessToken = res.locals.token;
       const chatRoomId: string = req.params.id;
-      const chatRoom = await ChatRoomService.view(chatRoomId);
-      res.json(chatRoom);
+      const chatRoom = await ChatRoomService.view(res.locals.user, chatRoomId);
+      res.json(res.json({
+        data:chatRoom,
+        message:"Room fetched successfully",
+        accessToken
+      }));
     } catch (error) {
       console.error("Error fetching chat room:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -72,6 +87,7 @@ class ChatRoomController {
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
+      const accessToken = res.locals.token;
       const newChatRoom = req.body;
       const chatRoom = await ChatRoomService.create(newChatRoom);
       res.status(201).json(chatRoom);
@@ -83,6 +99,7 @@ class ChatRoomController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
+      const accessToken = res.locals.token;
       const chatRoomId: string = req.params.id;
       const updateData = req.body;
       const chatRoom = await ChatRoomService.update(chatRoomId, updateData);
@@ -95,6 +112,7 @@ class ChatRoomController {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
+      const accessToken = res.locals.token;
       const chatRoomId: string = req.params.id;
       await ChatRoomService.delete(chatRoomId);
       res.status(200).json({ message: "Chat room deleted successfully" });

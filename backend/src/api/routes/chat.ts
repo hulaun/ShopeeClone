@@ -1,8 +1,12 @@
 import e, { Router } from "express";
 import ChatRoomController from "../controllers/ChatRoomController";
-
+import { deserializeUser } from "../middleware/deserializeUser";
+import { isAuthorized } from "../middleware/isAuthorized";
 
 const router:Router = Router();
+
+router.use(deserializeUser, isAuthorized);
+
 router
     .route("/")
     .get(ChatRoomController.viewAll)

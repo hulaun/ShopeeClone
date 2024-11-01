@@ -1,5 +1,5 @@
 import { db } from "../../config/db";
-import { ChatRoom } from "../../../db/schema";
+import { ChatRoom, ChatRoomUserRelations } from "../../../db/schema";
 import { ChatRoomModel } from "../models/model";
 import { eq } from "drizzle-orm";
 
@@ -13,14 +13,14 @@ class ChatRoomRepo {
     ChatRoomRepo.instance = this;
   }
 
-  async findAll() {
+  async findAll(userId: string) {
     try {
       const chatRooms = await db.select({
         id: ChatRoom.id,
         name: ChatRoom.name,
         createdAt: ChatRoom.createdAt,
         type: ChatRoom.type,
-      }).from(ChatRoom);
+      }).from(ChatRoomUserRelations).innerJoin(ChatRoom, eq(ChatRoom.id, ChatRoomUserRelations.chatRoomId));
       return chatRooms;
     } catch (error) {
       console.log(error);
@@ -28,7 +28,7 @@ class ChatRoomRepo {
     }
   }
 
-  async findSome(page: number, limit: number) {
+  async findSome(userId: string, page: number, limit: number) {
     try {
       const chatRooms = await db.select({
         id: ChatRoom.id,
@@ -45,7 +45,7 @@ class ChatRoomRepo {
     }
   }
 
-  async findById(chatRoomId: string) {
+  async findById(userId: string, chatRoomId: string) {
     try {
       const chatRoom = await db.select().from(ChatRoom).where(eq(ChatRoom.id, chatRoomId));
       return chatRoom;

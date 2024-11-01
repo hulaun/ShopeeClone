@@ -1,14 +1,13 @@
 import { Router } from "express";
 import UserController from "../controllers/UserController";
 import { deserializeUser } from "../middleware/deserializeUser";
+import { isAuthorized } from "../middleware/isAuthorized";
 
 
 const router:Router = Router();
 
 //Middleware
-router.use("/", deserializeUser);
-router.use("/:id", deserializeUser);
-router.use("/page/:page", deserializeUser);
+router.use(deserializeUser, isAuthorized);
 
 //Routes
 router
