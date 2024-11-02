@@ -1,7 +1,9 @@
 import { db } from "../../config/db";
-import { ChatRoom, ChatRoomUserRelations } from "../../../db/schema";
+import { ChatRoom, ChatRoomUserRelations, Messages } from "../../../db/schema";
 import { ChatRoomModel } from "../models/model";
-import { eq } from "drizzle-orm";
+import { asc, desc, eq, max, sql } from "drizzle-orm";
+import { late } from "zod";
+import { has, last } from "lodash";
 
 class ChatRoomRepo {
   private static instance: ChatRoomRepo;
@@ -15,13 +17,32 @@ class ChatRoomRepo {
 
   async findAll(userId: string) {
     try {
-      const chatRooms = await db.select({
-        id: ChatRoom.id,
-        name: ChatRoom.name,
-        createdAt: ChatRoom.createdAt,
-        type: ChatRoom.type,
-      }).from(ChatRoomUserRelations).innerJoin(ChatRoom, eq(ChatRoom.id, ChatRoomUserRelations.chatRoomId));
-      return chatRooms;
+
+      const filteredRooms = db.select({
+        roomId: ChatRoom.id,
+        roomName: ChatRoom.name,
+        lastSeenAt: ChatRoomUserRelations.lastSeenAt,
+      })
+      .from(ChatRoom)
+      .innerJoin(ChatRoomUserRelations, eq(ChatRoom.id, ChatRoomUserRelations.chatRoomId))
+      .where(eq(ChatRoomUserRelations.userId, userId))
+      .as('filteredRooms');
+      
+      // Step 2: Join the subquery with `Messages` and use aggregation
+      const recentRooms = await db
+        .select({
+          roomId: filteredRooms.roomId,
+          roomName: filteredRooms.roomName,
+          lastMessageAt: max(Messages.createdAt),
+          lastMessage: Messages.content,
+          hasUnreadMessages: sql`MAX(${Messages.createdAt}) > ${filteredRooms.lastSeenAt}`,
+        })
+        .from(filteredRooms) // Use the subquery as the source
+        .innerJoin(Messages, eq(filteredRooms.roomId, Messages.chatRoomId))
+        .groupBy(filteredRooms.roomId)
+        .orderBy(desc(Messages.createdAt))
+        .limit(10);
+      return recentRooms;
     } catch (error) {
       console.log(error);
       return error;
