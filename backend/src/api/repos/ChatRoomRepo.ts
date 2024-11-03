@@ -1,5 +1,5 @@
 import { db } from "../../config/db";
-import { ChatRoom, ChatRoomUserRelations, Messages } from "../../../db/schema";
+import { ChatRoom, ChatRoomUserRelations, Messages, User } from "../../../db/schema";
 import { ChatRoomModel } from "../models/model";
 import { asc, desc, eq, max, sql } from "drizzle-orm";
 import { late } from "zod";
@@ -26,6 +26,7 @@ class ChatRoomRepo {
       .from(ChatRoom)
       .innerJoin(ChatRoomUserRelations, eq(ChatRoom.id, ChatRoomUserRelations.chatRoomId))
       .where(eq(ChatRoomUserRelations.userId, userId))
+      .limit(10)
       .as('filteredRooms');
       
       // Step 2: Join the subquery with `Messages` and use aggregation
@@ -51,24 +52,54 @@ class ChatRoomRepo {
 
   async findSome(userId: string, page: number, limit: number) {
     try {
-      const chatRooms = await db.select({
-        id: ChatRoom.id,
-        name: ChatRoom.name,
-        createdAt: ChatRoom.createdAt,
-        type: ChatRoom.type,
-      }).from(ChatRoom)
-        .limit(limit)
-        .offset((page - 1) * limit);
-      return chatRooms;
+      const filteredRooms = db.select({
+        roomId: ChatRoom.id,
+        roomName: ChatRoom.name,
+        lastSeenAt: ChatRoomUserRelations.lastSeenAt,
+      })
+      .from(ChatRoom)
+      .innerJoin(ChatRoomUserRelations, eq(ChatRoom.id, ChatRoomUserRelations.chatRoomId))
+      .where(eq(ChatRoomUserRelations.userId, userId))
+      .limit(10)
+      .as('filteredRooms');
+      
+      // Step 2: Join the subquery with `Messages` and use aggregation
+      const recentRooms = await db
+        .select({
+          roomId: filteredRooms.roomId,
+          roomName: filteredRooms.roomName,
+          lastMessageAt: max(Messages.createdAt),
+          lastMessage: Messages.content,
+          hasUnreadMessages: sql`MAX(${Messages.createdAt}) > ${filteredRooms.lastSeenAt}`,
+        })
+        .from(filteredRooms) // Use the subquery as the source
+        .innerJoin(Messages, eq(filteredRooms.roomId, Messages.chatRoomId))
+        .groupBy(filteredRooms.roomId)
+        .orderBy(desc(Messages.createdAt))
+        .limit(10);
+      return recentRooms;
     } catch (error) {
       console.log(error);
       return error;
     }
   }
 
-  async findById(userId: string, chatRoomId: string) {
+  async findById(chatRoomId: string) {
     try {
-      const chatRoom = await db.select().from(ChatRoom).where(eq(ChatRoom.id, chatRoomId));
+      const chatRoom = await db
+        .select({
+          message: Messages.content,
+          senderId: Messages.senderId,
+          senderName: User.username,
+          createdAt: Messages.createdAt,
+          senderIcon: User.profilePicture,
+        })
+        .from(ChatRoom)
+        .innerJoin(Messages, eq(Messages.chatRoomId, ChatRoom.id))
+        .innerJoin(User, eq(User.id, Messages.senderId))
+        .where(eq(ChatRoom.id, chatRoomId))
+        .orderBy(desc(Messages.createdAt))
+        .limit(20);
       return chatRoom;
     } catch (error) {
       console.log(error);

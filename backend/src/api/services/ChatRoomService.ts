@@ -43,7 +43,7 @@ class ChatRoomService {
 
   async view(user: UserModel, chatRoomId: string) {
     try {
-      const chatRoom = await ChatRoomRepo.findById(user.id, chatRoomId);
+      const chatRoom = await ChatRoomRepo.findById(chatRoomId);
       return chatRoom;
     } catch (error) {
       console.error("Error fetching chat room:", error);

@@ -68,6 +68,7 @@ const Button = forwardRef(
       styles,
       CloseIcon = DropdownDownIcon,
       ActiveIcon = DropdownUpIcon,
+      onHover = false,
     },
     ref
   ) => {
@@ -78,6 +79,7 @@ const Button = forwardRef(
         ref={ref}
         className={`flex justify-center items-center ${styles}`}
         onClick={toggleDropdown}
+        onMouseEnter={() => onHover && toggleDropdown()}
       >
         {children}
         {isOpen ? <ActiveIcon /> : <CloseIcon />}

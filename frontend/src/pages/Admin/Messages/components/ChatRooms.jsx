@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { IconButton } from "../../../../components/Buttons/Buttons";
 
-function ChatRooms() {
+function ChatRooms(rooms) {
   const [activeTab, setActiveTab] = useState('All');
 
   const handleTabClick = (tab) => {

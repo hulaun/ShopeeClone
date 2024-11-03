@@ -58,11 +58,11 @@ class ChatRoomController {
       const page = parseInt(req.params.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const chatRooms = await ChatRoomService.viewPage(res.locals.user, page, limit);
-      res.json(res.json({
+      res.json({
         data:chatRooms,
         message:"Rooms fetched successfully",
         accessToken
-      }));
+      });
     } catch (error) {
       console.error("Error fetching chat rooms:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -74,11 +74,11 @@ class ChatRoomController {
       const accessToken = res.locals.token;
       const chatRoomId: string = req.params.id;
       const chatRoom = await ChatRoomService.view(res.locals.user, chatRoomId);
-      res.json(res.json({
+      res.json({
         data:chatRoom,
         message:"Room fetched successfully",
         accessToken
-      }));
+      });
     } catch (error) {
       console.error("Error fetching chat room:", error);
       res.status(500).json({ message: "Internal server error" });
