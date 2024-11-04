@@ -3,13 +3,11 @@ import { IconButton } from "../../../../components/Buttons/Buttons";
 
 function MainChat({messages, sendMessage}) {
   const inputRef = useRef(null);
-
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       sendMessage(inputRef.current.value);
     }
   }
-
 
   return ( <div className="basis-2/3 bg-white rounded-xl p-5 flex flex-col">
     <section className="flex gap-2 justify-between items-between w-full">
@@ -36,8 +34,8 @@ function MainChat({messages, sendMessage}) {
       {
         messages && messages.map((message, index) => (
           <div key={index} className="rounded-xl flex items-center gap-2">
-            <div className="h-10 aspect-square bg-primary rounded-full"></div>
-            <p className="text-sm bg-grey-100 p-3 rounded-full text-grey-500">{message}</p>
+            <img src={message.senderIcon} className="h-10 aspect-square rounded-full"></img>
+            <p className="text-sm bg-grey-100 p-3 rounded-full text-grey-500">{message.message}</p>
           </div>))
       }
     </section>
@@ -49,8 +47,8 @@ function MainChat({messages, sendMessage}) {
         </svg>
       </div>
       <button onClick={()=>{sendMessage(inputRef.current.value)}} className="absolute inset-y-0 right-0 flex items-center pr-3">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
         </svg>
       </button>
     </section>

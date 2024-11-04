@@ -11,14 +11,13 @@ function AdminMessages() {
 
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [rooms, setRooms] = useState('');
+  const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
     const newSocket = io('http://localhost:5500/chat');
     setSocket(newSocket);
 
     newSocket.emit('joinRoom', 'admin');
-    setRooms('admin');
 
     newSocket.on('broadcastMessage', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
@@ -29,17 +28,17 @@ function AdminMessages() {
     })
 
     const fetchRooms = async () => {
-      const rooms = await privateGet('/chat');
-      setRooms(rooms);
+      const response = await privateGet('/chat');
+      setRooms(response.data.data);
     };
-
-    const fetchMostRecentlySeenRoom = async () => {
-      const messages = await privateGet('/chat/most-recently-seen-room');
-      setMessages(messages);
+    
+    const fetchMostRecentlyVisitedRoom = async () => {
+      const response = await privateGet('/chat/most-recently-visited');
+      setMessages(response.data.data);
     };
 
     fetchRooms();
-    fetchMostRecentlySeenRoom();
+    fetchMostRecentlyVisitedRoom();
 
     return () => {
       newSocket.disconnect();

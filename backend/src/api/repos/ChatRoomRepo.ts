@@ -1,9 +1,7 @@
 import { db } from "../../config/db";
 import { ChatRoom, ChatRoomUserRelations, Messages, User } from "../../../db/schema";
-import { ChatRoomModel } from "../models/model";
+import { ChatRoomModel, UserModel } from "../models/model";
 import { asc, desc, eq, max, sql } from "drizzle-orm";
-import { late } from "zod";
-import { has, last } from "lodash";
 
 class ChatRoomRepo {
   private static instance: ChatRoomRepo;
@@ -34,16 +32,44 @@ class ChatRoomRepo {
         .select({
           roomId: filteredRooms.roomId,
           roomName: filteredRooms.roomName,
+          senderName: sql`CASE WHEN ${filteredRooms.roomName} = '1on1' THEN (
+            SELECT username 
+            FROM ${ChatRoomUserRelations}
+            INNER JOIN ${User} ON ${User}.id = ${ChatRoomUserRelations}.userId
+            WHERE ${ChatRoomUserRelations}.chatRoomId = ${filteredRooms.roomId}
+            AND ${ChatRoomUserRelations}.userId != ${userId}
+            LIMIT 1
+          ) ELSE ${filteredRooms.roomName} END`,
+          senderIcon: User.profilePicture,
           lastMessageAt: max(Messages.createdAt),
           lastMessage: Messages.content,
           hasUnreadMessages: sql`MAX(${Messages.createdAt}) > ${filteredRooms.lastSeenAt}`,
         })
         .from(filteredRooms) // Use the subquery as the source
         .innerJoin(Messages, eq(filteredRooms.roomId, Messages.chatRoomId))
+        .innerJoin(User, eq(User.id, Messages.senderId))
         .groupBy(filteredRooms.roomId)
         .orderBy(desc(Messages.createdAt))
         .limit(10);
       return recentRooms;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  async findTheParticipants(chatRoomId: string) {
+    try {
+      const participants = await db
+        .select({
+          userId: ChatRoomUserRelations.userId,
+          username: User.username,
+          profilePicture: User.profilePicture,
+        })
+        .from(ChatRoomUserRelations)
+        .innerJoin(User, eq(User.id, ChatRoomUserRelations.userId))
+        .where(eq(ChatRoomUserRelations.chatRoomId, chatRoomId));
+      return participants;
     } catch (error) {
       console.log(error);
       return error;
@@ -68,12 +94,15 @@ class ChatRoomRepo {
         .select({
           roomId: filteredRooms.roomId,
           roomName: filteredRooms.roomName,
+          senderName: User.username,
+          senderIcon: User.profilePicture,
           lastMessageAt: max(Messages.createdAt),
           lastMessage: Messages.content,
           hasUnreadMessages: sql`MAX(${Messages.createdAt}) > ${filteredRooms.lastSeenAt}`,
         })
         .from(filteredRooms) // Use the subquery as the source
         .innerJoin(Messages, eq(filteredRooms.roomId, Messages.chatRoomId))
+        .innerJoin(User, eq(User.id, Messages.senderId))
         .groupBy(filteredRooms.roomId)
         .orderBy(desc(Messages.createdAt))
         .limit(10);
@@ -101,6 +130,23 @@ class ChatRoomRepo {
         .orderBy(desc(Messages.createdAt))
         .limit(20);
       return chatRoom;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+  
+  async findMostRecentlyVisited(userId: string) {
+    try {
+      const chatRoom = await db
+        .select({
+          chatRoomId: ChatRoomUserRelations.chatRoomId,
+        })
+        .from(ChatRoomUserRelations)
+        .where(eq(ChatRoomUserRelations.userId, userId))
+        .orderBy(desc(ChatRoomUserRelations.lastSeenAt))
+        .limit(1) as { chatRoomId: string }[];
+      return chatRoom[0].chatRoomId;
     } catch (error) {
       console.log(error);
       return error;

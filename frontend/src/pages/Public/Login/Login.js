@@ -104,6 +104,7 @@ function Login() {
         const { user, accessToken } = response.data.data;
         setCurrentUser(user);
         setAccessToken(accessToken);
+        sessionStorage.setItem("accessToken", accessToken);
 
         if (isConsumer()) {
           navigate(config.routes.public.home);

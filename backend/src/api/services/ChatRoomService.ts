@@ -50,6 +50,17 @@ class ChatRoomService {
       throw new Error("Internal server error");
     }
   }
+  
+  async viewMostRecentlyVisited(user: UserModel) {
+    try {
+      const chatRoomId: string = await ChatRoomRepo.findMostRecentlyVisited(user.id) as string;
+      const chatRoom = await ChatRoomRepo.findById(chatRoomId);
+      return chatRoom;
+    } catch (error) {
+      console.error("Error fetching chat room:", error);
+      throw new Error("Internal server error");
+    }
+  }
 
   async update(chatRoomId: string, updateData: ChatRoomModel) {
     try {

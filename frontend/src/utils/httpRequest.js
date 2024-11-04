@@ -20,17 +20,21 @@ axios.interceptors.response.use((req) => {
 //http methods
 
 export const publicGet = async (path, options = {}) => {
+  console.log("publicGet", path, options);
   return await publicHttpRequest.get(path, options);
 };
 
 export const publicPost = async (path, options = {}) => {
+  console.log("publicPost", path, options);
   return await publicHttpRequest.post(path, options);
 };
 
 export const privateGet = async (path, options = {}) => {
+  console.log("privateGet", path, options);
   return await privateHttpRequest.get(path, options);
 };
 
 export const privatePost = async (path, options = {}) => {
+  console.log("privatePost", path, options);
   return await privateHttpRequest.post(path, options);
 };

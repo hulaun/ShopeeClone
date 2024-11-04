@@ -13,6 +13,10 @@ router
     .post(ChatRoomController.create);
 
 router
+    .route("/most-recently-visited")
+    .get(ChatRoomController.viewMostRecentlyVisited);
+
+router
     .route("/:id")
     .get(ChatRoomController.view)
     .patch(ChatRoomController.update)

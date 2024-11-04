@@ -1,12 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IconButton } from "../../../../components/Buttons/Buttons";
 
 function ChatRooms(rooms) {
   const [activeTab, setActiveTab] = useState('All');
-
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
+  console.log(rooms);
+  const handleDate = (date) => {
+    const serverDateStr = date;
+
+    const serverDate = new Date(serverDateStr);
+
+    const currentDate = new Date();
+
+    const diffInMs = currentDate - serverDate;
+
+    let diffInSeconds;
+    let diffInMinutes;
+    let diffInHours;
+
+    if((diffInSeconds = Math.floor(diffInMs / 1000))<60){
+      return `${diffInSeconds} seconds ago`;
+    }
+    if((diffInMinutes = Math.floor(diffInMs / 60000))<60){
+      return `${diffInMinutes} minutes ago`;
+    }
+    if((diffInHours = Math.floor(diffInMs / 3600000))<24){
+      return `${diffInHours} hours ago`;
+    }
+    return `${Math.floor(diffInMs / 86400000)} days ago`;
+  }
+
 
   return (
     <div className="basis-1/3 bg-white rounded-xl p-5">
@@ -43,26 +68,18 @@ function ChatRooms(rooms) {
         </ul>
       </section>
       <section className="flex flex-col gap-2 py-2">
-        <div className="flex items-center gap-2 hover:bg-grey-100 rounded-lg">
-          <div className="w-12 aspect-square bg-primary rounded-full"></div>
-          <div className="flex flex-col w-full">
-            <div className="flex justify-between items-center">
-              <h1 className="text-lg truncate">John Doe</h1>
-              <div className="text-grey-200">3 min</div>
+        {rooms && rooms.rooms.map(room =>(
+          <div key={room.roomId} className="flex items-center gap-2 hover:bg-grey-100 rounded-lg">
+            <div className="w-12 aspect-square bg-primary rounded-full"></div>
+            <div className="flex flex-col w-full">
+              <div className="flex justify-between items-center">
+                <h1 className="text-lg truncate">{room.roomName=='1on1'?room.senderName:room.roomName}</h1>
+                <div className="text-grey-200">{handleDate(room.lastMessageAt)}</div>
+              </div>
+              <p className="text-sm">{room.lastMessage}</p>
             </div>
-            <p className="text-sm">Hello, how are you?</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 hover:bg-grey-100 rounded-lg">
-          <div className="w-12 aspect-square bg-primary rounded-full"></div>
-          <div className="flex flex-col w-full">
-            <div className="flex justify-between items-center">
-              <h1 className="text-lg truncate">Jane Doe</h1>
-              <div className="text-grey-200">3 min</div>
-            </div>
-            <p className="text-sm">I'm fine, thank you.</p>
-          </div>
-        </div>
+          </div>))
+        }
       </section>
     </div>
   );

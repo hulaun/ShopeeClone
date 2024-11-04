@@ -85,6 +85,21 @@ class ChatRoomController {
     }
   }
 
+  async viewMostRecentlyVisited(req: Request, res: Response, next: NextFunction) {
+    try {
+      const accessToken = res.locals.token;
+      const chatRoom = await ChatRoomService.viewMostRecentlyVisited(res.locals.user);
+      res.json({
+        data:chatRoom,
+        message:"Room fetched successfully",
+        accessToken
+      });
+    } catch (error) {
+      console.error("Error fetching chat room:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const accessToken = res.locals.token;

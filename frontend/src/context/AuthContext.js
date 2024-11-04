@@ -14,6 +14,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     setupInterceptors();
+    refreshNecessaryData();
   }, []);
 
   useEffect(() => {
@@ -58,13 +59,11 @@ export function AuthProvider({ children }) {
     const authorizationHeader =
       privateHttpRequest.defaults.headers.common["Authorization"];
     if (!authorizationHeader) {
-      console.log("Authorization header is missing");
       return true;
     }
 
     const token = authorizationHeader.split(" ")[1];
     if (!token) {
-      console.log("Token is missing in the Authorization header");
       return true;
     }
 
@@ -75,15 +74,51 @@ export function AuthProvider({ children }) {
   };
 
   const isConsumer = () => {
+    if (!currentUser) {
+      const data = decodeJWT();
+      return data?.role === "Consumer";
+    }
     return currentUser?.role === "Consumer";
   };
 
   const isAdmin = () => {
+    if (!currentUser) {
+      const data = decodeJWT();
+      return data?.role === "Admin";
+    }
     return currentUser?.role === "Admin";
   };
 
   const isVendor = () => {
+    if (!currentUser) {
+      const data = decodeJWT();
+      return data?.role === "Vendor";
+    }
     return currentUser?.role === "Vendor";
+  };
+
+  const refreshNecessaryData = () => {
+    if (!currentUser) {
+      const data = decodeJWT();
+      if (!data) return;
+      setCurrentUser({
+        id: data.id,
+        username: data.username,
+        role: data.role,
+        email: data.email,
+      });
+    }
+  };
+
+  const decodeJWT = () => {
+    const token =
+      accessToken || sessionStorage.getItem("accessToken") || undefined;
+    if (!token) {
+      return undefined;
+    }
+    const payloadBase64 = token.split(".")[1];
+    const payloadJson = atob(payloadBase64);
+    return JSON.parse(payloadJson);
   };
 
   const value = {

@@ -17,8 +17,6 @@ function Home() {
   ];
 
   useEffect(() => {
-    console.log(accessToken)
-
     const interval = setInterval(() => {
       setCurrentIndexCarousel((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
     }, 3000);

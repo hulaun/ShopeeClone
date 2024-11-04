@@ -6,7 +6,7 @@ export const deserializeUser = async (req: Request, res: Response, next: NextFun
   let decoded;
   let accessToken =
     (authHeader && authHeader?.split(" ")[1]) || req.cookies?.accessToken;
-    if (!accessToken) {
+  if (!accessToken) {
     const refreshToken = req.cookies?.refreshToken;
     if (!refreshToken) {
       return next();
