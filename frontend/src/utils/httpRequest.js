@@ -12,29 +12,40 @@ export const privateHttpRequest = axios.create({
 
 //interceptor
 
-axios.interceptors.response.use((req) => {
-  console.log(`${req.method} ${req.url}`);
+publicHttpRequest.interceptors.request.use((req) => {
+  console.log(`publicHttpRequest ${req.method} ${req.url}`);
   return req;
+});
+publicHttpRequest.interceptors.response.use((res) => {
+  console.log(`publicHttpRequest response`);
+  console.log(res);
+  return res;
+});
+
+privateHttpRequest.interceptors.request.use((req) => {
+  console.log(`privateHttpRequest ${req.method} ${req.url}`);
+  return req;
+});
+privateHttpRequest.interceptors.response.use((res) => {
+  console.log("privateHttpRequest response");
+  console.log(res);
+  return res;
 });
 
 //http methods
 
 export const publicGet = async (path, options = {}) => {
-  console.log("publicGet", path, options);
   return await publicHttpRequest.get(path, options);
 };
 
 export const publicPost = async (path, options = {}) => {
-  console.log("publicPost", path, options);
   return await publicHttpRequest.post(path, options);
 };
 
 export const privateGet = async (path, options = {}) => {
-  console.log("privateGet", path, options);
   return await privateHttpRequest.get(path, options);
 };
 
 export const privatePost = async (path, options = {}) => {
-  console.log("privatePost", path, options);
   return await privateHttpRequest.post(path, options);
 };

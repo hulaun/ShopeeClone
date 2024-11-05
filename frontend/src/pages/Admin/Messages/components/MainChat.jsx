@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import { IconButton } from "../../../../components/Buttons/Buttons";
 
-function MainChat({messages, sendMessage}) {
+const MainChat =memo(({currentRoom, messages, sendMessage})=> {
   const inputRef = useRef(null);
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -12,10 +12,11 @@ function MainChat({messages, sendMessage}) {
   return ( <div className="basis-2/3 bg-white rounded-xl p-5 flex flex-col">
     <section className="flex gap-2 justify-between items-between w-full">
       <section className="flex items-center gap-2">
-        <div className="h-10 aspect-square bg-primary rounded-full"></div>
+        <img src={currentRoom.senderIcon} className="h-10 aspect-square rounded-full"></img>
         <div>
-          <h1 className="text-2xl">John Doe</h1>
-          <p className="text-grey-400">Online</p>
+          <h1 className="text-2xl">{currentRoom.roomName}</h1>
+          {/* //TODO */}
+          <p className="text-grey-400">Online </p>
         </div>
       </section>
       <section>
@@ -27,10 +28,6 @@ function MainChat({messages, sendMessage}) {
       </section>
     </section>
     <section className="grow flex flex-col justify-end items-start gap-1 pb-4">
-      <div className="rounded-xl flex items-center gap-2">
-        <div className="h-10 aspect-square bg-primary rounded-full"></div>
-        <p className="text-sm bg-grey-100 p-3 rounded-full text-grey-500">Hello, how are you?</p>
-      </div>
       {
         messages && messages.map((message, index) => (
           <div key={index} className="rounded-xl flex items-center gap-2">
@@ -53,6 +50,6 @@ function MainChat({messages, sendMessage}) {
       </button>
     </section>
   </div> );
-}
+})
 
 export default MainChat;

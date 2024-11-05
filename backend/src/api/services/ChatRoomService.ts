@@ -41,9 +41,9 @@ class ChatRoomService {
     }
   }
 
-  async view(user: UserModel, chatRoomId: string) {
+  async view(chatRoomId: string) {
     try {
-      const chatRoom = await ChatRoomRepo.findById(chatRoomId);
+      const chatRoom = await ChatRoomRepo.findMessagesById(chatRoomId);
       return chatRoom;
     } catch (error) {
       console.error("Error fetching chat room:", error);
@@ -54,8 +54,11 @@ class ChatRoomService {
   async viewMostRecentlyVisited(user: UserModel) {
     try {
       const chatRoomId: string = await ChatRoomRepo.findMostRecentlyVisited(user.id) as string;
-      const chatRoom = await ChatRoomRepo.findById(chatRoomId);
-      return chatRoom;
+      const messages = await ChatRoomRepo.findMessagesById(chatRoomId);
+      return {
+        roomId: chatRoomId,
+        messages: messages || [],
+      };
     } catch (error) {
       console.error("Error fetching chat room:", error);
       throw new Error("Internal server error");

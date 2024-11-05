@@ -31,7 +31,6 @@ export function AuthProvider({ children }) {
           if (!newAccessToken) {
             window.location.href = config.routes.public.login;
           }
-          setAuthorizationHeader(newAccessToken);
           setAccessToken(newAccessToken);
         }
         return response;
@@ -76,6 +75,7 @@ export function AuthProvider({ children }) {
   const isConsumer = () => {
     if (!currentUser) {
       const data = decodeJWT();
+      setAuthorizationHeader(sessionStorage.getItem("accessToken"));
       return data?.role === "Consumer";
     }
     return currentUser?.role === "Consumer";
@@ -84,6 +84,7 @@ export function AuthProvider({ children }) {
   const isAdmin = () => {
     if (!currentUser) {
       const data = decodeJWT();
+      setAuthorizationHeader(sessionStorage.getItem("accessToken"));
       return data?.role === "Admin";
     }
     return currentUser?.role === "Admin";
@@ -92,6 +93,7 @@ export function AuthProvider({ children }) {
   const isVendor = () => {
     if (!currentUser) {
       const data = decodeJWT();
+      setAuthorizationHeader(sessionStorage.getItem("accessToken"));
       return data?.role === "Vendor";
     }
     return currentUser?.role === "Vendor";
@@ -114,7 +116,7 @@ export function AuthProvider({ children }) {
     const token =
       accessToken || sessionStorage.getItem("accessToken") || undefined;
     if (!token) {
-      return undefined;
+      return;
     }
     const payloadBase64 = token.split(".")[1];
     const payloadJson = atob(payloadBase64);

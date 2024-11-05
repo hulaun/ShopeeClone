@@ -73,9 +73,11 @@ class ChatRoomController {
     try {
       const accessToken = res.locals.token;
       const chatRoomId: string = req.params.id;
-      const chatRoom = await ChatRoomService.view(res.locals.user, chatRoomId);
+      const messages = await ChatRoomService.view(chatRoomId);
       res.json({
-        data:chatRoom,
+        data:{
+          messages: messages
+        },
         message:"Room fetched successfully",
         accessToken
       });
@@ -88,9 +90,12 @@ class ChatRoomController {
   async viewMostRecentlyVisited(req: Request, res: Response, next: NextFunction) {
     try {
       const accessToken = res.locals.token;
-      const chatRoom = await ChatRoomService.viewMostRecentlyVisited(res.locals.user);
+      const data = await ChatRoomService.viewMostRecentlyVisited(res.locals.user);
       res.json({
-        data:chatRoom,
+        data:{
+          roomId: data.roomId,
+          messages: data.messages
+        },
         message:"Room fetched successfully",
         accessToken
       });
