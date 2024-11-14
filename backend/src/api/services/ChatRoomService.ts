@@ -1,4 +1,4 @@
-import { ChatRoomModel, UserModel } from "../models/model";
+import { ChatRoomModel, MessagesModel, UserModel } from "../models/model";
 import ChatRoomRepo from "../repos/ChatRoomRepo";
 
 class ChatRoomService {
@@ -51,9 +51,9 @@ class ChatRoomService {
     }
   }
   
-  async viewMostRecentlyVisited(user: UserModel) {
+  async viewMostRecentlyVisited(userId: string) {
     try {
-      const chatRoomId: string = await ChatRoomRepo.findMostRecentlyVisited(user.id) as string;
+      const chatRoomId: string = await ChatRoomRepo.findMostRecentlyVisited(userId) as string;
       const messages = await ChatRoomRepo.findMessagesById(chatRoomId);
       return {
         roomId: chatRoomId,
@@ -80,6 +80,21 @@ class ChatRoomService {
       await ChatRoomRepo.delete(chatRoomId);
     } catch (error) {
       console.error("Error deleting chat room:", error);
+      throw new Error("Internal server error");
+    }
+  }
+
+  async addMessage(chatRoomId: string, message: string, sender: UserModel) {
+    try {
+      console.log(sender)
+      const newMessage: MessagesModel = await ChatRoomRepo.addMessage(chatRoomId, message, sender.id) as MessagesModel;
+      return {
+        ...newMessage,
+        senderName: sender.fullName,
+        senderIcon: sender.profilePicture,
+      }
+    } catch (error) {
+      console.error("Error adding message to chat room:", error);
       throw new Error("Internal server error");
     }
   }

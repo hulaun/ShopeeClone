@@ -7,7 +7,7 @@ const ChatRooms= memo(({setCurrentRoom, currentRoom, rooms})=> {
     setActiveTab(tab);
   };
 
-  const handleEnterRoom = (roomId) => {
+  const handleViewRoom = (roomId) => {
     const roomData = rooms.filter((room) => room.roomId === roomId);
     setCurrentRoom(roomData[0]);
   };

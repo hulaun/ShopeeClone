@@ -1,6 +1,6 @@
  import { Request, Response, NextFunction } from "express";
 import ChatRoomService from "../services/ChatRoomService";
-
+import { verifyAccessToken } from "../utils/AuthUtils";
 class ChatRoomController {
   private static instance: ChatRoomController;
 
@@ -12,24 +12,53 @@ class ChatRoomController {
   }
 
   handleConnection(io: any, socket: any) {
-    const messages = []
+    socket.use((packet: any, next: NextFunction) => {
+      const token = socket.handshake.auth.token;
+      if (token) {
+        try {
+          const user = verifyAccessToken(token);
+          socket.data.user = user;
+          next();
+        } catch (err) {
+          socket.emit("unauthorized", "Invalid token");
+        }
+      } else {
+        socket.emit("unauthorized", "No token provided");
+      }
+    });
 
     socket.on("joinRoom", async (chatRoomId: string) => {
       console.log("User joined room:", chatRoomId);
       socket.join(chatRoomId);
-      // const chatRoom = await ChatRoomService.view(chatRoomId);
+      const chatRoom = await ChatRoomService.view(chatRoomId);
       io.to(chatRoomId).emit("chatRoom", chatRoomId);
+    });
+
+    socket.on("joinRoomFirstTime", async (chatRoomId: string) => {
+      console.log("User joined room first time:", chatRoomId);
+      socket.join(chatRoomId);
+      const chatRoom = await ChatRoomService.view(chatRoomId);
+      io.to(chatRoomId).emit("chatRoom", chatRoom);
     });
 
     socket.on("leaveRoom", (chatRoomId: string) => {
       console.log("User left room:", chatRoomId);
       socket.leave(chatRoomId);
     });
+    
+    socket.on("deleteRoom", (chatRoomId: string) => {
+      console.log("User left room:", chatRoomId);
+      socket.leave(chatRoomId);
+      const chatRoom = ChatRoomService.delete(chatRoomId);
+    });
 
     socket.on("sendMessage", async (message: any, chatRoomId: string) => {
-      messages.push(message);
       console.log("Message received:", message, chatRoomId);
-      io.to(chatRoomId).emit("broadcastMessage", message);
+      console.log(socket.data.user)
+      const newMessage = await ChatRoomService.addMessage(chatRoomId, message, socket.data.user);
+      io.to(chatRoomId).emit("updateMessageState", {
+        newMessage
+      });
     });
 
     socket.on("disconnect", () => {
@@ -90,7 +119,7 @@ class ChatRoomController {
   async viewMostRecentlyVisited(req: Request, res: Response, next: NextFunction) {
     try {
       const accessToken = res.locals.token;
-      const data = await ChatRoomService.viewMostRecentlyVisited(res.locals.user);
+      const data = await ChatRoomService.viewMostRecentlyVisited(res.locals.user.id);
       res.json({
         data:{
           roomId: data.roomId,

@@ -130,7 +130,7 @@ class ChatRoomRepo {
         .innerJoin(Messages, eq(Messages.chatRoomId, ChatRoom.id))
         .innerJoin(User, eq(User.id, Messages.senderId))
         .where(eq(ChatRoom.id, chatRoomId))
-        .orderBy(desc(Messages.createdAt))
+        .orderBy(asc(Messages.createdAt))
         .limit(20);
       return chatRoom;
     } catch (error) {
@@ -193,6 +193,25 @@ class ChatRoomRepo {
         .where(eq(ChatRoom.id, chatRoomId))
         .returning();
       return chatRoom;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  async addMessage(chatRoomId: string, message: string, senderId: string) {
+    try {
+      const newMessage = await db
+        .insert(Messages)
+        .values({
+          chatRoomId,
+          content: message,
+          senderId,
+          status: "Delivered",
+        })
+        .returning({ createdAt: Messages.createdAt ,message: Messages.content, senderId: Messages.senderId });
+
+      return newMessage[0];
     } catch (error) {
       console.log(error);
       return error;

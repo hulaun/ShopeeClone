@@ -1,10 +1,14 @@
 import { memo, useRef } from "react";
 import { IconButton } from "../../../../components/Buttons/Buttons";
+import { useAuth } from "../../../../context/AuthContext";
 
-const MainChat =memo(({currentRoom, messages, sendMessage})=> {
+const MainChat =memo(({currentRoom, messages, loadingMessages, sendMessage})=> {
   const inputRef = useRef(null);
+  const { currentUser } = useAuth();
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
+      console.log(sendMessage);
       sendMessage(inputRef.current.value);
     }
   }
@@ -27,12 +31,25 @@ const MainChat =memo(({currentRoom, messages, sendMessage})=> {
         </IconButton>
       </section>
     </section>
-    <section className="grow flex flex-col justify-end items-start gap-1 pb-4">
+    <section className="grow flex flex-col justify-end gap-1 pb-4">
       {
-        messages && messages.map((message, index) => (
-          <div key={index} className="rounded-xl flex items-center gap-2">
-            <img src={message.senderIcon} className="h-10 aspect-square rounded-full"></img>
-            <p className="text-sm bg-grey-100 p-3 rounded-full text-grey-500">{message.message}</p>
+        messages && messages.map((message, index) =>
+          (message.senderId === currentUser.id) 
+          ?
+            (<div key={index} className="rounded-xl flex items-center gap-2 justify-end">
+              <p className="block text-sm bg-grey-100 p-3 rounded-full text-grey-500">{message.message}</p>
+            </div>)
+          :
+            (<div key={index} className="rounded-xl flex items-center gap-2">
+              <img src={message.senderIcon} className="h-10 aspect-square rounded-full"></img>
+              <p className="text-sm bg-grey-100 p-3 rounded-full text-grey-500">{message.message}</p>
+            </div>)
+        )
+      }
+      {
+        loadingMessages && loadingMessages.map((message, index) => (
+          <div key={index} className="rounded-xl flex items-center gap-2 justify-end">
+            <p className="block text-sm bg-grey-100 p-3 rounded-full text-grey-500">{message}</p>
           </div>))
       }
     </section>
@@ -43,7 +60,9 @@ const MainChat =memo(({currentRoom, messages, sendMessage})=> {
           <path fill="grey" d="M505 442.7L405.3 343c28.4-34.9 45.7-79.4 45.7-127C451 96.5 354.5 0 231 0S11 96.5 11 216s96.5 216 216 216c47.6 0 92.1-17.3 127-45.7l99.7 99.7c4.7 4.7 10.9 7 17 7s12.3-2.3 17-7c9.4-9.4 9.4-24.6 0-34zM231 392c-97.2 0-176-78.8-176-176S133.8 40 231 40s176 78.8 176 176-78.8 176-176 176z"/>
         </svg>
       </div>
-      <button onClick={()=>{sendMessage(inputRef.current.value)}} className="absolute inset-y-0 right-0 flex items-center pr-3">
+      <button onClick={()=>{
+        sendMessage(inputRef.current.value)
+        }} className="absolute inset-y-0 right-0 flex items-center pr-3">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
         </svg>
