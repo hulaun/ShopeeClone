@@ -13,11 +13,7 @@ function AdminMessages() {
   const [messages, setMessages] = useState([]);
   const [loadingMessages, setLoadingMessages] = useState([]);
   const [rooms, setRooms] = useState([]);
-  const [currentRoom, setCurrentRoom] = useState({
-    id: '',
-    name: '',
-    icon: '',
-  });
+  const [currentRoom, setCurrentRoom] = useState({});
   
   const nagivate = useNavigate();
   const { accessToken } = useAuth();
@@ -30,7 +26,6 @@ function AdminMessages() {
       }
     });
     setSocket(newSocket);
-
     newSocket.on('broadcastMessage', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
@@ -38,11 +33,11 @@ function AdminMessages() {
     newSocket.on('chatRoom', (chatRoom) => {
     })
 
-    newSocket.on('updateMessageState', (message) => {
-      console.log('updateMessageState', message);
-      const list = loadingMessages.filter((mes) => mes !== message.content);
+    newSocket.on('updateMessageState', (data) => {
+      console.log('updateMessageState', data.newMessage);
+      const list = loadingMessages.filter((mes) => mes !== data.newMessage.content);
       setLoadingMessages(list);
-      setMessages(messages => [...messages, message]);
+      setMessages(messages => [...messages, data.newMessage]);
     })
 
     const fetchData = async () => {
@@ -52,15 +47,16 @@ function AdminMessages() {
       setRooms(roomsResponse.data.data);
       setMessages(currentRoomResponse.data.data.messages);
       
-      const roomData = roomsResponse.data.data.filter((room) => room.roomId === currentRoomResponse.data.data.roomId);
-      setCurrentRoom(roomData[0]);
+      const roomData = roomsResponse.data.data.find((room) => room.roomId === currentRoomResponse.data.data.roomId);
+      setCurrentRoom(roomData);
       newSocket.emit('joinRoom', currentRoomResponse.data.data.roomId);
     };
 
     fetchData();
     
     newSocket.on('unauthorized', (error) => {
-      console.log('unauthorized', error);
+      debugger
+      console.log('unauthorized: ', error);
       nagivate(config.routes.public.login);
     });
     
@@ -69,18 +65,27 @@ function AdminMessages() {
     };
   }, []);
 
-  console.log('loadMessages', loadingMessages);
   const sendMessage = useCallback((input) => {
-    console.log('sendMessage', input);
-    console.log('socket', socket);
     if (socket && input) {
-      console.log('sendMessage2', input);
       setLoadingMessages((prev) => [...prev, input]);
       socket.emit('sendMessage', input, currentRoom.roomId);
     }
   },[socket, currentRoom]);
+
+  const handleChangeRoom = useCallback((roomId) => {
+    socket.emit('switchRoom', (currentRoom,roomId));
+    const roomData = rooms.find((room) => room.roomId === roomId);
+    const fetchData=async()=>{
+      const currentRoomResponse = await privateGet('/chat/most-recently-visited');
+      setMessages(currentRoomResponse.data.data.messages);
+      setCurrentRoom(roomData);
+    }
+
+    fetchData();
+  },[socket, rooms]);
+
   return ( <div className="w-full p-8 flex gap-8">
-    <ChatRooms setCurrentRoom={setCurrentRoom} currentRoom={currentRoom} rooms={rooms}/>
+    <ChatRooms handleChangeRoom={handleChangeRoom} setCurrentRoom={setCurrentRoom} currentRoom={currentRoom} rooms={rooms}/>
     <MainChat currentRoom={currentRoom} messages={messages} loadingMessages={loadingMessages} sendMessage={sendMessage}/>
   </div> );
 }

@@ -19,9 +19,9 @@ class AuthRepo {
       const user = await db
         .insert(User)
         .values({...newUser, role:"Consumer"} )
-        .returning({ insertedId: User.id, username: User.username });
+        .returning({ id: User.id, username: User.username });
 
-      return user;
+      return user[0] as UserModel;
     } catch (error) {
       console.error("Error creating user:", error);
       throw new Error("Internal server error");

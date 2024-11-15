@@ -1,15 +1,10 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { IconButton } from "../../../../components/Buttons/Buttons";
 
-const ChatRooms= memo(({setCurrentRoom, currentRoom, rooms})=> {
+const ChatRooms= memo(({handleChangeRoom, currentRoom, rooms})=> {
   const [activeTab, setActiveTab] = useState('All');
   const handleTabClick = (tab) => {
     setActiveTab(tab);
-  };
-
-  const handleViewRoom = (roomId) => {
-    const roomData = rooms.filter((room) => room.roomId === roomId);
-    setCurrentRoom(roomData[0]);
   };
 
   const handleDate = useMemo(()=>(date) => {
@@ -39,7 +34,7 @@ const ChatRooms= memo(({setCurrentRoom, currentRoom, rooms})=> {
 
 
   return (
-    <div className="basis-1/3 bg-white rounded-xl p-5">
+    <div className="bg-white rounded-xl p-5 w-96">
       <section className="flex items-center justify-between pb-2">
         <h1 className="text-2xl">Message</h1>
         <IconButton>
@@ -74,7 +69,11 @@ const ChatRooms= memo(({setCurrentRoom, currentRoom, rooms})=> {
       </section>
       <section className="flex flex-col py-2">
         {rooms && rooms.map(room =>(
-          <div key={room.roomId} className={`flex items-center gap-2 rounded-md ${room.roomId === currentRoom.roomId?"bg-grey-200":"hover:bg-grey-100"}`}>
+          <div
+            key={room.roomId}
+            className={`flex items-center gap-2 rounded-md ${room.roomId === currentRoom.roomId?"bg-grey-200":"hover:bg-grey-100"}`}
+            onClick={() => handleChangeRoom(room.roomId)}
+            >
             <div className="w-12 aspect-square bg-primary rounded-full"></div>
             <div className="flex flex-col w-full">
               <div className="flex justify-between items-center">

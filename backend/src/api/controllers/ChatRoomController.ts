@@ -14,24 +14,35 @@ class ChatRoomController {
   handleConnection(io: any, socket: any) {
     socket.use((packet: any, next: NextFunction) => {
       const token = socket.handshake.auth.token;
-      if (token) {
-        try {
-          const user = verifyAccessToken(token);
-          socket.data.user = user;
-          next();
-        } catch (err) {
-          socket.emit("unauthorized", "Invalid token");
-        }
-      } else {
+      console.log("Token:", token);
+      if (!token){
+        console.log("No token provided");
         socket.emit("unauthorized", "No token provided");
       }
+      const user = verifyAccessToken(token);
+      if (!user){
+        console.log("Invalid token");
+        socket.emit("unauthorized", "Invalid token");
+      }
+      console.log("User connected:", user);
+      socket.data.user = user;
+      next();
     });
 
     socket.on("joinRoom", async (chatRoomId: string) => {
       console.log("User joined room:", chatRoomId);
       socket.join(chatRoomId);
       const chatRoom = await ChatRoomService.view(chatRoomId);
-      io.to(chatRoomId).emit("chatRoom", chatRoomId);
+      io.to(chatRoomId).emit("chatRoom", chatRoom);
+    });
+    
+    socket.on("switchRoom", async (previousRoomId: string, newRoomId: string) => {
+      console.log("User left room:", previousRoomId);
+      socket.leave(previousRoomId);
+      console.log("User joined room:", newRoomId);
+      socket.join(newRoomId);
+      const chatRoom = await ChatRoomService.view(newRoomId);
+      io.to(newRoomId).emit("chatRoom", chatRoom);
     });
 
     socket.on("joinRoomFirstTime", async (chatRoomId: string) => {
@@ -54,7 +65,6 @@ class ChatRoomController {
 
     socket.on("sendMessage", async (message: any, chatRoomId: string) => {
       console.log("Message received:", message, chatRoomId);
-      console.log(socket.data.user)
       const newMessage = await ChatRoomService.addMessage(chatRoomId, message, socket.data.user);
       io.to(chatRoomId).emit("updateMessageState", {
         newMessage

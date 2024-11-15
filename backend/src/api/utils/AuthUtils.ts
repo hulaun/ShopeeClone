@@ -13,7 +13,7 @@ export const hashPassword = (password: string, salt: any) => {
 
 export const signAccessToken = (user: UserModel) => {
   return jwt.sign(
-    { id: user.id, username: user.username, email: user.email, role: user.role },
+    { id: user.id, username: user.username, profilePicture: user.profilePicture, email: user.email, role: user.role },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: "1h" }
   );
@@ -21,7 +21,7 @@ export const signAccessToken = (user: UserModel) => {
 
 export const signRefreshToken = (user: UserModel) => {
   return jwt.sign(
-    { id: user.id, username: user.username,email: user.email, role: user.role },
+    { id: user.id, username: user.username, profilePicture: user.profilePicture, email: user.email, role: user.role },
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: "3d" }
   );
@@ -31,7 +31,6 @@ export const verifyAccessToken = (token: string) => {
   try {
     return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
   } catch (error) {
-    console.error("Token verification failed:", error);
     return null;
   }
 };
@@ -40,7 +39,6 @@ export const verifyRefreshToken = (token: string) => {
   try {
     return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
   } catch (error) {
-    console.error("Token verification failed:", error);
     return null;
   }
 };

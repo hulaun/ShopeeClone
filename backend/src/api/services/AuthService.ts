@@ -2,12 +2,12 @@ require("dotenv").config();
 
 import { UserModel } from "../models/model";
 import AuthRepo from "../repos/AuthRepo";
-const {
+import {
   hashPassword,
   createSalt,
   signAccessToken,
   signRefreshToken,
-} = require("../utils/AuthUtils");
+} from "../utils/AuthUtils";
 class AuthService {
   public static instance: AuthService;
 
@@ -33,7 +33,7 @@ class AuthService {
       password: passwordHash,
       salt: salt,
     } as UserModel;
-    const user = await AuthRepo.addConsumerAccount(newUser);
+    const user: UserModel = await AuthRepo.addConsumerAccount(newUser);
 
     const accessToken = signAccessToken(user);
     const refreshToken = signRefreshToken(user);
@@ -66,8 +66,8 @@ class AuthService {
       };
     }
 
-    const accessToken = signAccessToken(userData.user);
-    const refreshToken = signRefreshToken(userData.user);
+    const accessToken = signAccessToken(userData.user as UserModel);
+    const refreshToken = signRefreshToken(userData.user as UserModel);
 
     return {
       status: 200,

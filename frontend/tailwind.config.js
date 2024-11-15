@@ -32,5 +32,5 @@ module.exports = {
       secondary: "#f53e2d",
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar")({ nocompatible: true })],
 };

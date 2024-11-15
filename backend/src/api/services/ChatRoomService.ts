@@ -86,11 +86,10 @@ class ChatRoomService {
 
   async addMessage(chatRoomId: string, message: string, sender: UserModel) {
     try {
-      console.log(sender)
       const newMessage: MessagesModel = await ChatRoomRepo.addMessage(chatRoomId, message, sender.id) as MessagesModel;
       return {
         ...newMessage,
-        senderName: sender.fullName,
+        senderName: sender.username,
         senderIcon: sender.profilePicture,
       }
     } catch (error) {
