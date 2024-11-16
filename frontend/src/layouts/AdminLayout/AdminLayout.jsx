@@ -103,7 +103,6 @@ function AuthLayout({ children}) {
               onClick={() => handleCurrentTab("dashboard")}
               >
               <motion.svg
-                className='hover:basis-1/3'
                 width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <motion.path
                   variants={svgVariants}
@@ -131,7 +130,6 @@ function AuthLayout({ children}) {
               onClick={() => handleCurrentTab("analitics")}
               >
               <motion.svg
-                className='hover:basis-1/3'
                 width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <motion.path
                   variants={svgVariants}
@@ -159,7 +157,6 @@ function AuthLayout({ children}) {
               onClick={() => handleCurrentTab("users")}
               >
               <motion.svg
-                className='hover:basis-1/3'
                 width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <motion.path
                   variants={svgVariants}
@@ -186,7 +183,6 @@ function AuthLayout({ children}) {
               onClick={() => handleCurrentTab("calendar")}
               >
               <motion.svg
-                className='hover:basis-1/3'
                 width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <motion.path
                   variants={svgVariants}
@@ -213,7 +209,6 @@ function AuthLayout({ children}) {
               onClick={() => handleCurrentTab("messages")}
               >
               <motion.svg
-                className='hover:basis-1/3'
                 width="24" height="24"
                 viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <motion.path
@@ -241,7 +236,6 @@ function AuthLayout({ children}) {
               onClick={() => handleCurrentTab("settings")}
               >
               <motion.svg
-                className='hover:basis-1/3'
                 width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <motion.path
                   variants={svgVariants}
@@ -270,8 +264,7 @@ function AuthLayout({ children}) {
               whileHover="active"
               onClick={() => handleCurrentTab("exit")}
               >
-            <motion.svg
-              className='hover:basis-1/3' width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <motion.svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <motion.path 
                 variants={svgVariants}
                 fill='#d2d6dc' fillRule="evenodd" clipRule="evenodd" d="M6.57946 8.03819C6.21487 8.03819 5.9266 8.32382 5.9266 8.68506C5.9266 9.0379 6.21487 9.33193 6.57946 9.33193H11.6667V13.3475C11.6667 15.4058 9.97941 17.0859 7.89365 17.0859H3.76453C1.68726 17.0859 0 15.4142 0 13.3559V4.02257C0 1.95595 1.69574 0.28418 3.77301 0.28418H7.91061C9.97941 0.28418 11.6667 1.95595 11.6667 4.01417V8.03819H6.57946ZM14.692 5.77864L17.1253 8.22329C17.2503 8.3493 17.317 8.50892 17.317 8.68534C17.317 8.85336 17.2503 9.02137 17.1253 9.13899L14.692 11.5836C14.567 11.7097 14.4003 11.7769 14.242 11.7769C14.0753 11.7769 13.9087 11.7097 13.7837 11.5836C13.5337 11.3316 13.5337 10.92 13.7837 10.6679L15.117 9.33221H11.667V8.03847H15.117L13.7837 6.70273C13.5337 6.45071 13.5337 6.03906 13.7837 5.78704C14.0337 5.52661 14.442 5.52661 14.692 5.77864Z"/>

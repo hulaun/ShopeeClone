@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
+import { runSockets } from './socket';
 import ChatRoomController from "./api/controllers/ChatRoomController";
 dotenv.config({ path: ".env.local" });
 const cors = require("cors");
@@ -18,11 +19,7 @@ const io = new Server(server, {
   },
 });
 
-const chatNamespace = io.of("/chat");
-chatNamespace.on("connection", (socket) => {
-  console.log("a user connected");
-  ChatRoomController.handleConnection(chatNamespace, socket);
-});
+runSockets(io);
 
 app.use(
   cors({

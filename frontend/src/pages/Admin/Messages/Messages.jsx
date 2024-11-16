@@ -30,7 +30,16 @@ function AdminMessages() {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    newSocket.on('chatRoom', (chatRoom) => {
+    newSocket.on('updateRoomsLastMessage', (chatRoom) => {
+      setRooms((prevRooms) => {
+        const newRooms = prevRooms.map((room) => {
+          if (room.roomId === chatRoom.roomId) {
+            return chatRoom;
+          }
+          return room;
+        });
+        return newRooms;
+      })
     })
 
     newSocket.on('updateMessageState', (data) => {
@@ -43,23 +52,21 @@ function AdminMessages() {
     const fetchData = async () => {
       const roomsResponse = await privateGet('/chat');
       const currentRoomResponse = await privateGet('/chat/most-recently-visited');
-      
+      const roomData = roomsResponse.data.data.find((room) => room.roomId === currentRoomResponse.data.data.roomId);
+
       setRooms(roomsResponse.data.data);
       setMessages(currentRoomResponse.data.data.messages);
-      
-      const roomData = roomsResponse.data.data.find((room) => room.roomId === currentRoomResponse.data.data.roomId);
       setCurrentRoom(roomData);
       newSocket.emit('joinRoom', currentRoomResponse.data.data.roomId);
     };
 
     fetchData();
-    
+
     newSocket.on('unauthorized', (error) => {
-      debugger
       console.log('unauthorized: ', error);
       nagivate(config.routes.public.login);
     });
-    
+
     return () => {
       newSocket.disconnect();
     };
@@ -73,10 +80,10 @@ function AdminMessages() {
   },[socket, currentRoom]);
 
   const handleChangeRoom = useCallback((roomId) => {
-    socket.emit('switchRoom', (currentRoom,roomId));
+    socket.emit('switchRoom', currentRoom.roomId, roomId);
     const roomData = rooms.find((room) => room.roomId === roomId);
     const fetchData=async()=>{
-      const currentRoomResponse = await privateGet('/chat/most-recently-visited');
+      const currentRoomResponse = await privateGet(`/chat/${roomId}`);
       setMessages(currentRoomResponse.data.data.messages);
       setCurrentRoom(roomData);
     }

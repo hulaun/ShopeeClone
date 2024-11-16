@@ -40,43 +40,35 @@ const MainChat =memo(({currentRoom, messages, loadingMessages, sendMessage})=> {
         </IconButton>
       </section>
     </section>
-    <section
-      className="grow flex-1 flex-col justify-end gap-1 mb-4 pr-2 overflow-y-scroll max-h-full scrollbar scrollbar-w-1 scrollbar-thumb-rounded-full  scrollbar-thumb-grey-200"
-      >
-      {
-        messages && messages.map((message, index) =>
-          (message.senderId === currentUser.id) 
-          ?
-            (<div key={index} className="rounded-xl flex items-center gap-2 justify-end">
-              <p 
-                onMouseEnter={() => console.log('hover')}
-                className="block text-sm bg-grey-100 p-3 rounded-full text-grey-500">
-                {message.message}
-              </p>
-            </div>)
-          :
-            (<div 
-              key={index} className="rounded-xl flex items-center gap-2">
-              <img src={message.senderIcon} className="h-10 aspect-square rounded-full"></img>
-              <p
-                onMouseEnter={() => console.log('hover')}
-                className="text-sm bg-grey-100 p-3 rounded-full text-grey-500">
-                {message.message}
-              </p>
-            </div>)
-        )
-      }
-      {
-        loadingMessages && loadingMessages.map((message, index) => (
-          <div key={index} className="rounded-xl flex items-center gap-2 justify-end">
-            <p 
-              onMouseEnter={() => console.log('hover')}
-              className="block text-sm bg-grey-100 p-3 rounded-full text-grey-500">
-              {message}
-            </p>
-          </div>))
-      }
-      <div ref={messagesEndRef} />
+    <section className="grow mb-4 pr-2 overflow-y-scroll max-h-full scrollbar scrollbar-w-1 scrollbar-thumb-rounded-full scrollbar-thumb-grey-200">
+      <div className="flex flex-col gap-1 min-h-full justify-end">
+        {
+          messages && messages.map((message, index) =>
+            (message.senderId === currentUser.id) 
+            ?
+              (<div key={index} className="rounded-xl flex items-center gap-2 justify-end">
+                <p 
+                  onMouseEnter={() => console.log('hover')}
+                  className="block text-sm bg-grey-100 p-3 rounded-full text-grey-500">
+                  {message.message}
+                </p>
+              </div>)
+            :
+              (<div 
+                key={index} className="rounded-xl flex items-center gap-2">
+                <img src={message.senderIcon} className="h-10 aspect-square rounded-full" alt="sender icon"></img>
+                <p className="text-sm bg-grey-100 p-3 rounded-full text-grey-500">{message.message}</p>
+              </div>)
+          )
+        }
+        {
+          loadingMessages && loadingMessages.map((message, index) => (
+            <div key={index} className="rounded-xl flex items-center gap-2 justify-end">
+              <p className="block text-sm bg-grey-100 p-3 rounded-full text-grey-500">{message}</p>
+            </div>))
+        }
+        <div ref={messagesEndRef} />
+      </div>
     </section>
     <section className="relative">
       <input onKeyDown={handleKeyDown} ref={inputRef} type="text" className="bg-grey-100 p-3 pl-10 rounded-lg w-full border border-grey-300" placeholder="Type a message" />
