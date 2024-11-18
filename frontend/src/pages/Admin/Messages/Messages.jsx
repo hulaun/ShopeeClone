@@ -20,6 +20,7 @@ function AdminMessages() {
 
   useEffect(() => {
     const token = accessToken ? accessToken : sessionStorage.getItem('accessToken');
+    const controller = new AbortController();
     const newSocket = io('http://localhost:5500/chat',{
       auth: {
         token: token
@@ -50,8 +51,8 @@ function AdminMessages() {
     })
 
     const fetchData = async () => {
-      const roomsResponse = await privateGet('/chat');
-      const currentRoomResponse = await privateGet('/chat/most-recently-visited');
+      const roomsResponse = await privateGet('/chat', { signal: controller.signal });
+      const currentRoomResponse = await privateGet('/chat/most-recently-visited', { signal: controller.signal });
       const roomData = roomsResponse.data.data.find((room) => room.roomId === currentRoomResponse.data.data.roomId);
 
       setRooms(roomsResponse.data.data);
@@ -68,6 +69,11 @@ function AdminMessages() {
     });
 
     return () => {
+      controller.abort();
+      newSocket.off('broadcastMessage');
+      newSocket.off('updateRoomsLastMessage');
+      newSocket.off('updateMessageState');
+      newSocket.off('unauthorized');
       newSocket.disconnect();
     };
   }, []);

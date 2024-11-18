@@ -52,7 +52,7 @@ const Dropdown = ({ children }) => {
       }}
     >
       {React.Children.map(children, (child) => {
-        if (child.type === Button) {
+        if (child.type.displayName === "Menu") {
           return React.cloneElement(child, { ref: dropdownRef });
         }
         return child;
@@ -61,22 +61,18 @@ const Dropdown = ({ children }) => {
   );
 };
 
-const Button = forwardRef(
-  (
-    {
+const Button =({
       children,
       styles,
       CloseIcon = DropdownDownIcon,
       ActiveIcon = DropdownUpIcon,
       onHover = false,
-    },
-    ref
+    }
   ) => {
     const { toggleDropdown, isOpen } = useDropdown();
 
     return (
       <button
-        ref={ref}
         className={`flex justify-center items-center ${styles}`}
         onClick={toggleDropdown}
         onMouseEnter={() => onHover && toggleDropdown()}
@@ -86,9 +82,9 @@ const Button = forwardRef(
       </button>
     );
   }
-);
 
-const Menu = ({ children, styles, value, onValueChange }) => {
+
+const Menu = forwardRef(({ children, styles, onValueChange },ref) => {
   const { isOpen } = useDropdown();
   return (
     isOpen && (
@@ -101,18 +97,19 @@ const Menu = ({ children, styles, value, onValueChange }) => {
         role="menu"
         aria-orientation="vertical"
         tabIndex="-1"
+        ref={ref}
       >
         {React.Children.map(children, (child) => {
           if (React.isValidElement(child)) {
-            return React.cloneElement(child, { value, onValueChange });
+            return React.cloneElement(child, { onValueChange });
           }
         })}
       </motion.div>
     )
   );
-};
+});
 
-const Options = ({ children, styles, id, value, onValueChange }) => {
+const Options = ({ children, styles, id, onValueChange }) => {
   const { closeDropdown } = useDropdown();
   const handleClick = (e) => {
     onValueChange(e.target.id);
@@ -121,9 +118,7 @@ const Options = ({ children, styles, id, value, onValueChange }) => {
 
   return (
     <div
-      className={`block border border-grey-100 hover:bg-grey-100 select-none first:rounded-t-md last:rounded-b-md truncate p-2 ${styles} ${
-        value === id ? "bg-grey-300" : "bg-white"
-      }`}
+      className={`block border border-grey-100 hover:bg-grey-100 select-none first:rounded-t-md last:rounded-b-md truncate p-2 ${styles}`}
       onClick={handleClick}
       id={id}
     >
@@ -131,7 +126,7 @@ const Options = ({ children, styles, id, value, onValueChange }) => {
     </div>
   );
 };
-
+Menu.displayName = "Menu";
 Dropdown.Button = Button;
 Dropdown.Menu = Menu;
 Dropdown.Options = Options;

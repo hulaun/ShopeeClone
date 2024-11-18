@@ -31,10 +31,14 @@ class UserService {
     }
   }
 
-  async viewPage(page: number, limit: number) {
+  async viewPage(page: number, limit: number, sortOption: string, sortOrder: string) {
     try {
-      const users = await UserRepo.findSome(page, limit);
-      return users;
+      const numberOfPages = await UserRepo.countPages(limit);
+      const users = await UserRepo.findSome(page, limit, sortOption, sortOrder);
+      return {
+        users: users,
+        numberOfPages: numberOfPages,
+      };
     } catch (error) {
       console.error("Error fetching users:", error);
       throw new Error("Internal server error");

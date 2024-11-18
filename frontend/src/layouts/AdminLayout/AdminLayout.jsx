@@ -1,7 +1,7 @@
 import { ShopeeIcon } from "../../components/Icons/Icons";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const bgVariants = {
   active: {
@@ -63,7 +63,10 @@ const sideBarVariants = {
 
 
 function AuthLayout({ children}) {
-  const [currentTab, setCurrentTab] = useState("dashboard");
+  const [currentTab, setCurrentTab] = useState(
+    useLocation().pathname.split("/")[2] ||
+    "dashboard"
+  );
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
 

@@ -1,9 +1,7 @@
-import { Request, Response, NextFunction } from "express";
 import {db} from "../../config/db";
 import { User } from "../../../db/schema";
 import { UserModel } from "../models/model"
-import { eq } from "drizzle-orm";
-import { omit } from "lodash";
+import { asc, desc, eq, not, sql } from "drizzle-orm";
 
 class UserRepo {
 
@@ -33,19 +31,38 @@ class UserRepo {
     }
   }
 
-  async findSome(page: number, limit: number) {
+  async findSome(page: number, limit: number, sortOption: string, sortOrder: string) {
     try{
-      const users = await db.select({
-        id: User.id,
-        username: User.username,
-        email: User.email,
-        fullName: User.fullName,
-        createdAt: User.createdAt,
-        role: User.role,
-      }).from(User)
-      .limit(limit)
-      .offset((page-1)*limit)
-      return users
+      let query;
+      if(sortOption === 'role'){
+        query = db.select({
+          id: User.id,
+          username: User.username,
+          email: User.email,
+          fullName: User.fullName,
+          createdAt: User.createdAt,
+          role: User.role,
+        }).from(User)
+        .where(eq(User.role, sortOrder as 'Consumer' | 'Vendor'))
+        .limit(limit)
+        .offset((page-1)*limit)
+      }else{
+        query = db.select({
+          id: User.id,
+          username: User.username,
+          email: User.email,
+          fullName: User.fullName,
+          createdAt: User.createdAt,
+          role: User.role,
+        }).from(User)
+        .where(not(eq(User.role, 'Admin')))
+        .limit(limit)
+        .offset((page-1)*limit)
+        .orderBy(sortOrder==='asc'?
+          asc(User[sortOption as keyof UserModel]):
+          desc(User[sortOption as keyof UserModel]))
+      }
+      return await query;
     }catch(error){
       console.log(error)
       return error
@@ -56,6 +73,17 @@ class UserRepo {
     try{
       const user = await db.select().from(User).where(eq(User.id, userId))
       return user
+    }catch(error){
+      console.log(error)
+      return error
+    }
+  }
+
+  async countPages(limit: number) {
+    try{
+      const num = await db.select({
+        count: sql<number>`cast(count(${User.id}) as int)`}).from(User)
+        return Math.ceil(num[0].count/limit)
     }catch(error){
       console.log(error)
       return error

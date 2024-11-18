@@ -1,13 +1,10 @@
 import HomeFooter from "./components/HomeFooter";
 import { useEffect, useRef, useState, React } from "react";
-import Cookies from 'js-cookie';
-import {useAuth} from "../../../context/AuthContext";
 
 import ProductCategory from "./components/ProductCategory";
 import SuggestedProducts from "./components/SuggestedProducts";
 
 function Home() {
-  const {setAuthorizationHeader, accessToken} = useAuth();
   const [currentIndexCarousel, setCurrentIndexCarousel] = useState(0);
   const images = [
     'https://picsum.photos/id/236/800/200',

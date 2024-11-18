@@ -15,8 +15,6 @@ import { useAuth } from "../../../../context/AuthContext";
 const cx = classNames.bind(styles);
 
 function SettingsHeader() {
-  const { user } = useAuth();
-
   return (
     <header className={cx("wrapper", "text-white")}>
       <div className={cx("container")}>
