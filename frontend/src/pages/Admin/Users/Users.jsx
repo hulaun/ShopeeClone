@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { privateGet } from "../../../utils/httpRequest";
-import Dropdown from "../../../components/Drowdown/Drowdown";
+import { Dropdown } from "../../../components/Drowdown/Drowdown";
 
 
 function AdminUsers() {
@@ -41,7 +41,7 @@ function AdminUsers() {
         <section className="flex col-start-2 col-span-3">
           <Dropdown>
             <Dropdown.Button >Username</Dropdown.Button>
-            <Dropdown.Menu value={sortOrder} onValueChange={(option)=>{
+            <Dropdown.Menu onValueChange={(option)=>{
                 setSortOrder(option);
                 setSortOption("username");
               }} >
@@ -53,7 +53,7 @@ function AdminUsers() {
         <section className="flex col-span-3">
           <Dropdown>
             <Dropdown.Button >Email</Dropdown.Button>
-            <Dropdown.Menu value={sortOrder} onValueChange={(option)=>{
+            <Dropdown.Menu onValueChange={(option)=>{
                 setSortOrder(option);
                 setSortOption("email");
               }}>
@@ -65,7 +65,7 @@ function AdminUsers() {
         <section className="flex col-span-3">
           <Dropdown>
             <Dropdown.Button >Full Name</Dropdown.Button>
-            <Dropdown.Menu value={sortOrder} onValueChange={(option)=>{
+            <Dropdown.Menu onValueChange={(option)=>{
                 setSortOrder(option);
                 setSortOption("fullName");
               }}>
@@ -77,7 +77,7 @@ function AdminUsers() {
         <section className="flex">
           <Dropdown>
             <Dropdown.Button >Role</Dropdown.Button>
-            <Dropdown.Menu value={sortOrder} onValueChange={(option)=>{
+            <Dropdown.Menu onValueChange={(option)=>{
                 setSortOrder(option);
                 setSortOption("role");
               }}>

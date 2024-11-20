@@ -4,7 +4,6 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import { runSockets } from './socket';
-import ChatRoomController from "./api/controllers/ChatRoomController";
 dotenv.config({ path: ".env.local" });
 const cors = require("cors");
 const app: Express = express();
@@ -41,13 +40,9 @@ app.use(express.json());
 
 route(app);
 
-// const {generateRandomUser, insertUsersIntoDb} = require("./api/utils/UsersUtils");
-// const users = [];
-// for (let i = 0; i < 10; i++) {
-//   users.push(generateRandomUser());
-// }
-// insertUsersIntoDb(users);
-
+const {convertUserToVendor} = require("./api/utils/UsersUtils");
+const {generateAndInsertSeedData} = require("./api/utils/ShopProductUtils");
+generateAndInsertSeedData();
 // Start the server
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

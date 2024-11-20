@@ -292,3 +292,22 @@ export const DownIcon = memo(
     </svg>
   )
 );
+export const UpIcon = memo(({ width = "1rem", height = "1rem", className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={`${className}`}
+    height={height}
+    width={width}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="white"
+      d="m4.5 15.75 7.5-7.5 7.5 7.5"
+    />
+  </svg>
+));

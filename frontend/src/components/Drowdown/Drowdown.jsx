@@ -19,16 +19,26 @@ const useDropdown = () => {
   return context;
 };
 
-const Dropdown = ({ children }) => {
+export const Dropdown = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const timeoutRef = useRef(null);
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
   };
 
   const closeDropdown = () => {
+    clearTimeout(timeoutRef.current);
+    console.log("close");
     setIsOpen(false);
+  };
+
+  const openDropdown = () => {
+    console.log("open");
+    timeoutRef.current = setTimeout(() => {
+      setIsOpen(true);
+    },200);
   };
 
   const handleClickOutside = (event) => {
@@ -49,6 +59,7 @@ const Dropdown = ({ children }) => {
         isOpen,
         toggleDropdown,
         closeDropdown,
+        openDropdown,
       }}
     >
       {React.Children.map(children, (child) => {
@@ -63,19 +74,20 @@ const Dropdown = ({ children }) => {
 
 const Button =({
       children,
-      styles,
+      className,
       CloseIcon = DropdownDownIcon,
       ActiveIcon = DropdownUpIcon,
       onHover = false,
     }
   ) => {
-    const { toggleDropdown, isOpen } = useDropdown();
+    const { toggleDropdown, isOpen, openDropdown, closeDropdown } = useDropdown();
 
     return (
       <button
-        className={`flex justify-center items-center ${styles}`}
+        className={`${className} flex justify-center items-center gap-1`}
         onClick={toggleDropdown}
-        onMouseEnter={() => onHover && toggleDropdown()}
+        onMouseEnter={() => onHover && openDropdown()}
+        onMouseLeave={() => onHover && closeDropdown()}
       >
         {children}
         {isOpen ? <ActiveIcon /> : <CloseIcon />}
@@ -84,7 +96,7 @@ const Button =({
   }
 
 
-const Menu = forwardRef(({ children, styles, onValueChange },ref) => {
+const Menu = forwardRef(({ children, className, onValueChange },ref) => {
   const { isOpen } = useDropdown();
   return (
     isOpen && (
@@ -93,7 +105,7 @@ const Menu = forwardRef(({ children, styles, onValueChange },ref) => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.15 }}
-        className={`absolute mt-6 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 ${styles} `}
+        className={`${className} absolute mt-6 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5`}
         role="menu"
         aria-orientation="vertical"
         tabIndex="-1"
@@ -109,7 +121,7 @@ const Menu = forwardRef(({ children, styles, onValueChange },ref) => {
   );
 });
 
-const Options = ({ children, styles, id, onValueChange }) => {
+const Options = ({ children, className, id, onValueChange }) => {
   const { closeDropdown } = useDropdown();
   const handleClick = (e) => {
     onValueChange(e.target.id);
@@ -118,7 +130,7 @@ const Options = ({ children, styles, id, onValueChange }) => {
 
   return (
     <div
-      className={`block border border-grey-100 hover:bg-grey-100 select-none first:rounded-t-md last:rounded-b-md truncate p-2 ${styles}`}
+      className={`${className} block border border-grey-100 hover:bg-grey-100 select-none first:rounded-t-md last:rounded-b-md truncate p-2`}
       onClick={handleClick}
       id={id}
     >
@@ -130,5 +142,3 @@ Menu.displayName = "Menu";
 Dropdown.Button = Button;
 Dropdown.Menu = Menu;
 Dropdown.Options = Options;
-
-export default Dropdown;

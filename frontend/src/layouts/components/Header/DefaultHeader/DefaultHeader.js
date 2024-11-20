@@ -46,13 +46,10 @@ function DefaultHeader() {
               <input
                 className={cx("input")}
                 onChange={handleChange}
-                // type="text"
-                // id="search-input"
-                // name="search"
                 placeholder="Shoppe Thời Trang"
                 ref={searchRef}
               ></input>
-              <PrimaryButton style={primaryButtonStyle.current}>
+              <PrimaryButton className="bg-primary flex items-center">
                 {buttonChildren}
               </PrimaryButton>
             </div>
@@ -60,7 +57,7 @@ function DefaultHeader() {
               <div>Bộ Vệ Sinh Laptop</div>
               <div>Ốp IPhone</div>
               <div>Tinh Dầu bưởi</div>
-              <div>etc</div>
+              <div>Hello</div>
               <div>etc</div>
               <div>etc</div>
               <div>etc</div>

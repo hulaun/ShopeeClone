@@ -4,9 +4,9 @@ import { memo } from "react";
 
 const cx = classNames.bind(styles);
 
-export const PrimaryButton = memo(({ children, style = {} }) => {
+export const PrimaryButton = memo(({ children, className }) => {
   return (
-    <button className={cx("primary-button")} style={style}>
+    <button className={`bg-primary flex items-center p-2 px-6 ${className}`}>
       {children}
     </button>
   );

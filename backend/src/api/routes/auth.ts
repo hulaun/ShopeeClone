@@ -4,6 +4,7 @@ const router:Router = Router();
 
 router.post("/signup", AuthController.signup);
 router.post("/signin", AuthController.signin);
+router.get("/signout", AuthController.signout);
 router.get("/signin/oauth/google/login", AuthController.signinWithGoogleLogin);
 router.get(
   "/signin/oauth/google/callback",

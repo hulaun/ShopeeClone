@@ -18,9 +18,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    if (accessToken) {
-      setAuthorizationHeader(accessToken);
-    }
+    setAuthorizationHeader(accessToken);
   }, [accessToken]);
 
   const setupInterceptors = () => {
@@ -52,6 +50,13 @@ export function AuthProvider({ children }) {
     } else {
       delete privateHttpRequest.defaults.headers.common["Authorization"];
     }
+  };
+
+  const logout = () => {
+    setAccessToken(null);
+    setCurrentUser(null);
+    sessionStorage.removeItem("accessToken");
+    setAuthorizationHeader("");
   };
 
   const isTokenExpired = () => {
@@ -131,6 +136,7 @@ export function AuthProvider({ children }) {
     isConsumer,
     isAdmin,
     isVendor,
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
