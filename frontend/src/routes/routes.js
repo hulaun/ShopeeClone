@@ -15,6 +15,7 @@ import AdminSettings from "../pages/Admin/Settings/Settings";
 import AdminAnalitics from "../pages/Admin/Analitics/Analitics";
 import AdminCalendar from "../pages/Admin/Calendar/Calendar";
 import AdminMessages from "../pages/Admin/Messages/Messages";
+import ViewProduct from "../pages/Consumer/ViewProduct";
 
 const publicRoutes = [
   { path: config.routes.public.home, component: Home, layout: DefaultLayout },
@@ -39,6 +40,11 @@ const publicRoutes = [
 ];
 const consumerRoutes = [
   { path: config.routes.consumer.profile, component: Profile },
+  {
+    path: config.routes.consumer.viewProduct,
+    component: ViewProduct,
+    layout: DefaultLayout,
+  },
 ];
 
 const vendorRoutes = [];

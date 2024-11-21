@@ -1,0 +1,1 @@
+ALTER TABLE `ProductCategory` ADD `Image` text(100);

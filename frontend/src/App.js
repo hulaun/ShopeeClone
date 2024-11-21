@@ -5,12 +5,13 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import { adminRoutes, publicRoutes } from "./routes";
+import { adminRoutes, consumerRoutes, publicRoutes } from "./routes";
 import config from "./config";
 import { useAuth } from "./context/AuthContext";
+import React from "react";
 
 function App() {
-  const { isAdmin } = useAuth();
+  const { isAdmin, isConsumer } = useAuth();
 
   return (
     <Router>
@@ -40,6 +41,25 @@ function App() {
               element={
                 <Layout>
                   {!isAdmin() ? (
+                    <Navigate to={config.routes.public.login} />
+                  ) : (
+                    <Page />
+                  )}
+                </Layout>
+              }
+            />
+          );
+        })}
+        {consumerRoutes.map((route, index) => {
+          let Layout = route.layout || React.Fragment;
+          let Page = route.component;
+          return (
+            <Route
+              key={index}
+              path={route.path}
+              element={
+                <Layout>
+                  {!isConsumer() ? (
                     <Navigate to={config.routes.public.login} />
                   ) : (
                     <Page />

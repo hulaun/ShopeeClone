@@ -7,7 +7,7 @@ function DefaultLayout({ children }) {
     <>
       <SettingsHeader />
       <DefaultHeader />
-      <div>{children}</div>
+      {children}
       <Footer />
     </>
   );

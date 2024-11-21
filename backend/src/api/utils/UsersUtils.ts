@@ -32,6 +32,33 @@ function generateRandomUser() {
   };
 }
 
+function generateNewAdminUser(name: string="admin") {
+  const username = name;
+  const email = faker.internet.email();
+  const profilePicture = faker.image.avatar();
+  const passwordV1 = "admin";
+  const salt = createSalt();
+  const password = hashPassword(passwordV1, salt);
+  const fullName = faker.name.findName();
+  const gender = faker.random.arrayElement(["F", "M", "O"]);
+  const userAddress = faker.address.streetAddress();
+  const phoneNumber = faker.phone.phoneNumber();
+  const role = "Admin";
+
+  return {
+    username,
+    email,
+    profilePicture,
+    password,
+    salt,
+    fullName,
+    gender,
+    userAddress,
+    phoneNumber,
+    role,
+  };
+}
+
 async function insertUsersIntoDb(users: UserModel[]) {
   try {
     for (const user of users) {
@@ -151,4 +178,4 @@ async function convertUserToVendor(userId: string, username: string="vendor") {
   }
 }
 
-module.exports = {generateRandomUser,  insertUsersIntoDb,  convertUserToAdmin,  convertUserToConsumer,convertUserToVendor,  generateRandomUsersAndInsertIntoDb};
+module.exports = {generateRandomUser,  insertUsersIntoDb,  convertUserToAdmin,  convertUserToConsumer,convertUserToVendor,  generateRandomUsersAndInsertIntoDb, generateNewAdminUser};

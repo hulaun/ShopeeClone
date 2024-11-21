@@ -97,6 +97,7 @@ export const ProductCategory = sqliteTable('ProductCategory', {
     id: text('Id', { length: 36 }).primaryKey().$defaultFn(()=> crypto.randomUUID()),
     name: text('Name', { length: 50 }),
     description: text('Description'),
+    image: text('Image', { length: 100 }),
     createdAt: text('CreatedAt').default(sql`current_timestamp`),
 })
 

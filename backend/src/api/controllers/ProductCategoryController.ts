@@ -32,6 +32,25 @@ class ProductCategoryController {
     }
   }
 
+  async viewPage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const accessToken = res.locals.token;
+      const page = parseInt(req.params.page as string) ||1;
+      const limit = parseInt(req.query.limit as string)||10;
+      const sortOption = req.query.sort as string || "name";
+      const sortOrder = req.query.order as string || "asc";
+      const data = await ProductCategoryService.viewPage(page, limit, sortOption, sortOrder);
+      res.json({
+        data:data,
+        message:"Users fetched successfully",
+        accessToken
+      });
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const newCategory = req.body;

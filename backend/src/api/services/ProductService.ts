@@ -41,6 +41,20 @@ class ProductService {
     }
   }
 
+  async viewPage(page: number, limit: number, sortOption: string, sortOrder: string) {
+    try {
+      const numberOfPages = await ProductRepo.countPages(limit);
+      const users = await ProductRepo.findSome(page, limit, sortOption, sortOrder);
+      return {
+        users: users,
+        numberOfPages: numberOfPages,
+      };
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      throw new Error("Internal server error");
+    }
+  }
+
   async update(productId: string, updateData: ProductModel) {
     try {
       const product = await ProductRepo.update(productId, updateData);

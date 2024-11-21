@@ -1,7 +1,7 @@
 import { db } from "../../config/db";
 import { Shop, Product, ProductCategory, ProductCategoryRelations } from "../../../db/schema";
-import { sql } from "drizzle-orm";
-import { ProductModel, ShopModel } from "../models/model";
+import { ProductCategoryModel, ProductModel, ShopModel } from "../models/model";
+import { eq } from "drizzle-orm";
 const faker =require("faker");
 
 // Function to generate random shop data
@@ -33,6 +33,7 @@ function generateRandomProductCategory() {
   return {
     name: faker.commerce.department(),
     description: faker.lorem.sentence(),
+    image: faker.image.imageUrl(),
   };
 }
 
@@ -116,6 +117,14 @@ async function generateAndInsertSeedData() {
       });
     }
   });
+  console.log("Seed data generated and inserted successfully");
+}
+
+async function addImagesToProductCategory(){
+  const productCategories = await db.select().from(ProductCategory);
+  productCategories.forEach(async (productCategory:ProductCategoryModel)=>{
+    await db.update(ProductCategory).set({image: faker.image.imageUrl()}).where(eq(ProductCategory.id, productCategory.id));
+  })
 }
 
 module.exports = {
@@ -126,4 +135,5 @@ module.exports = {
   insertProductsIntoDb,
   insertProductCategoriesIntoDb,
   generateAndInsertSeedData,
+  addImagesToProductCategory,
 };

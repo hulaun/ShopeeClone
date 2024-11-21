@@ -41,6 +41,21 @@ class ProductCategoryService {
     }
   }
 
+  async viewPage(page: number, limit: number, sortOption: string, sortOrder: string) {
+    try {
+      const numberOfPages = await ProductCategoryRepo.countPages(limit);
+      const users = await ProductCategoryRepo.findSome(page, limit, sortOption, sortOrder);
+      return {
+        users: users,
+        numberOfPages: numberOfPages,
+      };
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      throw new Error("Internal server error");
+    }
+  }
+
+
   async update(categoryId: string, updateData: ProductCategoryModel) {
     try {
       const category = await ProductCategoryRepo.update(categoryId, updateData);

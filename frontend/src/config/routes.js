@@ -7,6 +7,7 @@ const routes = {
   },
   consumer: {
     profile: "/consumer/profile",
+    viewProduct: "/consumer/view-product/:id",
   },
   vendor: {},
   admin: {

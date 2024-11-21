@@ -1,7 +1,7 @@
 import { db } from "../../config/db";
 import { Product } from "../../../db/schema";
 import { ProductModel } from "../models/model";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 class ProductRepo {
   private static instance: ProductRepo;
@@ -26,10 +26,42 @@ class ProductRepo {
   async findById(productId: string) {
     try {
       const product = await db.select().from(Product).where(eq(Product.id, productId));
-      return product;
+      return product[0];
     } catch (error) {
       console.log(error);
       return error;
+    }
+  }
+
+  async findSome(page: number, limit: number, sortOption: string, sortOrder: string) {
+    try{
+      let query;
+      // if(sortOption === 'role'){
+        query = db.select().from(Product)
+        // .where(eq(Product.role, sortOrder as 'Consumer' | 'Vendor'))
+        .limit(limit)
+        .offset((page-1)*limit)
+      // }else{
+      //   query = db.select().from(Product)
+      //   // .where(not(eq(Product.role, 'Admin')))
+      //   .limit(limit)
+      //   .offset((page-1)*limit)
+      // }
+      return await query;
+    }catch(error){
+      console.log(error)
+      return error
+    }
+  }
+
+  async countPages(limit: number) {
+    try{
+      const num = await db.select({
+        count: sql<number>`cast(count(${Product.id}) as int)`}).from(Product)
+        return Math.ceil(num[0].count/limit)
+    }catch(error){
+      console.log(error)
+      return error
     }
   }
 

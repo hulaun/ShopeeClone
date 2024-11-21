@@ -1,40 +1,19 @@
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { publicGet } from "../../../../../utils/httpRequest";
 function ProductCategory() {
-  const [productCategory, setProductCategory] = useState([
-    {
-      name: "Clothing",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      name: "Shoes",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      name: "Accessories",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      name: "Bags",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      name: "Jewelry",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      name: "Watches",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      name: "Phones",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      name: "Laptops",
-      image: "https://via.placeholder.com/150",
-    },
-  ]);
+  const [productCategory, setProductCategory] = useState([]);
+
+  useEffect(() => {
+    const fetchProductCategory = async () => {
+      try {
+        const response = await publicGet("/product-category");
+        setProductCategory(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchProductCategory();
+  }, []);
 
   return (
     <div className="bg-white">
@@ -49,7 +28,7 @@ function ProductCategory() {
           >
             <img
               src={category.image}
-              alt={category.name}
+              alt={category.image}
               className="w-24 h-24 object-cover rounded-full"
             />
             <p className="mt-2">{category.name}</p>
