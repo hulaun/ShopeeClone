@@ -39,7 +39,11 @@ const publicRoutes = [
   },
 ];
 const consumerRoutes = [
-  { path: config.routes.consumer.profile, component: Profile },
+  {
+    path: config.routes.consumer.profile,
+    component: Profile,
+    layout: DefaultLayout,
+  },
   {
     path: config.routes.consumer.viewProduct,
     component: ViewProduct,

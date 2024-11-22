@@ -105,7 +105,7 @@ const Menu = forwardRef(({ children, className, onValueChange },ref) => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.15 }}
-        className={`${className} absolute mt-6 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5`}
+        className={`${className} absolute w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5`}
         role="menu"
         aria-orientation="vertical"
         tabIndex="-1"

@@ -10,7 +10,7 @@ import {
   DownIcon,
   UpIcon,
 } from "../../../../components/Icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Dropdown } from "../../../../components/Drowdown/Drowdown";
 import React, { useCallback } from "react";
 import config from "../../../../config";
@@ -20,6 +20,7 @@ const cx = classNames.bind(styles);
 
 function SettingsHeader() {
   const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = useCallback(() => {
     const fetchLogout = async () => {
@@ -29,9 +30,9 @@ function SettingsHeader() {
     fetchLogout();
   }, []);
 
-  const handleCheckProfile = () => {
-    console.log("check profile");
-  };
+  const handleCheckProfile = useCallback(() => {
+    navigate(config.routes.consumer.profile);
+  }, []);
 
   const handleCheckOrders = () => {
     console.log("check orders");
@@ -71,7 +72,7 @@ function SettingsHeader() {
                   <GlobeIcon />
                   <span>Language</span>
                 </Dropdown.Button>
-                <Dropdown.Menu className="mt-0" onValueChange={(option) => {}}>
+                <Dropdown.Menu onValueChange={(option) => {}}>
                   <Dropdown.Options className="text-grey-600" id="1">
                     Tiếng Việt
                   </Dropdown.Options>
@@ -96,7 +97,7 @@ function SettingsHeader() {
                   <span>{currentUser.username}</span>
                 </Dropdown.Button>
                 <Dropdown.Menu
-                  className="ml-52"
+                  className="ml-56 mt-6"
                   onValueChange={(value) => {
                     switch (parseInt(value)) {
                       case 1: {
