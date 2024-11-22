@@ -78,7 +78,6 @@ export function AuthProvider({ children }) {
   };
 
   const isConsumer = () => {
-    debugger;
     if (!currentUser) {
       const data = decodeJWT();
       setAuthorizationHeader(sessionStorage.getItem("accessToken"));
