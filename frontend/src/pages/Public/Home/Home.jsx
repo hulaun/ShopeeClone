@@ -3,8 +3,10 @@ import { useEffect, useRef, useState, React } from "react";
 
 import ProductCategory from "./components/ProductCategory";
 import SuggestedProducts from "./components/SuggestedProducts";
+import { useAuth } from "../../../context/AuthContext";
 
 function Home() {
+  const { handleGoogleAuth } = useAuth();
   const [currentIndexCarousel, setCurrentIndexCarousel] = useState(0);
   const images = [
     'https://picsum.photos/id/236/800/200',
@@ -19,7 +21,7 @@ function Home() {
       setCurrentIndexCarousel((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
     }, 3000);
 
-    
+    handleGoogleAuth()
 
     return () => clearInterval(interval);
   }, []);

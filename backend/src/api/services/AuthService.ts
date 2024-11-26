@@ -113,11 +113,18 @@ class AuthService {
     const userData = await fetch(
       `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${gglAccessToken}`
     );
-
-    const user = await userData.json();
-    const userExists = await AuthRepo.hasAccount(user.email);
+    const tempUser = await userData.json();
+    const userExists = await AuthRepo.hasAccount(tempUser.email);
+    let user: UserModel= {} as UserModel;
     if (!userExists) {
-      await AuthRepo.addConsumerAccount(user);
+      user = await AuthRepo.addConsumerAccount({
+        username: tempUser.email,
+        email: tempUser.email,
+        fullName: tempUser.name,
+        profilePicture: tempUser.picture,
+      }as UserModel);
+    }else{
+      user = await AuthRepo.getUserAccountByGoogleMail(tempUser.email) as UserModel;
     }
 
     const accessToken = signAccessToken(user);

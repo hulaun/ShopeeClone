@@ -112,7 +112,7 @@ function Profile() {
             <motion.div className="flex py-5 gap-2 border border-grey-100 border-b-grey-200">
               <motion.img className="rounded-full size-12" src="https://picsum.photos/440/440" alt="" />
               <motion.div>
-                <motion.h1 className="text-lg font-semibold">{currentUser?currentUser.username:JSON.stringify(currentUser)}</motion.h1>
+                <motion.h1 className="text-lg font-semibold truncate">{currentUser?currentUser.username:JSON.stringify(currentUser)}</motion.h1>
               </motion.div>
             </motion.div>
             <motion.nav>

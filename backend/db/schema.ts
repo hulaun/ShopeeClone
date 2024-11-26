@@ -128,7 +128,7 @@ export const Order = sqliteTable('Order', {
     orderDate: text('OrderDate').default(sql`current_timestamp`),
     status: text('Status', {length: 20, enum: ["Pending", "Processing", "Delivered", "Cancelled"]}).notNull(),
     totalAmount: integer('TotalAmount'),
-    shippingAddress: text('ShippingAddress').references(()=> User.userAddress),
+    shippingAddress: text('ShippingAddress'),
     userId: text('UserId', { length: 36 }).references(()=> User.id),
     createdAt: text('CreatedAt').default(sql`current_timestamp`),
 })

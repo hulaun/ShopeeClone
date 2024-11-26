@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "dbccb3e7-3abf-43c9-b852-42f2a2d55683",
+  "id": "eec2fa8a-94ac-456a-9716-a0787d9d1cff",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "Cart": {
@@ -388,19 +388,6 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "Order_ShippingAddress_User_UserAddress_fk": {
-          "name": "Order_ShippingAddress_User_UserAddress_fk",
-          "tableFrom": "Order",
-          "tableTo": "User",
-          "columnsFrom": [
-            "ShippingAddress"
-          ],
-          "columnsTo": [
-            "UserAddress"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "Order_UserId_User_Id_fk": {
           "name": "Order_UserId_User_Id_fk",
           "tableFrom": "Order",
@@ -518,6 +505,13 @@
         "Description": {
           "name": "Description",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "Image": {
+          "name": "Image",
+          "type": "text(100)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

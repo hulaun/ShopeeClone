@@ -53,7 +53,6 @@ CREATE TABLE `Order` (
 	`UserId` text(36),
 	`CreatedAt` text DEFAULT current_timestamp,
 	FOREIGN KEY (`CartId`) REFERENCES `Cart`(`Id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`ShippingAddress`) REFERENCES `User`(`UserAddress`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`UserId`) REFERENCES `User`(`Id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
@@ -73,6 +72,7 @@ CREATE TABLE `ProductCategory` (
 	`Id` text(36) PRIMARY KEY NOT NULL,
 	`Name` text(50),
 	`Description` text,
+	`Image` text(100),
 	`CreatedAt` text DEFAULT current_timestamp
 );
 --> statement-breakpoint

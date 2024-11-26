@@ -1,25 +1,50 @@
 import { UserModel } from "../models/model";
 import UserRepo from "../repos/UserRepo";
-import CloudinaryService from "./CloudinaryService";
-class UserService {
-  private static instance: UserService;
+import { v2 as cloudinary } from "cloudinary";
+require("dotenv").config();
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+class CloudinaryService {
+  private static instance: CloudinaryService;
 
   constructor() {
-    if (UserService.instance) {
-      return UserService.instance;
+    if (CloudinaryService.instance) {
+      return CloudinaryService.instance;
     }
-    UserService.instance = this;
+    CloudinaryService.instance = this;
   }
 
-  async create(newUser: UserModel) {
-    try {
-      const user = await UserRepo.create(newUser);
-      return user;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      throw new Error("Internal server error");
-    }
-  }
+  
+  async test(){
+    // const uploadResult = await cloudinary.uploader
+    //   .upload(
+    //       'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg', {
+    //           public_id: 'shoes',
+    //       }
+    //   )
+    //   .catch((error) => {
+    //       console.log(error);
+    //   });
+    
+    // console.log(uploadResult);
+    
+    // Optimize delivery by resizing and applying auto-format and auto-quality
+    const someUrl = cloudinary.url("samples/landscapes/landscape-panorama");
+    
+    console.log(someUrl);
+    const optimizeUrl = await cloudinary.api.resource("shoes");
+    
+    console.log(optimizeUrl);
+    
+    // Transform the image: auto-crop to square aspect_ratio
+    const autoCropUrl = cloudinary.image('shoes');
+    
+    console.log(autoCropUrl);
+};
 
   async viewAll() {
     try {
@@ -57,10 +82,8 @@ class UserService {
 
   async update(userId: string, updateData: UserModel) {
     try {
-      // const user = await UserRepo.update(userId, updateData);
-      const image = await CloudinaryService.test();
-      console.log(image);
-      return image;
+      const user = await UserRepo.update(userId, updateData);
+      return user;
     } catch (error) {
       console.error("Error updating user:", error);
       throw new Error("Internal server error");
@@ -77,7 +100,7 @@ class UserService {
   }
 }
 
-const instance = new UserService();
+const instance = new CloudinaryService();
 Object.freeze(instance);
 
 export default instance;

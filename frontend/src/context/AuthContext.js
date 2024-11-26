@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { privateHttpRequest } from "../utils/httpRequest";
 import config from "../config";
+import Cookies from "js-cookie";
 
 const AuthContext = React.createContext();
 
@@ -50,6 +51,16 @@ export function AuthProvider({ children }) {
     } else {
       delete privateHttpRequest.defaults.headers.common["Authorization"];
     }
+  };
+
+  const handleGoogleAuth = () => {
+    const accessToken = Cookies.get("accessToken");
+    const user = Cookies.get("user");
+    if (!accessToken || !user) return;
+    sessionStorage.setItem("accessToken", accessToken);
+    setAccessToken(accessToken);
+    setAuthorizationHeader(accessToken);
+    setCurrentUser(JSON.parse(user.substring(2, user.length)));
   };
 
   const logout = () => {
@@ -133,6 +144,7 @@ export function AuthProvider({ children }) {
     setCurrentUser,
     accessToken,
     setAccessToken,
+    handleGoogleAuth,
     isConsumer,
     isAdmin,
     isVendor,

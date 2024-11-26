@@ -42,7 +42,7 @@ class AuthRepo {
         if (passwordHash === user[0].password) {
           return {
             message: "Login successful",
-            user: omit(user[0], ["password", "salt"]),
+            user: omit(user[0], ["password", "salt", "createdAt", "status"]),
           };
         } else {
           return {
@@ -58,6 +58,21 @@ class AuthRepo {
       }
     } catch (error) {
       console.error("Error logging in:", error);
+      throw new Error("Internal server error");
+    }
+  }
+
+  async getUserAccountByGoogleMail(email: string) {
+    try {
+      const user: UserModel[] = await db
+        .select()
+        .from(User)
+        .where(eq(User.email, email))
+        .limit(1) as UserModel[];
+
+      return omit(user[0], ["password", "salt", "createdAt", "status"]);
+    } catch (error) {
+      console.error("Error getting user by email:", error);
       throw new Error("Internal server error");
     }
   }
