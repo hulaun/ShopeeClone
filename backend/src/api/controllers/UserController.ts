@@ -81,10 +81,11 @@ class UserController {
     try {
       const accessToken = res.locals.token;
       const userId: string = req.params.id;
-      const updateData = req.body;
-      const user = await UserService.update(userId, updateData);
+      const updateData = req;
+      console.log("updateData",updateData.body);
+      // const user = await UserService.update(userId, updateData);
       res.status(200).json({
-        data:user,
+        data:undefined,
         message:"Users updates successfully",
         accessToken
       });
@@ -104,6 +105,22 @@ class UserController {
         accessToken });
     } catch (error) {
       console.error("Error deleting user:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  async profile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const accessToken = res.locals.token;
+      const userId = req.params.id;
+      const data = await UserService.profile(userId);
+      res.status(200).json({
+        data:data,
+        message:"User profile fetched successfully",
+        accessToken
+      });
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   }

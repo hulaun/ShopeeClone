@@ -105,8 +105,9 @@ CREATE TABLE `User` (
 	`ProfilePicture` text(100),
 	`FullName` text,
 	`Gender` text(1),
-	`UserAddress` text,
+	`Address` text,
 	`PhoneNumber` text(50),
+	`DOB` text(20),
 	`Role` text(20) NOT NULL,
 	`Status` text(20),
 	`CreatedAt` text DEFAULT current_timestamp

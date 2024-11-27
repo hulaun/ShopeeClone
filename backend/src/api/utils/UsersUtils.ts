@@ -16,6 +16,8 @@ function generateRandomUser() {
   const gender = faker.random.arrayElement(["F", "M", "O"]);
   const userAddress = faker.address.streetAddress();
   const phoneNumber = faker.phone.phoneNumber();
+  const dob = faker.date.past(50, new Date()).toISOString().split("T")[0];
+  const status = faker.random.arrayElement(["Inactive", "Blocked"]);
   const role = faker.random.arrayElement(["Consumer", "Vendor"]);
 
   return {
@@ -26,6 +28,8 @@ function generateRandomUser() {
     salt,
     fullName,
     gender,
+    dob,
+    status,
     userAddress,
     phoneNumber,
     role,
@@ -43,6 +47,8 @@ function generateNewAdminUser(name: string="admin") {
   const gender = faker.random.arrayElement(["F", "M", "O"]);
   const userAddress = faker.address.streetAddress();
   const phoneNumber = faker.phone.phoneNumber();
+  const dob = faker.date.past(50, new Date()).toISOString().split("T")[0];
+  const status = faker.random.arrayElement(["Inactive", "Blocked"]);
   const role = "Admin";
 
   return {
@@ -53,6 +59,8 @@ function generateNewAdminUser(name: string="admin") {
     salt,
     fullName,
     gender,
+    dob,
+    status,
     userAddress,
     phoneNumber,
     role,
@@ -70,6 +78,23 @@ async function insertUsersIntoDb(users: UserModel[]) {
     }
   } catch (error) {
     console.error("Error inserting Users:", error);
+  }
+}
+
+async function addDobToEachUser() {
+  try {
+    const users = await db.select().from(schema.User);
+
+    for (const user of users) {
+      const dob = faker.date.past(50, new Date()).toISOString().split("T")[0];
+      await db
+        .update(schema.User)
+        .set({ dob })
+        .where(eq(schema.User.id, user.id))
+        .run();
+    }
+  } catch (error) {
+    console.error("Error adding DOB to each user:", error);
   }
 }
 
@@ -178,4 +203,4 @@ async function convertUserToVendor(userId: string, username: string="vendor") {
   }
 }
 
-module.exports = {generateRandomUser,  insertUsersIntoDb,  convertUserToAdmin,  convertUserToConsumer,convertUserToVendor,  generateRandomUsersAndInsertIntoDb, generateNewAdminUser};
+module.exports = {generateRandomUser,  insertUsersIntoDb,  convertUserToAdmin,  convertUserToConsumer,convertUserToVendor,  generateRandomUsersAndInsertIntoDb, generateNewAdminUser, addDobToEachUser};

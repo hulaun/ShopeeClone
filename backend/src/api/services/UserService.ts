@@ -75,6 +75,16 @@ class UserService {
       throw new Error("Internal server error");
     }
   }
+
+  async profile(userId: string) {
+    try {
+      const user = await UserRepo.profile(userId);
+      return user;
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      throw new Error("Internal server error");
+    }
+  }
 }
 
 const instance = new UserService();

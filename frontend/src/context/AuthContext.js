@@ -14,15 +14,11 @@ export function AuthProvider({ children }) {
   const [accessToken, setAccessToken] = useState();
 
   useEffect(() => {
-    setupInterceptors();
-    refreshNecessaryData();
-  }, []);
-
-  useEffect(() => {
     setAuthorizationHeader(accessToken);
   }, [accessToken]);
 
   const setupInterceptors = () => {
+    console.log("setupInterceptors");
     privateHttpRequest.interceptors.response.use(
       (response) => {
         if (isTokenExpired()) {
@@ -35,6 +31,7 @@ export function AuthProvider({ children }) {
         return response;
       },
       async (error) => {
+        console.log("error", error);
         if (error.response.status === 401) {
           window.location.href = config.routes.public.login;
         }
@@ -138,6 +135,9 @@ export function AuthProvider({ children }) {
     const payloadJson = atob(payloadBase64);
     return JSON.parse(payloadJson);
   };
+
+  setupInterceptors();
+  refreshNecessaryData();
 
   const value = {
     currentUser,

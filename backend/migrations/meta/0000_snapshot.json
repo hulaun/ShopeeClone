@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "eec2fa8a-94ac-456a-9716-a0787d9d1cff",
+  "id": "3b6a2203-a843-4b15-99d6-17b6ac235f65",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "Cart": {
@@ -727,8 +727,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "UserAddress": {
-          "name": "UserAddress",
+        "Address": {
+          "name": "Address",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -737,6 +737,13 @@
         "PhoneNumber": {
           "name": "PhoneNumber",
           "type": "text(50)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "DOB": {
+          "name": "DOB",
+          "type": "text(20)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

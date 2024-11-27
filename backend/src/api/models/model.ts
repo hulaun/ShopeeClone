@@ -7,8 +7,9 @@ export type UserModel = {
     profilePicture: string | null;
     fullName: string | null;
     gender: "M" | "F" | "O" | null;
-    userAddress: string | null;
+    address: string | null;
     phoneNumber: string | null;
+    dob: string | null;
     role: "Admin" | "Consumer" | "Vendor";
     status: "Active" | "Inactive" | "Blocked" | null;
     createdAt: string | null;

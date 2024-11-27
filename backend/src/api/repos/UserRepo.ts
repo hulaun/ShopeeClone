@@ -2,6 +2,7 @@ import {db} from "../../config/db";
 import { User } from "../../../db/schema";
 import { UserModel } from "../models/model"
 import { asc, desc, eq, not, sql } from "drizzle-orm";
+import { add } from "lodash";
 
 class UserRepo {
 
@@ -131,6 +132,27 @@ class UserRepo {
         console.log(error)
         return error
       }
+  }
+
+  async profile(userId: string) {
+    try{
+      const user = await db
+        .select({
+          username: User.username,
+          email: User.email,
+          fullName: User.fullName,
+          gender: User.gender,
+          dob: User.dob,
+          address: User.address,
+          phoneNumber: User.phoneNumber,
+        })
+        .from(User)
+        .where(eq(User.id, userId))
+      return user[0]
+    }catch(error){
+      console.log(error)
+      return error
+    }
   }
 }
 

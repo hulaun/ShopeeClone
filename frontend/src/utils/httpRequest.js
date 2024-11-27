@@ -46,6 +46,14 @@ export const privateGet = async (path, options = {}, signal) => {
   return await privateHttpRequest.get(path, { ...options, signal });
 };
 
-export const privatePost = async (path, options = {}, signal) => {
-  return await privateHttpRequest.post(path, { ...options, signal });
+export const privatePost = async (path, options = {}, signal, headers = {}) => {
+  return await privateHttpRequest.post(
+    path,
+    { ...options, signal },
+    { headers: { ...headers } }
+  );
+};
+
+export const privatePatch = async (path, options = {}, signal) => {
+  return await privateHttpRequest.patch(path, { ...options, signal });
 };

@@ -18,11 +18,15 @@ router
 router
     .route("/:id")
     .get(UserController.view)
-    .patch(UserController.update)
+    .post(UserController.update)
     .delete(UserController.delete);
 
 router
     .route("/page/:page")
     .get(UserController.viewPage);
+
+router
+    .route("/profile/:id")
+    .get(UserController.profile);
 
 export {router as userRouter}

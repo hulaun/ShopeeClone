@@ -4,6 +4,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import { runSockets } from './socket';
+import fileUpload from "express-fileupload";
 dotenv.config({ path: ".env.local" });
 const cors = require("cors");
 const app: Express = express();
@@ -13,7 +14,7 @@ const route = require("./api/routes");
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:8080", "http://127.0.0.1:8080"],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   },
 });
@@ -21,12 +22,20 @@ const io = new Server(server, {
 runSockets(io);
 
 app.use(
+  fileUpload({
+    createParentPath: true,
+    debug: true,
+  })
+)
+
+app.use(
   cors({
     origin: ["http://localhost:8080", "http://127.0.0.1:8080"],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
+
 
 app.use(cookieParser());
 
@@ -40,7 +49,7 @@ app.use(express.json());
 
 route(app);
 
-// const {convertUserToVendor} = require("./api/utils/UsersUtils");
+// const {convertUserToVendor, addDobToEachUser} = require("./api/utils/UsersUtils");
 // const {generateAndInsertSeedData, addImagesToProductCategory} = require("./api/utils/ShopProductUtils");
 // generateAndInsertSeedData();
 // addImagesToProductCategory()
