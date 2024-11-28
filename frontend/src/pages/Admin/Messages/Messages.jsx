@@ -51,8 +51,8 @@ function AdminMessages() {
     })
 
     const fetchData = async () => {
-      const roomsResponse = await privateGet('/chat', { signal: controller.signal });
-      const currentRoomResponse = await privateGet('/chat/most-recently-visited', { signal: controller.signal });
+      const roomsResponse = await privateGet({path:'/chat', signal:controller.signal });
+      const currentRoomResponse = await privateGet({path:'/chat/most-recently-visited',  signal: controller.signal });
       const roomData = roomsResponse.data.data.find((room) => room.roomId === currentRoomResponse.data.data.roomId);
 
       setRooms(roomsResponse.data.data);
@@ -89,7 +89,7 @@ function AdminMessages() {
     socket.emit('switchRoom', currentRoom.roomId, roomId);
     const roomData = rooms.find((room) => room.roomId === roomId);
     const fetchData=async()=>{
-      const currentRoomResponse = await privateGet(`/chat/${roomId}`);
+      const currentRoomResponse = await privateGet({path:`/chat/${roomId}`});
       setMessages(currentRoomResponse.data.data.messages);
       setCurrentRoom(roomData);
     }

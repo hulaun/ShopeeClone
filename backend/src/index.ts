@@ -24,7 +24,6 @@ runSockets(io);
 app.use(
   fileUpload({
     createParentPath: true,
-    debug: true,
   })
 )
 
@@ -50,9 +49,9 @@ app.use(express.json());
 route(app);
 
 // const {convertUserToVendor, addDobToEachUser} = require("./api/utils/UsersUtils");
-// const {generateAndInsertSeedData, addImagesToProductCategory} = require("./api/utils/ShopProductUtils");
+// const {generateAndInsertSeedData, modifyThePriceInProduct} = require("./api/utils/ShopProductUtils");
 // generateAndInsertSeedData();
-// addImagesToProductCategory()
+// modifyThePriceInProduct()
 // Start the server
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

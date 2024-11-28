@@ -34,26 +34,43 @@ privateHttpRequest.interceptors.response.use((res) => {
 
 //http methods
 
-export const publicGet = async (path, options = {}, signal) => {
-  return await publicHttpRequest.get(path, { ...options, signal });
+export const publicGet = async ({ path, data, options = {}, signal }) => {
+  return await publicHttpRequest.get(path, data, { ...options, signal });
 };
 
-export const publicPost = async (path, options = {}, signal) => {
-  return await publicHttpRequest.post(path, { ...options, signal });
+export const publicPost = async ({ path, data, options = {}, signal }) => {
+  return await publicHttpRequest.post(path, data, { ...options, signal });
 };
 
-export const privateGet = async (path, options = {}, signal) => {
-  return await privateHttpRequest.get(path, { ...options, signal });
+export const privateGet = async ({ path, data, options = {}, signal }) => {
+  return await privateHttpRequest.get(path, data, { ...options, signal });
 };
 
-export const privatePost = async (path, options = {}, signal, headers = {}) => {
-  return await privateHttpRequest.post(
-    path,
-    { ...options, signal },
-    { headers: { ...headers } }
-  );
+export const privatePost = async ({
+  path,
+  data,
+  options = {},
+  signal,
+  headers,
+}) => {
+  console.log("headers", headers);
+  return await privateHttpRequest.post(path, data, {
+    ...options,
+    signal,
+    headers,
+  });
 };
 
-export const privatePatch = async (path, options = {}, signal) => {
-  return await privateHttpRequest.patch(path, { ...options, signal });
+export const privatePatch = async ({
+  path,
+  data,
+  options = {},
+  signal,
+  headers,
+}) => {
+  return await privateHttpRequest.patch(path, data, {
+    ...options,
+    signal,
+    headers,
+  });
 };

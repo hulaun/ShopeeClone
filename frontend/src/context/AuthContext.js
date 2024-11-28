@@ -87,6 +87,7 @@ export function AuthProvider({ children }) {
 
   const isConsumer = () => {
     if (!currentUser) {
+      console.log("currentUser", currentUser);
       const data = decodeJWT();
       setAuthorizationHeader(sessionStorage.getItem("accessToken"));
       return data?.role === "Consumer";

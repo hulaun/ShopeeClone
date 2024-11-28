@@ -1,18 +1,18 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../../../../context/AuthContext';
-import { privateGet, privatePatch, privatePost } from '../../../../../utils/httpRequest';
-import axios from 'axios';
+import { privateGet, privatePost } from '../../../../../utils/httpRequest';
 
 function MainProfile() {
-  const imageRef = useRef();
-  const [newImage, setNewImage] = useState(null);
   const { currentUser } = useAuth();
+  
+  const [newImage, setNewImage] = useState();
+  const imageRef = useRef();
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      const response = await privateGet("/user/profile/" + currentUser.id);
+      const response = await privateGet({path:"/user/profile/" + currentUser.id});
       // Set form values
       setValue('name', response.data.data.fullName || '');
       setValue('email', response.data.data.email || '');
@@ -35,17 +35,10 @@ function MainProfile() {
     for (let [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
     }
-    // console.log('Data:', fs.createReadStream(newImage));
     const updateUser = async () => {
-      await privatePost("/user/" + currentUser.id, {
-        formData,
-      },headers={
+      await privatePost({path:"/user/" + currentUser.id, data:formData,headers:{
         'Content-Type': 'multipart/form-data'
-      });
-      // axios.post(process.env.REACT_APP_SERVER_ENDPOINT + "/user/" + currentUser.id, formData, {headers:{
-      //   'Content-Type': 'multipart/form-data'
-      // }})
-      // console.log(status);
+      }});
     };
     updateUser();
   };

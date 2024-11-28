@@ -81,11 +81,9 @@ class UserController {
     try {
       const accessToken = res.locals.token;
       const userId: string = req.params.id;
-      const updateData = req;
-      console.log("updateData",updateData.body);
-      // const user = await UserService.update(userId, updateData);
+      const user = await UserService.update(userId, req.body, req.files?.profilePicture);
       res.status(200).json({
-        data:undefined,
+        data:user,
         message:"Users updates successfully",
         accessToken
       });

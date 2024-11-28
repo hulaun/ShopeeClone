@@ -67,7 +67,7 @@ function generateNewAdminUser(name: string="admin") {
   };
 }
 
-async function insertUsersIntoDb(users: UserModel[]) {
+async function insertUsersIntoDb(users:any) {
   try {
     for (const user of users) {
       console.log("Inserting user:", user);
@@ -99,9 +99,9 @@ async function addDobToEachUser() {
 }
 
 async function generateRandomUsersAndInsertIntoDb(count: number) {
-  const users:UserModel[] = [];
+  const users= [];
   for (let i = 0; i < count; i++) {
-    users.push(generateRandomUser() as UserModel);
+    users.push(generateRandomUser());
   }
 
   await insertUsersIntoDb(users);

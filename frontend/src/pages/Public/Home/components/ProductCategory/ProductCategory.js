@@ -6,7 +6,7 @@ function ProductCategory() {
   useEffect(() => {
     const fetchProductCategory = async () => {
       try {
-        const response = await publicGet("/product-category");
+        const response = await publicGet({ path: "/product-category" });
         setProductCategory(response.data);
       } catch (error) {
         console.error(error);

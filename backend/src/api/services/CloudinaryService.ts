@@ -1,5 +1,3 @@
-import { UserModel } from "../models/model";
-import UserRepo from "../repos/UserRepo";
 import { v2 as cloudinary } from "cloudinary";
 require("dotenv").config();
 cloudinary.config({
@@ -44,58 +42,21 @@ class CloudinaryService {
     const autoCropUrl = cloudinary.image('shoes');
     
     console.log(autoCropUrl);
-};
+  };
+  
+  async uploadImage(image: any, userId: string){
+    try{
+      const base64Image = `data:${image.mimetype};base64,${image.data.toString("base64")}`;
 
-  async viewAll() {
-    try {
-      const users = await UserRepo.findAll();
-      return users;
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      throw new Error("Internal server error");
-    }
-  }
-
-  async viewPage(page: number, limit: number, sortOption: string, sortOrder: string) {
-    try {
-      const numberOfPages = await UserRepo.countPages(limit);
-      const users = await UserRepo.findSome(page, limit, sortOption, sortOrder);
-      return {
-        users: users,
-        numberOfPages: numberOfPages,
-      };
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      throw new Error("Internal server error");
-    }
-  }
-
-  async view(userId: string) {
-    try {
-      const user = await UserRepo.findById(userId);
-      return user;
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      throw new Error("Internal server error");
-    }
-  }
-
-  async update(userId: string, updateData: UserModel) {
-    try {
-      const user = await UserRepo.update(userId, updateData);
-      return user;
-    } catch (error) {
-      console.error("Error updating user:", error);
-      throw new Error("Internal server error");
-    }
-  }
-
-  async delete(userId: string) {
-    try {
-      await UserRepo.delete(userId);
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      throw new Error("Internal server error");
+    // Upload to Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(base64Image, {
+      public_id: 'profileImage',
+      folder: `users/${userId}`,
+    });
+      return uploadResult.public_id;
+    }catch(error){
+      console.log(error)
+      return error
     }
   }
 }

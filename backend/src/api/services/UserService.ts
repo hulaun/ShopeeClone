@@ -55,12 +55,19 @@ class UserService {
     }
   }
 
-  async update(userId: string, updateData: UserModel) {
+  async update(userId: string, updateData: any, newImage: any) {
     try {
-      // const user = await UserRepo.update(userId, updateData);
-      const image = await CloudinaryService.test();
-      console.log(image);
-      return image;
+      console.log("updateData", updateData);
+      console.log("image", newImage);
+      let profilePicture:string="";
+      if(newImage){
+        profilePicture = await CloudinaryService.uploadImage(newImage, userId) as string;
+      }
+      const user = await UserRepo.update(userId, profilePicture?{
+        ...updateData,
+        profilePicture,
+      }:updateData);
+      return user;
     } catch (error) {
       console.error("Error updating user:", error);
       throw new Error("Internal server error");

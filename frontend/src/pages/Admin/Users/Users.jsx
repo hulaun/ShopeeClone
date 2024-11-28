@@ -14,7 +14,7 @@ function AdminUsers() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await privateGet(`/user/page/${currentPage}?limit=10&sort=${sortOption}&order=${sortOrder}`);
+      const response = await privateGet({path:`/user/page/${currentPage}?limit=10&sort=${sortOption}&order=${sortOrder}`});
       if (response.status === 200) {
         console.log(response.data.data);
         setUsers(response.data.data.users);

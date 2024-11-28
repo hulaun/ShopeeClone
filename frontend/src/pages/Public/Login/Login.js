@@ -95,9 +95,12 @@ function Login() {
     event.preventDefault();
 
     try {
-      const response = await publicPost("auth/signin", {
-        loginKey: userInputValue,
-        password: passwordValue,
+      const response = await publicPost({
+        path: "auth/signin",
+        data: {
+          loginKey: userInputValue,
+          password: passwordValue,
+        },
       });
 
       if (response.status >= 200 && response.status <= 300) {
@@ -107,6 +110,7 @@ function Login() {
         sessionStorage.setItem("accessToken", accessToken);
 
         if (isConsumer()) {
+          console.log("Consumer");
           navigate(config.routes.public.home);
         } else if (isVendor()) {
           navigate(config.routes.public.home);

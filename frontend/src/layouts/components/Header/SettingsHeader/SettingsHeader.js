@@ -24,7 +24,7 @@ function SettingsHeader() {
 
   const handleLogout = useCallback(() => {
     const fetchLogout = async () => {
-      await publicGet("/auth/signout");
+      await publicGet({ path: "/auth/signout" });
       logout();
     };
     fetchLogout();

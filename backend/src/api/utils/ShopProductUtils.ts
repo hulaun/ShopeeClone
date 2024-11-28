@@ -21,7 +21,7 @@ function generateRandomProduct(shopId: string) {
   return {
     name: faker.commerce.productName(),
     description: faker.lorem.sentence(),
-    price: faker.commerce.price(),
+    price: faker.commerce.price(10000, 1000000),
     discount: faker.datatype.number({ min: 0, max: 50 }),
     productPicture: faker.image.imageUrl(),
     shopId: shopId,
@@ -120,11 +120,16 @@ async function generateAndInsertSeedData() {
   console.log("Seed data generated and inserted successfully");
 }
 
-async function addImagesToProductCategory(){
-  const productCategories = await db.select().from(ProductCategory);
-  productCategories.forEach(async (productCategory:ProductCategoryModel)=>{
-    await db.update(ProductCategory).set({image: faker.image.imageUrl()}).where(eq(ProductCategory.id, productCategory.id));
-  })
+async function modifyThePriceInProduct(){
+  try{
+    const products:ProductModel[] = await db.select().from(Product);
+    for(const product of products){
+      const newPrice = product.price?product.price/25344:100000;
+      await db.update(Product).set({price: newPrice}).where(eq(Product.id, product.id)).run();
+    }
+  }catch(error){
+    console.error("Error modifying the price in product:", error);
+  }
 }
 
 module.exports = {
@@ -135,5 +140,5 @@ module.exports = {
   insertProductsIntoDb,
   insertProductCategoriesIntoDb,
   generateAndInsertSeedData,
-  addImagesToProductCategory,
+  modifyThePriceInProduct,
 };

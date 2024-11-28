@@ -3,6 +3,7 @@ import { User } from "../../../db/schema";
 import { UserModel } from "../models/model"
 import { asc, desc, eq, not, sql } from "drizzle-orm";
 import { add } from "lodash";
+import e from "express";
 
 class UserRepo {
 
@@ -126,7 +127,16 @@ class UserRepo {
           .update(User)
           .set({...updatedColumns})
           .where(eq(User.id,userId))
-          .returning()
+          .returning({
+            id:User.id, 
+            username:User.username,
+            email:User.email,
+            fullName:User.fullName,
+            dob:User.dob,
+            address:User.address,
+            phoneNumber:User.phoneNumber,
+            gender:User.gender,
+          })
         return user
       }catch(error){
         console.log(error)

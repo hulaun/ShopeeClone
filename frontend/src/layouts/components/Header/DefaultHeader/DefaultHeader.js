@@ -4,6 +4,8 @@ import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 
 import { CartIcon, SearchIcon, ShopeeLogo } from "../../../../components/Icons";
 import { PrimaryButton } from "../../../../components/Buttons";
+import { Link, Navigate } from "react-router-dom";
+import config from "../../../../config";
 
 const cx = classNames.bind(styles);
 
@@ -65,7 +67,9 @@ function DefaultHeader() {
             </div>
           </div>
           <div className={cx("cart-icon")}>
-            <CartIcon />
+            <Link to={config.routes.consumer.cart}>
+              <CartIcon />
+            </Link>
           </div>
         </div>
       </div>
