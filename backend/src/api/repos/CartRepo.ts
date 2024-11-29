@@ -1,6 +1,6 @@
 import { db } from "../../config/db";
-import { Cart } from "../../../db/schema";
-import { CartModel } from "../models/model";
+import { Cart, CartProductsRelations, Product } from "../../../db/schema";
+import { CartModel, ProductModel } from "../models/model";
 import { eq } from "drizzle-orm";
 
 class CartRepo {
@@ -25,7 +25,16 @@ class CartRepo {
 
   async findById(cartId: string) {
     try {
-      const cart = await db.select().from(Cart).where(eq(Cart.id, cartId));
+      const cart = await db.select({
+          id: CartProductsRelations.productId,
+          quantity: CartProductsRelations.quantity,
+          price: CartProductsRelations.price,
+          name: Product.name,
+          image: Product.productPicture,
+        })
+        .from(CartProductsRelations)
+        .innerJoin(Product,eq(CartProductsRelations.productId,Product.id))
+        .where(eq(CartProductsRelations.cartId, cartId))
       return cart;
     } catch (error) {
       console.log(error);
@@ -33,15 +42,34 @@ class CartRepo {
     }
   }
 
-  async create(newCart: CartModel) {
+  async create(userId: string) {
     try {
       const cart = await db
         .insert(Cart)
         .values({
-          ...newCart
+          userId: userId,
         })
-        .returning({ insertedId: Cart.id, userId: Cart.userId });
-      return cart;
+        .returning({ id: Cart.id, userId: Cart.userId });
+      return cart[0];
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  async addToCart(cartId: string, product: ProductModel, quantity: number) {
+    try {
+      console.log("cartId",cartId);
+      const cart = await db
+        .insert(CartProductsRelations)
+        .values({
+          cartId: cartId,
+          productId: product.id,
+          quantity: quantity,
+          price: product.price?product.price*quantity:0,
+        })
+        .returning({ cartId: CartProductsRelations.cartId, productId: CartProductsRelations.productId });
+      return cart[0];
     } catch (error) {
       console.log(error);
       return error;
@@ -61,19 +89,6 @@ class CartRepo {
     }
   }
 
-  async update(cartId: string, updatedColumns: CartModel) {
-    try {
-      const cart = await db
-        .update(Cart)
-        .set({ ...updatedColumns })
-        .where(eq(Cart.id, cartId))
-        .returning();
-      return cart;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
-  }
 }
 
 const instance = new CartRepo();

@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
 import HomeFooter from "./components/HomeFooter";
 import { useEffect, useRef, useState, React } from "react";
-import { privateGet } from "../../../utils/httpRequest";
+import { privateGet, privatePost } from "../../../utils/httpRequest";
 import SuggestedProducts from "./components/SuggestedProducts/SuggestedProducts";
 
 function ViewProduct() {
   const [currentProduct, setCurrentProduct] = useState({});
+  const quantityRef = useRef();
   const params = useParams();
   useEffect(() => {
     const fetchCurrentProduct = async () => {
@@ -16,9 +17,28 @@ function ViewProduct() {
   },[]);
 
   const handleAddToCart = () => {
-    sessionStorage.getItem('cart') === null 
-    ? sessionStorage.setItem('cart', JSON.stringify([]))
-    : sessionStorage.setItem('cart', JSON.stringify([...JSON.parse(sessionStorage.getItem('cart')), currentProduct]));
+    const quantity = quantityRef.current.value;
+    console.log("cart",sessionStorage.getItem('cart'))
+    if(sessionStorage.getItem('cart') === null){
+      const createAndAddToCart=async()=>{
+        const response = await privatePost({path:`/cart/`, data:{
+          product:{...currentProduct}, 
+          quantity:quantity
+        }});
+        if(response.status === 201){
+          sessionStorage.setItem('cart', response.data.cartId);
+        }
+      }
+      createAndAddToCart();
+    }else{
+      const addToCart = async()=>{
+        const response = await privatePost({path:`/cart/${sessionStorage.getItem('cart')}`, data:{
+          product:{...currentProduct},
+          quantity:quantity
+        }});
+      }
+      addToCart();
+    }
   }
 
   return (
@@ -34,6 +54,8 @@ function ViewProduct() {
               <p>{currentProduct.description}</p>
               <p>{currentProduct.price}</p>
               <button className="bg-primary text-white px-4 py-2 rounded-md" onClick={handleAddToCart}>Add to cart</button>
+              <label htmlFor="quantity">Quantity</label>
+              <input ref={quantityRef} type="number" id="quantity" min="1" max="10" className="p-2 border border-grey-300"/>
             </div>
           </section>
         </div>

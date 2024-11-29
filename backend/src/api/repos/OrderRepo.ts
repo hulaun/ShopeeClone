@@ -33,14 +33,23 @@ class OrderRepo {
     }
   }
 
-  async create(newOrder: OrderModel) {
+  async create(userId: string, cartId: string, amount: number) {
     try {
       const order = await db
         .insert(Order)
         .values({
-          ...newOrder
+          userId: userId,
+          cartId: cartId,
+          totalAmount: amount,
+          status: "Pending",
         })
-        .returning({ insertedId: Order.id, userId: Order.userId });
+        .returning({ 
+          id: Order.id, 
+          userId: Order.userId, 
+          cartId: Order.cartId, 
+          totalAmount: Order.totalAmount, 
+          status: Order.status
+         });
       return order;
     } catch (error) {
       console.log(error);

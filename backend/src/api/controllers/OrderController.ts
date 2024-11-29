@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import OrderService from "../services/OrderService";
+import { Order } from "../../../db/schema";
 
 class OrderController {
   private static instance: OrderController;
@@ -32,17 +33,6 @@ class OrderController {
     }
   }
 
-  async create(req: Request, res: Response, next: NextFunction) {
-    try {
-      const newOrder = req.body;
-      const order = await OrderService.create(newOrder);
-      res.status(201).json(order);
-    } catch (error) {
-      console.error("Error creating order:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  }
-
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const orderId: string = req.params.id;
@@ -64,6 +54,33 @@ class OrderController {
       console.error("Error deleting order:", error);
       res.status(500).json({ message: "Internal server error" });
     }
+  }
+
+  async vnpayReturn(req: Request, res: Response, next: NextFunction) {
+    try {
+      const orderId: string = req.query.orderId as string;
+      const order = await OrderService.vnpayReturn(orderId);
+      res.status(200).json(order);
+    } catch (error) {
+      console.error("Error returning from VNPay:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  async createPaymentUrl(req: Request, res: Response, next: NextFunction) {
+    const ipAddr = req.headers['x-forwarded-for']||
+      req.connection.remoteAddress ||
+      req.socket.remoteAddress;
+    const amount = req.body.amount;
+    const cartId = req.body.cartId;
+    const user = res.locals.user;
+    console.log("user",user);
+    console.log("ipAddr",ipAddr);
+    console.log("amount",amount);
+    console.log("cartId",cartId);
+    const vnpUrl = await OrderService.createPaymentUrl(user.id, amount,cartId, ipAddr);
+    console.log("vnpUrl",vnpUrl);
+    res.redirect(vnpUrl!);
   }
 }
 

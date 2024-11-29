@@ -26,7 +26,7 @@ class ProductRepo {
   async findById(productId: string) {
     try {
       const product = await db.select().from(Product).where(eq(Product.id, productId));
-      return product[0];
+      return product[0] as ProductModel;
     } catch (error) {
       console.log(error);
       return error;

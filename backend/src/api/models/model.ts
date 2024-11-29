@@ -53,7 +53,6 @@ export type UserRelationshipModel = {
 export type CartModel = {
     id: string;
     userId: string | null;
-    createdAt: string | null;
 };
 
 export type ShopModel = {

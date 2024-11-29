@@ -11,16 +11,6 @@ class CartController {
     CartController.instance = this;
   }
 
-  async viewAll(req: Request, res: Response, next: NextFunction) {
-    try {
-      const carts = await CartService.viewAll();
-      res.json(carts);
-    } catch (error) {
-      console.error("Error fetching carts:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  }
-
   async view(req: Request, res: Response, next: NextFunction) {
     try {
       const cartId: string = req.params.id;
@@ -31,11 +21,13 @@ class CartController {
       res.status(500).json({ message: "Internal server error" });
     }
   }
-
-  async create(req: Request, res: Response, next: NextFunction) {
+  
+  async createAndAddToCart(req: Request, res: Response, next: NextFunction) {
     try {
-      const newCart = req.body;
-      const cart = await CartService.create(newCart);
+      const user = res.locals.user;
+      const product = req.body.product;
+      const quantity = req.body.quantity;
+      const cart = await CartService.createAndAddToCart(user.id, product, quantity);
       res.status(201).json(cart);
     } catch (error) {
       console.error("Error creating cart:", error);
@@ -43,28 +35,19 @@ class CartController {
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction) {
+  async addToCart(req: Request, res: Response, next: NextFunction) {
     try {
       const cartId: string = req.params.id;
-      const updateData = req.body;
-      const cart = await CartService.update(cartId, updateData);
+      const product = req.body.product;
+      const quantity = req.body.quantity;
+      const cart = await CartService.addToCart(cartId, product, quantity);
       res.status(200).json(cart);
     } catch (error) {
-      console.error("Error updating cart:", error);
+      console.error("Error adding product to cart:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction) {
-    try {
-      const cartId: string = req.params.id;
-      await CartService.delete(cartId);
-      res.status(200).json({ message: "Cart deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting cart:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  }
 }
 
 const instance = new CartController();

@@ -1,19 +1,40 @@
 import HomeFooter from "./components/HomeFooter";
 import { useEffect, useRef, useState, React } from "react";
+import { privateGet, privatePost } from "../../../utils/httpRequest";
 
 function ViewProduct() {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    const cart = JSON.parse(sessionStorage.getItem("cart"));
-    if (cart) {
-      setCart(cart);
+    const cart = sessionStorage.getItem("cart");
+    console.log(cart);
+    const fetchCart = async() => {
+      try {
+        const response = await privateGet({path:'/cart/'+cart});
+        setCart(response.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
+    fetchCart();
+    
   }, []);
 
   const handleCheckout = () => {
-    sessionStorage.removeItem("cart");
-    setCart([]);
+    const createOrder = async() => {
+      try {
+        const response = await privatePost({path:'/order/create_payment_url',
+          data: {
+            cartId: sessionStorage.getItem("cart"),
+            amount: cart.reduce((acc, product) => acc + product.price, 0)
+          }
+        });
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    createOrder();
   }
 
   return (

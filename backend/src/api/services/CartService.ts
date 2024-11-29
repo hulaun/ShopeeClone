@@ -1,4 +1,4 @@
-import { CartModel } from "../models/model";
+import { CartModel, ProductModel } from "../models/model";
 import CartRepo from "../repos/CartRepo";
 
 class CartService {
@@ -10,54 +10,18 @@ class CartService {
     }
     CartService.instance = this;
   }
-
-  async create(newCart: CartModel) {
-    try {
-      const cart = await CartRepo.create(newCart);
-      return cart;
-    } catch (error) {
-      console.error("Error creating cart:", error);
-      throw new Error("Internal server error");
-    }
-  }
-
-  async viewAll() {
-    try {
-      const carts = await CartRepo.findAll();
-      return carts;
-    } catch (error) {
-      console.error("Error fetching carts:", error);
-      throw new Error("Internal server error");
-    }
-  }
-
   async view(cartId: string) {
-    try {
-      const cart = await CartRepo.findById(cartId);
-      return cart;
-    } catch (error) {
-      console.error("Error fetching cart:", error);
-      throw new Error("Internal server error");
-    }
+    return await CartRepo.findById(cartId);
   }
 
-  async update(cartId: string, updateData: CartModel) {
-    try {
-      const cart = await CartRepo.update(cartId, updateData);
-      return cart;
-    } catch (error) {
-      console.error("Error updating cart:", error);
-      throw new Error("Internal server error");
-    }
+  async createAndAddToCart(userId: string, product: ProductModel, quantity: number) {
+    const cart:CartModel = await CartRepo.create(userId) as CartModel;
+    console.log("cart",cart);
+    return await CartRepo.addToCart(cart.id, product, quantity);
   }
 
-  async delete(cartId: string) {
-    try {
-      await CartRepo.delete(cartId);
-    } catch (error) {
-      console.error("Error deleting cart:", error);
-      throw new Error("Internal server error");
-    }
+  async addToCart(cartId: string, product: ProductModel, quantity: number) {
+    return await CartRepo.addToCart(cartId, product, quantity);
   }
 }
 
