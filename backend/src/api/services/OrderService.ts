@@ -1,6 +1,7 @@
 import { Order } from "../../../db/schema";
 import { OrderModel } from "../models/model";
 import OrderRepo from "../repos/OrderRepo";
+import { format } from 'date-fns';
 
 class OrderService {
   private static instance: OrderService;
@@ -74,7 +75,6 @@ class OrderService {
       const newOrder = OrderRepo.create(userId, cartId, amount);
   
     
-      const dateFormat = (await import("dateformat")).default;
       var tmnCode = process.env.VNP_TMN_CODE;
       var secretKey = process.env.VNP_HASH_SECRET;
       var vnpUrl = process.env.VNP_URL;
@@ -82,8 +82,8 @@ class OrderService {
     
       var date = new Date();
     
-      var createDate = dateFormat(date, 'yyyymmddHHmmss');
-      var orderId = dateFormat(date, 'HHmmss');
+      var createDate = format(date, 'yyyyMMddHHmmss');
+      var orderId = format(date, 'HHmmss');
       var locale = 'vn'
       var currCode = 'VND';
       var vnp_Params:any = {

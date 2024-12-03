@@ -17,6 +17,7 @@ import AdminCalendar from "../pages/Admin/Calendar/Calendar";
 import AdminMessages from "../pages/Admin/Messages/Messages";
 import ViewProduct from "../pages/Consumer/ViewProduct";
 import Cart from "../pages/Consumer/Cart";
+import OrderVNPay from "../pages/Consumer/OrderVNPay";
 
 const publicRoutes = [
   { path: config.routes.public.home, component: Home, layout: DefaultLayout },
@@ -53,6 +54,11 @@ const consumerRoutes = [
   {
     path: config.routes.consumer.cart,
     component: Cart,
+    layout: DefaultLayout,
+  },
+  {
+    path: config.routes.consumer.orderSuccessVNPAY,
+    component: OrderVNPay,
     layout: DefaultLayout,
   },
 ];

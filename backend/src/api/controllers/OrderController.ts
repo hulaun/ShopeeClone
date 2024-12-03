@@ -80,7 +80,9 @@ class OrderController {
     console.log("cartId",cartId);
     const vnpUrl = await OrderService.createPaymentUrl(user.id, amount,cartId, ipAddr);
     console.log("vnpUrl",vnpUrl);
-    res.redirect(vnpUrl!);
+    res.json({
+      url:vnpUrl
+    });
   }
 }
 

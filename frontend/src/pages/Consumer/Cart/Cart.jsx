@@ -27,9 +27,13 @@ function ViewProduct() {
           data: {
             cartId: sessionStorage.getItem("cart"),
             amount: cart.reduce((acc, product) => acc + product.price, 0)
+          },
+          headers: {
+            'Access-Control-Allow-Credentials': true,
           }
         });
-        console.log(response);
+        console.log(response.data);
+        window.location.href = response.data.url
       } catch (error) {
         console.log(error);
       }

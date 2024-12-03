@@ -9,6 +9,7 @@ const routes = {
     profile: "/consumer/profile",
     viewProduct: "/consumer/view-product/:id",
     cart: "/consumer/cart",
+    orderSuccessVNPAY: "/consumer/order-success-vnpay",
   },
   vendor: {},
   admin: {
